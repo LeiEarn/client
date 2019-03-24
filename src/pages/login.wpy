@@ -30,6 +30,8 @@
       position: absolute;
       top: 45%;
       border-radius: 20px;
+      border: 2px solid gray;
+      box-shadow: 0px 3px 10px gray;
   }
 
   .password {
@@ -41,6 +43,22 @@
       height: 4%;
       color: white;
       background-color: black;
+      border-color: white;
+      box-shadow: 0px 10px 10px gray;
+  }
+
+  .logup,.forgetpassword {
+      position: absolute;
+      top: 65%;
+      font-size: 12pt;
+  }
+
+  .logup {
+    left: 30%;
+  }
+
+  .forgetpassword {
+    right: 30%;
   }
 </style>
 <template>
@@ -50,6 +68,8 @@
       <input class="account" placeholder="请输入账号" />
       <input class="password" placeholder="请输入密码" />
       <text class="login">登录</text>
+      <text class="logup">注册账号</text>
+      <text class="forgetpassword">忘记密码</text>
   </view>
 </template>
 
