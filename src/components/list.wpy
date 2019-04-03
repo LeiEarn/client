@@ -1,4 +1,10 @@
 <style lang="less">
+  .mylist {
+    width: 90%;
+    height: 50px;
+    border: solid 1px black;
+  }
+
   .mylist:odd {
     color: red;
   }
@@ -8,12 +14,12 @@
 </style>
 <template>
   <view class="list">
-  <view>
-    <button @tap="add" size="mini">添加列表</button>
-  </view>
     <block wx:for-items="{{list}}" wx:for-index="index" wx:for-item="item" wx:key="id">
       <view @tap="tap" class="mylist">
-        <text>{{item.id}}</text>: {{item.title}}
+        <image class="icon" src="{{item.src}}" />
+        <text class="title">{{item.title}}</text>
+        <text class="num">{{item.num}}</text>
+        <text class="money">{{item.money}}</text>
       </view>
     </block>
   </view>
@@ -25,8 +31,10 @@
     data = {
       list: [
         {
-          id: '0',
-          title: 'loading'
+          src: '../assets/background.jpg',
+          title: 'loading',
+          num: '10',
+          money: '0.5'
         }
       ]
     }
@@ -41,7 +49,7 @@
     methods = {
       tap () {
         // this.num = this.num + 1
-        console.log(this.$name + ' tap')
+        console.log('65465448')
       },
       add () {
         let len = this.list.length
