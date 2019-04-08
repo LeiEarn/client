@@ -26,13 +26,13 @@
   <view class="container">
     <image class="background" src="{{ backgroundUrl }}"/>
     <button class="navigate" @tap="log_in" size="mid">开启新世界</button>
-    <list></list>
+    <list class="list"></list>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
-  import List from '../components/list'
+  import List from '../components/mylist'
 
   export default class Task extends wepy.page {
     config = {
