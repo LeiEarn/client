@@ -1,11 +1,11 @@
 <style lang="less">
-  .mylist {
+  .tasklist {
     height: 150rpx;
     width: 700rpx;
     margin-top: 10rpx;
     background-color: white;
     border: 1rpx solid gray;
-    border-radius: 10rpx;
+    border-radius: 15rpx;
     position: relative;
   }
 
@@ -18,7 +18,7 @@
 
   .title {
     position: absolute;
-    top: 15rpx;
+    top: 18rpx;
     left: 170rpx;
     font-size: 16pt;
     font-weight: bold;
@@ -26,14 +26,14 @@
 
   .num {
     position: absolute;
-    bottom: 15rpx;
+    bottom: 18rpx;
     left: 170rpx;
     font-size: 14pt;
   }
 
   .money {
     position: absolute;
-    top: 15rpx;
+    top: 18rpx;
     right: 30rpx;
     font-size: 16pt;
     color: red;
@@ -41,7 +41,7 @@
 
   .left {
     position: absolute;
-    bottom: 15rpx;
+    bottom: 18rpx;
     right: 30rpx;
     font-size: 14pt;
   }
@@ -49,7 +49,7 @@
 <template>
   <view class="list">
     <block wx:for-items="{{ list }}" wx:for-index="index" wx:for-item="item" wx:key="id">
-      <view @tap="tap" class="mylist">
+      <view @tap="tap" class="tasklist">
         <image class="icon" src="{{ item.src }}" />
         <text class="title">{{ item.title }}</text>
         <text class="num">{{ item.num }}</text>
@@ -62,7 +62,7 @@
 <script>
   import wepy from 'wepy'
 
-  export default class List extends wepy.component {
+  export default class TaskList extends wepy.component {
     data = {
       list: [
         {

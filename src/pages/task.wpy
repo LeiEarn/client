@@ -32,7 +32,7 @@
 
 <script>
   import wepy from 'wepy'
-  import List from '../components/mylist'
+  import TaskList from '../components/tasklist'
 
   export default class Task extends wepy.page {
     config = {
@@ -40,7 +40,7 @@
     };
 
     components = {
-      list: List
+      list: TaskList
     };
 
     data = {
