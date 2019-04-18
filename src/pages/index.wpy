@@ -1,8 +1,12 @@
 <style lang="less">
-  .container {
+  page, .container {
     position: fixed;
     height: 100%;
     width: 100%;
+  }
+
+  .tab_item {
+    height: 100%;
   }
 
   .background {
@@ -26,21 +30,66 @@
   <view class="container">
     <image class="background" src="{{ backgroundUrl }}"/>
     <button class="navigate" @tap="log_in" size="mid">开启新世界</button>
+    <view class="tab_item tab_task" hidden="{{currentTab != 0}}">
+      <task :list="tasklist" />
+    </view>
+    <view class="tab_item tab_task" hidden="{{currentTab != 1}}">
+    </view>
+    <view class="tab_item tab_task" hidden="{{currentTab != 2}}">
+    </view>
+    <view class="tab_item tab_task" hidden="{{currentTab != 3}}">
+      <mine />
+    </view>
+
+    <tab :active.sync="currentTab" />
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import Task from '../components/task'
+  import List from '../components/list'
+  import Mine from '../components/mine'
+  import Tab from '../components/tab'
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: 'client'
+      navigationBarTitleText: 'client',
+      navigationBarTextStyle: 'black',
+      navigationBarBackgroundColor: '#E7E8E3'
     }
     components = {
+      tab: Tab,
+      task: Task,
+      list: List,
+      mine: Mine
     }
 
     data = {
-      backgroundUrl: '../assets/background.jpg'
+      backgroundUrl: '../assets/background.jpg',
+      currentTab: 2,
+      tasklist: [
+        {
+          src: '../assets/background.jpg',
+          title: 55,
+          num: 10,
+          money: 0.5,
+          left: 33
+        },
+        {
+          src: '../assets/background.jpg',
+          title: 'loading',
+          num: '10',
+          money: '0.5',
+          left: 20
+        }
+      ],
+      abc: [
+        {
+          src: '../assets/background.jpg',
+          title: 'loading'
+        }
+      ]
     }
 
     methods = {

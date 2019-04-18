@@ -1,0 +1,118 @@
+<style type="less">
+.mine {
+  width: 800rpx;
+
+  .mine_item {
+    margin-top: 30rpx;
+  }
+
+  .info {
+    background-color: antiquewhite;
+    text-align: center;
+    height: 500rpx;
+    margin-top: 0rpx;
+    
+    .icon {
+      height: 150rpx;
+      width: 150rpx;
+      margin-top: 200rpx;
+      border-radius: 50%;
+    }
+
+    .login {
+      width: 120rpx;
+      margin: 0rpx auto;
+      margin-top: 50rpx;
+      border: 1rpx solid gray;
+      border-radius: 30rpx;
+    }
+  }
+
+  .balance {
+    margin-top: 80rpx;
+  }
+}
+</style>
+<template>
+  <view class="mine">
+    <view class="info mine_item">
+      <image class="icon" src="{{userInfo.avatarUrl}}" />
+      <view class="login" @tap="login">登录</view>
+    </view>
+
+    <view class="balance mine_item">
+      <balance :list="balance" />
+    </view>
+
+    <view class="manage mine_item">
+      <manage :list="manage" />
+    </view>
+
+    <view class="setting mine_item">
+      <setting :list="setting" />
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import List from './list'
+
+  export default class Mine extends wepy.component {
+    components = {
+      balance: List,
+      manage: List,
+      setting: List
+    }
+
+    data = {
+      userInfo: {
+        avatarUrl: '../assets/background.jpg'
+      },
+      balance: [
+        {
+          src: '../assets/background.jpg',
+          title: '账户余额',
+          link: '../assets/background.jpg'
+        }
+      ],
+      manage: [
+        {
+          src: '../assets/background.jpg',
+          title: '已接受任务',
+          link: '../assets/background.jpg'
+        },
+        {
+          src: '../assets/background.jpg',
+          title: '发布任务',
+          link: '../assets/background.jpg'
+        }
+      ],
+      setting: [
+        {
+          src: '../assets/background.jpg',
+          title: '修改密码',
+          link: '../assets/background.jpg'
+        },
+        {
+          src: '../assets/background.jpg',
+          title: '设置',
+          link: '../assets/background.jpg'
+        },
+        {
+          src: '../assets/background.jpg',
+          title: '关于',
+          link: '../assets/background.jpg'
+        }
+      ]
+    }
+
+    methods = {
+      login() {
+        this.$parent.$navigate({url: '../pages/login'})
+      }
+    }
+
+    onLoad () {
+    }
+  }
+</script>

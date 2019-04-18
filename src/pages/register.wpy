@@ -79,10 +79,18 @@
 
     methods = {
       register() {
-        console.log('abc')
         const request = require('../utils/request.js')
-        request.get('http://127.0.0.1:8000/').then(res => {
-          console.log(res.data)
+        var object = {
+          url: 'http://127.0.0.1:8000/register',
+          data: {
+            name: 'hejiayu',
+            telephone: '13169766417',
+            username: 'mu',
+            password: '123456'
+          }
+        }
+        request.post(object).then(res => {
+          console.log(res.data.msg)
         })
       }
     }
