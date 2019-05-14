@@ -38,19 +38,19 @@ display: block;
 </style>
 <template>
     <view class="tab">
-        <view class="tabitem tab_message{{active == 0 ? 'active' : ''}}" @tap="change(0)">
+        <view class="tabitem tab_message{{active == 1 ? 'active' : ''}}" @tap="change(1)">
             <!-- <image class="tabicon" src="../images/message{{active == 0 ? '_active' : ''}}.png"></image> -->
             <text class="tabtitle">接任务</text>
         </view>
-        <view class="tabitem tab_contact{{active == 1 ? 'active' : ''}}" @tap="change(1)">
+        <view class="tabitem tab_contact{{active == 2 ? 'active' : ''}}" @tap="change(2)">
             <!-- <image class="tabicon" src="../images/contact{{active == 1 ? '_active' : ''}}.png"></image> -->
             <text class="tabtitle">发布需求</text>
         </view>
-        <view class="tabitem tab_discovery{{active == 2 ? 'active' : ''}}" @tap="change(2)">
+        <view class="tabitem tab_discovery{{active == 3 ? 'active' : ''}}" @tap="change(3)">
             <!-- <image class="tabicon" src="../images/discovery{{active == 2 ? '_active' : ''}}.png"></image> -->
             <text class="tabtitle">消息</text>
         </view>
-        <view class="tabitem tab_me{{active == 3 ? 'active' : ''}}" @tap="change(3)">
+        <view class="tabitem tab_me{{active == 4 ? 'active' : ''}}" @tap="change(4)">
             <!-- <image class="tabicon" src="../images/me{{active == 3 ? '_active' : ''}}.png"></image> -->
             <text class="tabtitle">我的</text>
         </view>

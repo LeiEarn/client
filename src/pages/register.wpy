@@ -79,7 +79,7 @@
 
     methods = {
       register() {
-        const request = require('../utils/request.js')
+        const request = require('../lib/request.js')
         var object = {
           url: 'http://127.0.0.1:8000/register',
           data: {

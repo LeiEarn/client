@@ -1,4 +1,5 @@
 <style lang="less">
+@import './style/weui.wxss';
 .container {
   height: 100%;
   display: flex;
@@ -25,14 +26,46 @@ export default class extends wepy.app {
       'pages/index',
       'pages/login',
       'pages/register',
+      'pages/taskdetail',
       'pages/task',
-      'pages/taskdetail'
+      'pages/mine',
+      'pages/addtask'
     ],
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
       navigationBarTitleText: 'WeChat',
       navigationBarTextStyle: 'black'
+    },
+    tabBar: {
+      color: '#353535',
+      selectedColor: '#00C000',
+      list: [
+        {
+          pagePath: 'pages/index',
+          text: '首页',
+          iconPath: 'assets/index.png',
+          selectedIconPath: 'assets/index.png'
+        },
+        {
+          pagePath: 'pages/task',
+          text: '任务',
+          iconPath: 'assets/task.png',
+          selectedIconPath: 'assets/task.png'
+        },
+        {
+          pagePath: 'pages/addtask',
+          text: '发布',
+          iconPath: 'assets/add.png',
+          selectedIconPath: 'assets/add.png'
+        },
+        {
+          pagePath: 'pages/mine',
+          text: '我的',
+          iconPath: 'assets/mine.png',
+          selectedIconPath: 'assets/mine.png'
+        }
+      ]
     }
   }
 
