@@ -1,52 +1,48 @@
 <style type="less">
-@import '../style/weui.wxss';
-@import '../style/iconfont.wxss';
-.mine {
-  width: 100%;
-
-  .mine_item {
-    margin-top: 30rpx;
-  }
-
-  .info {
-    background-color: antiquewhite;
-    text-align: center;
-    height: 500rpx;
-    margin-top: 0rpx;
-    
-    .head {
-      height: 150rpx;
-      width: 150rpx;
-      margin-top: 200rpx;
-      border-radius: 50%;
+  @import '../style/iconfont.wxss';
+  .mine {
+    width: 100%;
+    .info {
+      background-color: antiquewhite;
+      text-align: center;
+      height: 500rpx;
+      margin-top: 0rpx;
+      .head {
+        height: 150rpx;
+        width: 150rpx;
+        margin-top: 150rpx;
+        border-radius: 50%;
+      }
+      .name {
+        display: block;
+      }
+      .login {
+        display: block;
+        width: 150rpx;
+        color: gray;
+        border: 1rpx solid gray;
+        border-radius: 30rpx;
+      }
     }
-
-    .login {
-      display: block;
-      width: 150rpx;
-      color: gray;
-      border: 1rpx solid gray;
-      border-radius: 30rpx;
+    .icon {
+      margin-right: 5px;
+      vertical-align: middle;
+      width: 20px;
+      height: 20px;
+    }
+    .balance {
+      margin-top: 80rpx;
     }
   }
-
-  .icon {
-    margin-right: 5px;
-    vertical-align: middle;
-    width:20px;
-    height: 20px;
-  }
-
-  .balance {
-    margin-top: 80rpx;
-  }
-}
 </style>
 <template>
   <view class="mine">
     <view class="info mine_item">
-      <image class="head" src="{{userInfo.avatarUrl}}" />
-      <button class="weui-btn login" type="primary" plain="true" size='mini' @tap="login">登录</button>
+      <block hidden="{{!hasUserInfo && canIUse}}">
+        <image class="head" src="{{userInfo.avatarUrl}}" mode="cover" />
+        <text class="name">{{userInfo.nickName}}</text>
+      </block>
+      <button class="weui-btn login" type="primary" plain="true" size='mini' open-type="getUserInfo" bindgetuserinfo="getUserInfo">{{hasUserInfo?"修改":"登录"}}</button>
     </view>
     <view class="weui-cells">
       <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
@@ -54,8 +50,12 @@
         <view class="weui-cell__bd">账户余额</view>
         <view class="weui-cell__ft weui-cell__ft_in-access">查询余额</view>
       </navigator>
+      <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+        <view class="weui-cell__hd iconfont icon">&#xe681;</view>
+        <view class="weui-cell__bd">身份认证</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access">未认证</view>
+      </navigator>
     </view>
-
     <view class="weui-cells">
       <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd iconfont icon">&#xe601;</view>
@@ -68,13 +68,7 @@
         <view class="weui-cell__ft weui-cell__ft_in-access"></view>
       </navigator>
     </view>
-
     <view class="weui-cells">
-      <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-        <view class="weui-cell__hd iconfont icon">&#xe681;</view>
-        <view class="weui-cell__bd">修改密码</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-      </navigator>
       <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd iconfont icon">&#xe62d;</view>
         <view class="weui-cell__bd">设置</view>
@@ -90,30 +84,56 @@
 </template>
 <script>
   import wepy from 'wepy'
-
   export default class Mine extends wepy.page {
     config = {
       navigationBarTitleText: 'Mine',
       navigationBarTextStyle: 'black',
       navigationBarBackgroundColor: '#E7E8E3'
     }
-
-    components = {
-    }
-
+    components = {}
     data = {
-      userInfo: {
-        avatarUrl: '../assets/background.jpg'
-      }
+      userInfo: {},
+      hasUserInfo: false,
+      canIUse: wepy.canIUse('button.open-type.getUserInfo')
     }
-
     methods = {
-      login() {
-        this.$navigate({url: './login'})
+      getUserInfo(e) {
+        if (this.hasUserInfo) {
+          console.log(this.userInfo)
+          console.log(this.$parent.globalData.openId)
+          this.$navigate({
+            url: './info'
+          })
+        } else {
+          this.$parent.globalData.userInfo = e.detail.userInfo
+          this.userInfo = e.detail.userInfo
+          this.hasUserInfo = true
+        }
       }
     }
-
-    onLoad () {
+    onLoad() {
+      let self = this
+      if (this.$parent.globalData.userInfo) {
+        this.userInfo = this.$parent.globalData.userInfo
+        this.hasUserInfo = true
+      } else {
+        this.$parent.getUserInfo(function(userInfo) {
+          if (userInfo) {
+            self.userInfo = userInfo
+            self.hasUserInfo = true
+            self.$apply()
+          }
+        })
+      }
+      if (this.$parent.globalData.openId) {
+        console.log(this.$parent.globalData.openId)
+      } else {
+        this.$parent.getUserId(function(openId) {
+          if (openId) {
+            console.log(openId)
+          }
+        })
+      }
     }
   }
 </script>

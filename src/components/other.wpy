@@ -5,9 +5,12 @@ page,
   height: 100%;
   width: 100%;
 }
+// .task {
+//   padding-top: 5rpx;
+// }
 .detail {
   display: block;
-  max-height: 680rpx;
+  max-height: 640rpx;
   overflow: scroll;
 }
 .weui-cells__title {
@@ -30,7 +33,7 @@ page,
 </style>
 <template>
   <view class="container">
-    <view class="weui-cells__title">任务</view>
+    <!-- <view class="weui-cells__title task">任务</view> -->
     <view class="weui-cells weui-cells_after-title">
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
@@ -117,25 +120,12 @@ page,
 <script>
 import wepy from 'wepy'
 
-export default class Addtask extends wepy.page {
-  config = {
-    navigationBarTitleText: 'Add',
-    navigationBarTextStyle: 'black',
-    navigationBarBackgroundColor: '#E7E8E3'
-  };
-  components = {
-  };
-
+export default class Other extends wepy.component {
   data = {
-    backgroundUrl: '../assets/background.jpg',
-    currentTab: 0,
     list: []
   };
 
   methods = {
-    log_in() {
-      this.$navigate({ url: './login' })
-    },
     add() {
       this.list.push({})
     },
@@ -143,14 +133,14 @@ export default class Addtask extends wepy.page {
 
     },
     bindDateChange: function (e) {
-        this.setData({
-            date: e.detail.value
-        })
+      this.setData({
+        date: e.detail.value
+      })
     },
     bindTimeChange: function (e) {
-        this.setData({
-            time: e.detail.value
-        })
+      this.setData({
+        time: e.detail.value
+      })
     }
   };
 
@@ -164,21 +154,6 @@ export default class Addtask extends wepy.page {
   }
 
   onLoad() {
-    let self = this
-    this.$parent.getUserInfo(function(userInfo) {
-      if (userInfo) {
-        self.userInfo = userInfo
-      }
-      self.normalTitle = '标题已被修改'
-
-      self.setTimeoutTitle = '标题三秒后会被修改'
-      setTimeout(() => {
-        self.setTimeoutTitle = '到三秒了'
-        self.$apply()
-      }, 3000)
-
-      self.$apply()
-    })
   }
 }
 </script>

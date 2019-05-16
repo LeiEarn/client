@@ -48,16 +48,6 @@ page, .container {
       <image class="background" src="{{ backgroundUrl }}"/>
       <button class="iconfont navigate" @tap="log_in" size="mid">&#xe637;开启新世界</button>
     </view>
-    <!-- <view class="tab_item tab_task" hidden="{{currentTab != 1}}">
-      <task :list="tasklist" />
-    </view>
-    <view class="tab_item tab_task" hidden="{{currentTab != 2}}">
-    </view>
-    <view class="tab_item tab_task" hidden="{{currentTab != 3}}">
-    </view>
-    <view class="tab_item tab_task" hidden="{{currentTab != 4}}">
-      <mine />
-    </view> -->
   </view>
 </template>
 
@@ -94,21 +84,12 @@ page, .container {
     }
 
     onLoad() {
-      let self = this
-      this.$parent.getUserInfo(function (userInfo) {
-        if (userInfo) {
-          self.userInfo = userInfo
-        }
-        self.normalTitle = '标题已被修改'
-
-        self.setTimeoutTitle = '标题三秒后会被修改'
-        setTimeout(() => {
-          self.setTimeoutTitle = '到三秒了'
-          self.$apply()
-        }, 3000)
-
-        self.$apply()
-      })
+      // let self = this
+      // this.$parent.getUserInfo(function (userInfo) {
+      //   if (userInfo) {
+      //     self.userInfo = userInfo
+      //   }
+      // })
     }
   }
 </script>

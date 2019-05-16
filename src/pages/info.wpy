@@ -1,0 +1,135 @@
+<style lang="less">
+  page,
+  .page {
+    height: 100%;
+    width: 100%;
+  }
+  .head {
+    height: 130rpx;
+    width: 130rpx;
+  }
+  .dialog {
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    position: absolute;
+    top: 0rpx;
+    padding: 40% 0;
+    background-color:rgba(0, 0, 0, .5);
+  }
+  .dialog_body {
+    width: 50%;
+    margin: 0 auto;
+    display: block;
+    border: 1rpx solid rgba(0, 0, 0, .5);
+    border-radius: 20rpx;
+    box-shadow: 8rpx;
+    padding: 10% 0;
+    background-color: white;
+  }
+  .uploader {
+    width: 260rpx;
+    height: 260rpx;
+    margin: 0 auto;
+    display: block;
+  }
+</style>
+<template>
+  <view class="page">
+    <view class="weui-cells">
+      <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" bindtap="head">
+        <view class="weui-cell__bd">头像</view>
+        <image class="weui-cell__ft weui-cell__ft_in-access head" src="{{userInfo.avatarUrl}}" />
+      </view>
+      <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" bindtap="name">
+        <view class="weui-cell__bd">昵称</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access">{{userInfo.nickName}}</view>
+      </view>
+      <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" bindtap="address">
+        <view class="weui-cell__bd">地址</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access">东校区明德园二号</view>
+      </view>
+    </view>
+    <view class="dialog" hidden="{{modify == 0}}">
+      <view class="dialog_body">
+        <image class="weui-cell uploader" bindtap="chooseImage" src="{{ avatarUrl }}" hidden="{{modify != 1}}" />
+        <input class="weui-cell" placeholder="{{userInfo.nickName}}" hidden="{{modify != 2}}" />
+        <input class="weui-cell" placeholder="明德园二号" hidden="{{modify != 3}}" />
+        <view class="weui-cell weui-flex">
+          <view class="weui-flex__item">
+            <button bindtap="cancel">取消</button>
+          </view>
+          <view class="weui-flex__item">
+            <button bindtap="confirm">确认</button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class Info extends wepy.page {
+    config = {
+      navigationBarTitleText: '登录'
+    }
+    components = {}
+    data = {
+      userInfo: null,
+      avatarUrl: null,
+      modify: 0
+    }
+    methods = {
+      chooseImage: function(e) {
+        var self = this
+        wx.chooseImage({
+          sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+          sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+          success: function(res) {
+            // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+            self.avatarUrl = res.tempFilePaths
+            self.$apply()
+          }
+        })
+      },
+      head() {
+        this.modify = 1
+      },
+      name() {
+        this.modify = 2
+      },
+      address() {
+        this.modify = 3
+      },
+      cancel() {
+        this.modify = 0
+      },
+      confirm() {
+        // const rq = require('../lib/request.js')
+        this.modify = 0
+      }
+    }
+    events = {
+      'index-emit': (...args) => {
+        let $event = args[args.length - 1]
+        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
+      }
+    }
+    onLoad() {
+      let self = this
+      if (this.$parent.globalData.userInfo) {
+        this.userInfo = this.$parent.globalData.userInfo
+        this.avatarUrl = this.$parent.globalData.userInfo.avatarUrl
+      } else {
+        this.$parent.getUserInfo(function(userInfo) {
+          if (userInfo) {
+            self.userInfo = userInfo
+            self.avatarUrl = userInfo.avatarUrl
+            self.$apply()
+          }
+        })
+      }
+    }
+  }
+</script>
