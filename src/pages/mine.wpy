@@ -50,7 +50,7 @@
         <view class="weui-cell__bd">账户余额</view>
         <view class="weui-cell__ft weui-cell__ft_in-access">查询余额</view>
       </navigator>
-      <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <navigator url="./authentication" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd iconfont icon">&#xe681;</view>
         <view class="weui-cell__bd">身份认证</view>
         <view class="weui-cell__ft weui-cell__ft_in-access">未认证</view>
