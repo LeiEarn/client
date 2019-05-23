@@ -108,6 +108,11 @@
           this.$parent.globalData.userInfo = e.detail.userInfo
           this.userInfo = e.detail.userInfo
           this.hasUserInfo = true
+          this.$parent.getUserId(function(userId) {
+            if (userId) {
+              console.log(userId)
+            }
+          })
         }
       }
     }
@@ -121,18 +126,17 @@
           if (userInfo) {
             self.userInfo = userInfo
             self.hasUserInfo = true
+            self.$parent.getUserId(function(userId) {
+              if (userId) {
+                console.log(userId)
+              }
+            })
             self.$apply()
           }
         })
       }
-      if (this.$parent.globalData.openId) {
-        console.log(this.$parent.globalData.openId)
-      } else {
-        this.$parent.getUserId(function(openId) {
-          if (openId) {
-            console.log(openId)
-          }
-        })
+      if (this.$parent.globalData.userId) {
+        console.log(this.$parent.globalData.userId)
       }
     }
   }

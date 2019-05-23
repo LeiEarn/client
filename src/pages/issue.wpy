@@ -1,85 +1,81 @@
 <style lang="less">
-page,
-.container {
-  position: fixed;
-  height: 100%;
-  width: 100%;
-}
+  page,
+  .container {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+  }
 </style>
 <template>
   <view class="page">
     <view class="page__bd">
-        <view class="weui-tab">
-            <view class="weui-navbar">
-                <block wx:for="{{tabs}}" wx:key="*this">
-                    <view id="{{index}}" class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" bindtap="tabClick">
-                        <view class="weui-navbar__title">{{item}}</view>
-                    </view>
-                </block>
-                <view class="weui-navbar__slider" style="left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
+      <view class="weui-tab">
+        <view class="weui-navbar">
+          <block wx:for="{{tabs}}" wx:key="*this">
+            <view id="{{index}}" class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" bindtap="tabClick">
+              <view class="weui-navbar__title">{{item}}</view>
             </view>
-            <view class="weui-tab__panel">
-                <view class="weui-tab__content" hidden="{{activeIndex != 0}}">选项一的内容</view>
-                <view class="weui-tab__content" hidden="{{activeIndex != 1}}">选项二的内容</view>
-                <other hidden="{{activeIndex != 2}}" />
-            </view>
+          </block>
+          <view class="weui-navbar__slider" style="left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
         </view>
+        <view class="weui-tab__panel">
+          <questionnaire class="weui-tab__content" hidden="{{activeIndex != 0}}" />
+          <view class="weui-tab__content" hidden="{{activeIndex != 1}}">选项二的内容</view>
+          <other hidden="{{activeIndex != 2}}" />
+        </view>
+      </view>
     </view>
     <!-- <other /> -->
   </view>
 </template>
 
 <script>
-import wepy from 'wepy'
-import Other from '../components/other'
-
-export default class Issue extends wepy.page {
-  config = {
-    navigationBarTitleText: 'Add',
-    navigationBarTextStyle: 'black',
-    navigationBarBackgroundColor: '#E7E8E3'
-  };
-
-  components = {
-    other: Other
-  };
-
-  data = {
-    tabs: ['调查问卷', '调查问卷2', '其他'],
-    activeIndex: 0,
-    sliderOffset: 0,
-    sliderLeft: 0,
-    sliderWidth: 96
-  };
-
-  methods = {
-    tabClick: function(e) {
-      this.sliderOffset = e.currentTarget.offsetLeft
-      this.activeIndex = e.currentTarget.id
-    }
-  }
-
-  events = {
-    'index-emit': (...args) => {
-      let $event = args[args.length - 1]
-      console.log(
-        `${this.$name} receive ${$event.name} from ${$event.source.$name}`
-      )
-    }
-  }
-
-  onLoad() {
-    var that = this
-    wx.getSystemInfo({
-      success: function(res) {
-        that.setData({
-          sliderLeft:
-            (res.windowWidth / that.data.tabs.length - that.data.sliderWidth) / 2,
-          sliderOffset:
-            (res.windowWidth / that.data.tabs.length) * that.data.activeIndex
-        })
+  import wepy from 'wepy'
+  import Other from '../components/other'
+  import Questionnaire from '../components/questionnaire'
+  export default class Issue extends wepy.page {
+    config = {
+      navigationBarTitleText: 'Add',
+      navigationBarTextStyle: 'black',
+      navigationBarBackgroundColor: '#E7E8E3'
+    };
+    components = {
+      other: Other,
+      questionnaire: Questionnaire
+    };
+    data = {
+      tabs: ['调查问卷', '调查问卷2', '其他'],
+      activeIndex: 0,
+      sliderOffset: 0,
+      sliderLeft: 0,
+      sliderWidth: 96
+    };
+    methods = {
+      tabClick: function(e) {
+        this.sliderOffset = e.currentTarget.offsetLeft
+        this.activeIndex = e.currentTarget.id
       }
-    })
+    }
+    events = {
+      'index-emit': (...args) => {
+        let $event = args[args.length - 1]
+        console.log(
+          `${this.$name} receive ${$event.name} from ${$event.source.$name}`
+        )
+      }
+    }
+    onLoad() {
+      var that = this
+      wx.getSystemInfo({
+        success: function(res) {
+          that.setData({
+            sliderLeft:
+              (res.windowWidth / that.data.tabs.length - that.data.sliderWidth) / 2,
+            sliderOffset:
+              (res.windowWidth / that.data.tabs.length) * that.data.activeIndex
+          })
+        }
+      })
+    }
   }
-}
 </script>

@@ -23,13 +23,13 @@ setStore(store)
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/authentication',
       'pages/index',
+      'pages/issue',
+      'pages/authentication',
       'pages/info',
       'pages/taskdetail',
       'pages/task',
-      'pages/mine',
-      'pages/issue'
+      'pages/mine'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -71,7 +71,7 @@ export default class extends wepy.app {
 
   globalData = {
     userInfo: null,
-    openId: null
+    userId: null
   }
 
   constructor () {
@@ -103,6 +103,15 @@ export default class extends wepy.app {
     wepy.getUserInfo({
       success (res) {
         this.globalData.userInfo = res.userInfo
+        // let promise = new Promise(function(resolve, reject) {
+        //   console.log('123')
+        //   resolve('OK')
+        // })
+        // promise.then(function() {
+        //   console.log('456')
+        // }).then(function () {
+        //   console.log('789')
+        // })
         cb && cb(res.userInfo)
       }
     })
@@ -119,18 +128,20 @@ export default class extends wepy.app {
       success (res) {
         if (res.code) {
           var object = {
-            url: 'https://api.weixin.qq.com/sns/jscode2session',
+            url: 'http://172.26.91.210/auth/login',
             data: {
               appid: APP_ID,
               secret: APP_SECRET,
-              js_code: res.code,
-              grant_type: 'authorization_code'
+              js_code: res.code
             },
             method: 'GET'
           }
           rq.request(object).then(res => {
-            this.globalData.openId = res.data.openid
-            cb && cb(res.data.openid)
+            this.globalData.userId = res.data
+            console.log(res)
+            cb && cb(res.data)
+          }).catch(res => {
+            console.log(res)
           })
         }
       }
