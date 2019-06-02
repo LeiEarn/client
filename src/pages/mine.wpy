@@ -105,9 +105,6 @@
             url: './info'
           })
         } else {
-          this.$parent.globalData.userInfo = e.detail.userInfo
-          this.userInfo = e.detail.userInfo
-          this.hasUserInfo = true
           this.$parent.getUserId(function(userId) {
             if (userId) {
               console.log(userId)
@@ -118,25 +115,20 @@
     }
     onLoad() {
       let self = this
-      if (this.$parent.globalData.userInfo) {
+      if (this.$parent.globalData.userId) {
+        console.log(this.$parent.globalData.userId)
         this.userInfo = this.$parent.globalData.userInfo
+        this.userId = this.$parent.globalData.userId
         this.hasUserInfo = true
       } else {
-        this.$parent.getUserInfo(function(userInfo) {
-          if (userInfo) {
-            self.userInfo = userInfo
+        this.$parent.getUserId(function(user) {
+          if (user) {
+            self.userInfo = user.userInfo
+            self.userId = user.userId
             self.hasUserInfo = true
-            self.$parent.getUserId(function(userId) {
-              if (userId) {
-                console.log(userId)
-              }
-            })
             self.$apply()
           }
         })
-      }
-      if (this.$parent.globalData.userId) {
-        console.log(this.$parent.globalData.userId)
       }
     }
   }

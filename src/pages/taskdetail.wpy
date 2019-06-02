@@ -116,7 +116,12 @@
     events = {
     };
 
-    onLoad() {
+    onLoad(res) {
+      var json = JSON.parse(res.json)
+      console.log(json)
+      this.data.content.title = json.title
+      this.data.content.money = json.money
+      this.data.content.left = json.left
     };
   }
 </script>

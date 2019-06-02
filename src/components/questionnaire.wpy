@@ -1,4 +1,8 @@
 <style lang="less">
+  .question {
+    overflow: scroll;
+    max-height: 1000rpx;
+  }
   .at-card {
     border: 1rpx #c5d9e8 solid;
     margin: 0 auto;
@@ -40,6 +44,23 @@
       border-right: none;
     }
   }
+  .at-card-bottom {
+    width: 94%;
+    margin: 0 auto;
+    text-align: center;
+    border-bottom: 1rpx #c5d9e8 solid;
+    border-left: 1rpx #c5d9e8 solid;
+  }
+  .weui-flex__item {
+    border-right: 1rpx #c5d9e8 solid;
+  }
+  .placeholder {
+    font-size: 15pt;
+    &-red {
+      color: red;
+      font-size: 15pt;
+    }
+  }
   .add-choice {
     background-color: white;
   }
@@ -53,7 +74,7 @@
   }
 </style>
 <template>
-  <view class="page">
+  <view class="question">
     <block wx:for-items="{{list}}" wx:for-index="index" wx:for-item="item" wx:key="id">
       <view class="at-card">
         <view class="at-card__header">
@@ -65,6 +86,14 @@
           </view>
           <button class="add-choice" bindtap="addChoice" data-index="{{index}}" hidden="{{item.type == '简答题'}}">+</button>
           <view class="at-card__content-note">{{item.tips}}</view>
+        </view>
+      </view>
+      <view class="weui-flex at-card-bottom">
+        <view class="weui-flex__item">
+          <view class="placeholder">编辑</view>
+        </view>
+        <view class="weui-flex__item">
+          <view class="placeholder-red">删除</view>
         </view>
       </view>
     </block>

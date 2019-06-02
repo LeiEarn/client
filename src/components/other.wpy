@@ -1,35 +1,35 @@
 <style lang="less">
-page,
-.container {
-  position: fixed;
-  height: 100%;
-  width: 100%;
-}
-// .task {
-//   padding-top: 5rpx;
-// }
-.detail {
-  display: block;
-  max-height: 640rpx;
-  overflow: scroll;
-}
-.weui-cells__title {
-  color: black;
-}
-.step-title {
-  font-size: 11pt;
-  color: rgb(120, 120, 120)
-}
-.step-detail {
-  display: block;
-  padding-left: 20rpx;
-  font-size: 11pt;
-}
-.issue {
-  color: white;
-  background-color: #00C000;
-  width: 300rpx;
-}
+  page,
+  .container {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+  }
+  // .task {
+  //   padding-top: 5rpx;
+  // }
+  .detail {
+    display: block;
+    max-height: 640rpx;
+    overflow: scroll;
+  }
+  .weui-cells__title {
+    color: black;
+  }
+  .step-title {
+    font-size: 11pt;
+    color: rgb(120, 120, 120)
+  }
+  .step-detail {
+    display: block;
+    padding-left: 20rpx;
+    font-size: 11pt;
+  }
+  .issue {
+    color: white;
+    background-color: #00C000;
+    width: 300rpx;
+  }
 </style>
 <template>
   <view class="container">
@@ -40,7 +40,7 @@ page,
           <view class="weui-label">标题</view>
         </view>
         <view class="weui-cell__bd">
-          <input class="weui-input" placeholder="请输入标题" />
+          <input class="weui-input" placeholder="请输入标题" bindinput="bindTitleInput" />
         </view>
       </view>
       <view class="weui-cell weui-cell_input weui-cell_vcode detail">
@@ -51,8 +51,8 @@ page,
         <view class="weui-cells weui-cells_after-title">
           <view class="weui-cell">
             <view class="weui-cell__bd">
-                <textarea class="weui-textarea" placeholder="请介绍任务内容" style="height: 3.3em" />
-                <view class="weui-textarea-counter">0/200</view>
+              <textarea class="weui-textarea" placeholder="请介绍任务内容" style="height: 3.3em" bindinput="bindDetailInput" />
+              <view class="weui-textarea-counter">0/200</view>
             </view>
           </view>
         </view>
@@ -62,7 +62,7 @@ page,
             <text class="step-title">步骤{{index+1}}</text>
           </view>
           <view class="weui-cell__bd step-detail">
-            <input class="weui-textarea" placeholder="请输入步骤内容"/>
+            <input class="weui-textarea" data-index="{{index}}" placeholder="请输入步骤内容" bindinput="bindStepInput" />
           </view>
         </view>
         <view class="weui-cell__ft">
@@ -74,13 +74,7 @@ page,
           <view class="weui-label">日期</view>
         </view>
         <view class="weui-cell__bd">
-          <picker
-            mode="date"
-            value="{{date}}"
-            start="2015-09-01"
-            end="2017-09-01"
-            bindchange="bindDateChange"
-          >
+          <picker mode="date" value="{{date}}" start="2015-09-01" end="2017-09-01" bindchange="bindDateChange">
             <view class="weui-input">{{date}}</view>
           </picker>
         </view>
@@ -90,13 +84,7 @@ page,
           <view class="weui-label">时间</view>
         </view>
         <view class="weui-cell__bd">
-          <picker
-            mode="time"
-            value="{{time}}"
-            start="09:01"
-            end="21:01"
-            bindchange="bindTimeChange"
-          >
+          <picker mode="time" value="{{time}}" start="09:01" end="21:01" bindchange="bindTimeChange">
             <view class="weui-input">{{time}}</view>
           </picker>
         </view>
@@ -106,7 +94,7 @@ page,
           <view class="weui-label">赏金</view>
         </view>
         <view class="weui-cell__bd">
-          <input class="weui-input" placeholder="请输入赏金" />
+          <input class="weui-input" placeholder="请输入赏金" bindinput="bindMoneyInput" />
         </view>
       </view>
     </view>
@@ -118,42 +106,58 @@ page,
 </template>
 
 <script>
-import wepy from 'wepy'
-
-export default class Other extends wepy.component {
-  data = {
-    list: []
-  };
-
-  methods = {
-    add() {
-      this.list.push({})
-    },
-    issue() {
-
-    },
-    bindDateChange: function (e) {
-      this.setData({
-        date: e.detail.value
-      })
-    },
-    bindTimeChange: function (e) {
-      this.setData({
-        time: e.detail.value
-      })
+  import wepy from 'wepy'
+  export default class Other extends wepy.component {
+    data = {
+      title: '',
+      detail: '',
+      list: [],
+      date: '',
+      time: '',
+      money: ''
+    };
+    methods = {
+      add() {
+        this.list.push('')
+      },
+      issue() {
+        console.log(this.data)
+        var object = {
+          data: this.data
+        }
+        const rq = require('../lib/request.js')
+        rq.request(object).then(res => {
+          this.globalData.user.userId = res.data
+          console.log(res)
+        }).catch(res => {
+          console.log(res)
+        })
+      },
+      bindTitleInput: function(e) {
+        this.title = e.detail.value
+      },
+      bindDetailInput: function(e) {
+        this.detail = e.detail.value
+      },
+      bindStepInput: function(e) {
+        console.log(e.currentTarget.dataset.index)
+        this.list[e.currentTarget.dataset.index] = e.detail.value
+      },
+      bindDateChange: function(e) {
+        this.date = e.detail.value
+      },
+      bindTimeChange: function(e) {
+        this.time = e.detail.value
+      }
+    };
+    events = {
+      'index-emit': (...args) => {
+        let $event = args[args.length - 1]
+        console.log(
+          `${this.$name} receive ${$event.name} from ${$event.source.$name}`
+        )
+      }
     }
-  };
-
-  events = {
-    'index-emit': (...args) => {
-      let $event = args[args.length - 1]
-      console.log(
-        `${this.$name} receive ${$event.name} from ${$event.source.$name}`
-      )
-    }
+    onLoad() {}
   }
-
-  onLoad() {
-  }
-}
 </script>
