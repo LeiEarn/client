@@ -23,9 +23,9 @@
     config = {
       pages: [
         'pages/index',
+        'pages/info',
         'pages/issue',
         'pages/authentication',
-        'pages/info',
         'pages/taskdetail',
         'pages/task',
         'pages/mine'
