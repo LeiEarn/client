@@ -22,11 +22,11 @@
   export default class extends wepy.app {
     config = {
       pages: [
+        'pages/taskdetail',
         'pages/index',
         'pages/info',
         'pages/issue',
         'pages/authentication',
-        'pages/taskdetail',
         'pages/task',
         'pages/mine'
       ],
@@ -70,7 +70,8 @@
     globalData = {
       user: {
         userInfo: null,
-        userId: null
+        userId: null,
+        hasAuthenticated: false
       }
     }
     constructor() {
