@@ -45,16 +45,16 @@
       <button class="weui-btn login" type="primary" plain="true" size='mini' open-type="getUserInfo" bindgetuserinfo="getUserInfo">{{hasUserInfo?"修改":"登录"}}</button>
     </view>
     <view class="weui-cells">
-      <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <view bindtap="balance" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd iconfont icon">&#xe637;</view>
         <view class="weui-cell__bd">账户余额</view>
         <view class="weui-cell__ft weui-cell__ft_in-access">查询余额</view>
-      </navigator>
-      <navigator url="./authentication" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      </view>
+      <view bindtap="auth" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd iconfont icon">&#xe681;</view>
         <view class="weui-cell__bd">身份认证</view>
         <view class="weui-cell__ft weui-cell__ft_in-access">未认证</view>
-      </navigator>
+      </view>
     </view>
     <view class="weui-cells">
       <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
@@ -64,7 +64,7 @@
       </navigator>
       <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd iconfont icon">&#xe6a4;</view>
-        <view class="weui-cell__bd">发布任务</view>
+        <view class="weui-cell__bd">已发布任务</view>
         <view class="weui-cell__ft weui-cell__ft_in-access"></view>
       </navigator>
     </view>
@@ -111,8 +111,19 @@
             }
           })
         }
+      },
+      balance() {
+        if (this.checkState()) {
+          wepy.navigateTo({ url: './authentication' })
+        }
+      },
+      auth() {
+        if (this.checkState()) {
+          wepy.navigateTo({ url: './authentication' })
+        }
       }
     }
+  
     onLoad() {
       let self = this
       if (this.$parent.globalData.userId) {
@@ -129,6 +140,21 @@
             self.$apply()
           }
         })
+      }
+    }
+  
+    checkState() {
+      if (this.hasUserInfo === false) {
+        wepy.showToast({
+          title: '您还未登录', // 提示的内容,
+          image: '../assets/warn.png', // 图标,
+          duration: 2000, // 延迟时间,
+          mask: true, // 显示透明蒙层，防止触摸穿透,
+          success: res => {}
+        })
+        return false
+      } else {
+        return true
       }
     }
   }

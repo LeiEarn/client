@@ -115,7 +115,8 @@
         ]
       },
       userId: null,
-      hasReceived: 0
+      hasReceived: 0,
+      hasAuthenticated: false
     };
 
     methods = {
@@ -181,6 +182,9 @@
     onLoad(res) {
       if (this.$parent.globalData.userId) {
         this.userId = this.$parent.globalData.userId
+      }
+      if (this.$parent.globalData.hasAuthenticated) {
+        this.hasAuthenticated = this.$parent.globalData.hasAuthenticated
       }
       var json = JSON.parse(res.json)
       console.log(json)
