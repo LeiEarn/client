@@ -1,4 +1,5 @@
 import wepy from 'wepy'
+import cookieJar from './cookieJar'
 
 const request = (object) => {
   let promise = new Promise((resolve, reject) => {
@@ -7,11 +8,14 @@ const request = (object) => {
       data: object.data,
       method: object.method,
       header: {
-        'content-type': 'applicction/x-www-form-urlencoded'
+        'content-type': 'applicction/x-www-form-urlencoded',
+        cookie: cookieJar.take()
       },
       success: res => {
-        if (res.statusCode == 200) {
+        if (res.statusCode === 200) {
           resolve(res)
+          const cookieStr = res.header['Set-Cookie']
+          if (cookieStr) cookieJar.put(cookieStr)
         } else {
           reject(res)
         }
