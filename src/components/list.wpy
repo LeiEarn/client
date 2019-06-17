@@ -20,7 +20,7 @@
       <button @tap="add" size="mini">添加列表</button>
     </view> -->
     <block class="weui-panel__bd" wx:for-items="{{list}}" wx:for-index="index" wx:for-item="item" wx:key="id">
-      <view @tap="tap" data-index="{{index}}" class="weui-media-box weui-media-box_appmsg">
+      <view bindtap="tap" data-index="{{index}}" class="weui-media-box weui-media-box_appmsg">
         <!-- <text>\{{item.id}}</text>: \{{item.title}} -->
         <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
           <image class="weui-media-box__thumb" src="{{item.icon}}" />
@@ -64,7 +64,7 @@
     methods = {
       tap (e) {
         // this.num = this.num + 1
-        this.$parent.$navigate({url: '../pages/taskdetail?json=' + JSON.stringify(this.list[e.currentTarget.dataset.index])})
+        this.$parent.$navigate({url: '../task/detail?json=' + JSON.stringify(this.list[e.currentTarget.dataset.index])})
       },
       add () {
         let len = this.list.length

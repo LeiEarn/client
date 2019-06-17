@@ -145,7 +145,6 @@ export default class Info extends wepy.page {
       this.modify = 0
     },
     confirm() {
-      // const rq = require('../lib/request.js')
       if (this.modify === 1) {
         if (this.userInfo.avatarUrl !== this.temp.avatarUrl) {
           const self = this

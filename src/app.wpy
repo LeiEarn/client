@@ -23,15 +23,15 @@ setStore(store)
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/mine',
-      'pages/index',
-      'pages/info',
       'pages/issue',
-      'pages/authentication',
-      'pages/task',
-      'pages/issuedtask',
-      'pages/receivedtask',
-      'pages/taskdetail'
+      'pages/index',
+      'pages/user/mine',
+      'pages/user/info',
+      'pages/user/auth',
+      'pages/task/task',
+      'pages/task/issued',
+      'pages/task/received',
+      'pages/task/detail'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -50,7 +50,7 @@ export default class extends wepy.app {
           selectedIconPath: 'assets/index.png'
         },
         {
-          pagePath: 'pages/task',
+          pagePath: 'pages/task/task',
           text: '任务',
           iconPath: 'assets/task.png',
           selectedIconPath: 'assets/task.png'
@@ -62,7 +62,7 @@ export default class extends wepy.app {
           selectedIconPath: 'assets/add.png'
         },
         {
-          pagePath: 'pages/mine',
+          pagePath: 'pages/user/mine',
           text: '我的',
           iconPath: 'assets/mine.png',
           selectedIconPath: 'assets/mine.png'

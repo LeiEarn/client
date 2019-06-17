@@ -1,5 +1,5 @@
 <style type="less">
-  @import '../style/iconfont.wxss';
+  @import '../../style/iconfont.wxss';
   .mine {
     width: 100%;
     .info {
@@ -115,22 +115,22 @@
       },
       balance() {
         if (this.checkState()) {
-          wepy.navigateTo({ url: './authentication' })
+          wepy.navigateTo({ url: './auth' })
         }
       },
       auth() {
         if (this.checkState()) {
-          wepy.navigateTo({ url: './authentication' })
+          wepy.navigateTo({ url: './auth' })
         }
       },
       received() {
         if (this.checkState()) {
-          wepy.navigateTo({ url: './receivedtask' })
+          wepy.navigateTo({ url: '../task/received' })
         }
       },
       issued() {
         if (this.checkState()) {
-          wepy.navigateTo({ url: './issuedtask' })
+          wepy.navigateTo({ url: '../task/issued' })
         }
       }
     }
@@ -178,12 +178,12 @@
       if (this.hasUserInfo === false) {
         wepy.showToast({
           title: '您还未登录', // 提示的内容,
-          image: '../assets/warn.png', // 图标,
+          image: '../../assets/warn.png', // 图标,
           duration: 1000, // 延迟时间,
           mask: true, // 显示透明蒙层，防止触摸穿透,
           success: res => {}
         })
-        return false
+        return true
       } else {
         return true
       }

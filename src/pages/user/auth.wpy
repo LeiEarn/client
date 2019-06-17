@@ -85,7 +85,7 @@
 
 <script>
   import wepy from 'wepy'
-  export default class Authentication extends wepy.page {
+  export default class Auth extends wepy.page {
     config = {
       navigationBarTitleText: '身份认证'
     }
@@ -104,7 +104,7 @@
         verf: '',
         id: ''
       },
-      cert: '../assets/background.jpg',
+      cert: '../../assets/background.jpg',
       userId: '',
       hasAuthenticated: false
     }
@@ -174,7 +174,7 @@
     async onLoad() {
       await this.getUserId()
       if (this.$parent.globalData.hasAuthenticated) {
-        const rq = require('../lib/request.js')
+        const rq = require('../../lib/request.js')
         let self = this
         var object = {
           url: '/getAuthInfo',

@@ -1,35 +1,45 @@
 <style lang="less">
-page {
-  height: 100%;
-  width: 100%;
-}
-.page__hd {
-  margin-bottom: 20rpx;
-  padding-left: 10rpx;
-  font-size: 18pt;
-}
-.detail {
-  display: block;
-  max-height: 500rpx;
-  overflow: scroll;
-}
-.weui-cells__title {
-  color: black;
-}
-.step-title {
-  font-size: 11pt;
-  color: rgb(120, 120, 120);
-}
-.step-detail {
-  display: block;
-  padding-left: 20rpx;
-  font-size: 11pt;
-}
-.issue {
-  color: white;
-  background-color: #00c000;
-  width: 300rpx;
-}
+  page {
+    height: 100%;
+    width: 100%;
+  }
+  .page__hd {
+    margin-bottom: 20rpx;
+    padding-left: 10rpx;
+    font-size: 18pt;
+  }
+  .weui-cells__title {
+    color: black;
+  }
+  .weui-textarea-counter {
+    font-size: 10pt;
+  }
+  .detail {
+    display: block;
+  }
+  .step {
+    display: block;
+    max-height: 200rpx;
+    overflow: scroll;
+  }
+  .step-title {
+    font-size: 11pt;
+    color: rgb(120, 120, 120);
+  }
+  .step-detail {
+    display: block;
+    padding-left: 20rpx;
+    font-size: 11pt;
+  }
+  .weui-cell__ft {
+    margin-right: 5rpx;
+    margin-bottom: 5rpx;
+  }
+  .issue {
+    color: white;
+    background-color: #00c000;
+    width: 300rpx;
+  }
 </style>
 <template>
   <view class="page">
@@ -43,11 +53,7 @@ page {
             <view class="weui-label">标题</view>
           </view>
           <view class="weui-cell__bd">
-            <input
-              class="weui-input"
-              placeholder="请输入标题"
-              bindinput="bindTitleInput"
-            />
+            <input class="weui-input" placeholder="请输入标题" bindinput="bindTitleInput" />
           </view>
         </view>
         <view class="weui-cell weui-cell_input weui-cell_vcode detail">
@@ -58,122 +64,119 @@ page {
           <view class="weui-cells weui-cells_after-title">
             <view class="weui-cell">
               <view class="weui-cell__bd">
-                <textarea
-                  class="weui-textarea"
-                  placeholder="请介绍任务内容"
-                  style="height: 3.3em"
-                  bindinput="bindDetailInput"
-                />
-                <view class="weui-textarea-counter">0/200</view>
+                <textarea class="weui-textarea" placeholder="请介绍任务内容" style="height: 3.3em" bindinput="bindDetailInput" minlength="0" maxlength="40" />
+                <view class="weui-textarea-counter">{{ currentLen }}/40</view>
+              </view>
+            </view>
+          </view>
+          <view class="weui-cells__title">步骤</view>
+          <view class="step">
+            <view class="weui-cell" wx:for-items="{{list}}" wx:for-index="index" wx:for-item="item" wx:key="id">
+              <view class="weui-cell__hd">
+                <text class="step-title">步骤{{index+1}}</text>
+              </view>
+              <view class="weui-cell__bd step-detail">
+                <input class="weui-textarea" data-index="{{index}}" placeholder="请输入步骤内容" bindinput="bindStepInput" />
+              </view>
+            </view>
+            <view class="weui-cell__ft">
+              <button bindtap="add" size="mini">添加步骤</button>
             </view>
           </view>
         </view>
-        <view class="weui-cells__title">步骤</view>
-        <view class="step">
-        <view class="weui-cell" wx:for-items="{{list}}" wx:for-index="index" wx:for-item="item" wx:key="id">
+        <view class="weui-cell weui-cell_input">
           <view class="weui-cell__hd">
-            <text class="step-title">步骤{{index+1}}</text>
+            <view class="weui-label">日期</view>
           </view>
-          <view class="weui-cell__bd step-detail">
-            <input class="weui-textarea" data-index="{{index}}" placeholder="请输入步骤内容" bindinput="bindStepInput" />
+          <view class="weui-cell__bd">
+            <picker mode="date" value="{{date}}" start="2015-09-01" end="2017-09-01" bindchange="bindDateChange">
+              <view class="weui-input">{{date}}</view>
+            </picker>
           </view>
         </view>
-        <view class="weui-cell__ft">
-          <button @tap="add" size="mini">添加步骤</button>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">时间</view>
+          </view>
+          <view class="weui-cell__bd">
+            <picker mode="time" value="{{time}}" start="09:01" end="21:01" bindchange="bindTimeChange">
+              <view class="weui-input">{{time}}</view>
+            </picker>
+          </view>
         </view>
-        
-        </view>
-      </view>
-      <view class="weui-cell weui-cell_input">
-        <view class="weui-cell__hd">
-          <view class="weui-label">日期</view>
-        </view>
-        <view class="weui-cell__bd">
-          <picker mode="date" value="{{date}}" start="2015-09-01" end="2017-09-01" bindchange="bindDateChange">
-            <view class="weui-input">{{date}}</view>
-          </picker>
-        </view>
-      </view>
-      <view class="weui-cell weui-cell_input">
-        <view class="weui-cell__hd">
-          <view class="weui-label">时间</view>
-        </view>
-        <view class="weui-cell__bd">
-          <picker mode="time" value="{{time}}" start="09:01" end="21:01" bindchange="bindTimeChange">
-            <view class="weui-input">{{time}}</view>
-          </picker>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">赏金</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input class="weui-input" placeholder="请输入赏金" bindinput="bindMoneyInput" />
+          </view>
         </view>
       </view>
-      <view class="weui-cell weui-cell_input">
-        <view class="weui-cell__hd">
-          <view class="weui-label">赏金</view>
-        </view>
-        <view class="weui-cell__bd">
-          <input class="weui-input" placeholder="请输入赏金" bindinput="bindMoneyInput" />
-        </view>
+      <view class="weui-btn-area">
+        <button @tap="issue" class="issue weui-btn">发布</button>
       </view>
-    </view>
-    <view class="weui-cells__tips">底部说明文字底部说明文字</view>
-    <view class="weui-btn-area">
-      <button @tap="issue" class="issue weui-btn">发布</button>
     </view>
   </view>
-</view>
 </template>
 
 <script>
-import wepy from 'wepy'
-export default class Other extends wepy.component {
-  data = {
-    title: '',
-    detail: '',
-    list: [],
-    date: '',
-    time: '',
-    money: ''
-  };
-  methods = {
-    add() {
-      this.list.push('')
-    },
-    issue() {
-      console.log(this.data)
-      var object = {
-        data: this.data
+  import wepy from 'wepy'
+  export default class Other extends wepy.component {
+    data = {
+      title: '',
+      detail: '',
+      list: [],
+      date: '',
+      time: '',
+      money: '',
+      currentLen: 0
+    };
+    methods = {
+      add() {
+        this.list.push('')
+      },
+      issue() {
+        console.log(this.data)
+        var object = {
+          data: this.data
+        }
+        const rq = require('../lib/request.js')
+        rq.request(object).then(res => {
+          this.globalData.user.userId = res.data
+          console.log(res)
+        }).catch(res => {
+          console.log(res)
+        })
+      },
+      bindTitleInput: function(e) {
+        this.title = e.detail.value
+      },
+      bindDetailInput: function(e) {
+        var value = e.detail.value
+        var len = parseInt(value.length)
+        this.currentLen = len
+        this.detail = e.detail.value
+      },
+      bindStepInput: function(e) {
+        console.log(e.currentTarget.dataset.index)
+        this.list[e.currentTarget.dataset.index] = e.detail.value
+      },
+      bindDateChange: function(e) {
+        this.date = e.detail.value
+      },
+      bindTimeChange: function(e) {
+        this.time = e.detail.value
       }
-      const rq = require('../lib/request.js')
-      rq.request(object).then(res => {
-        this.globalData.user.userId = res.data
-        console.log(res)
-      }).catch(res => {
-        console.log(res)
-      })
-    },
-    bindTitleInput: function (e) {
-      this.title = e.detail.value
-    },
-    bindDetailInput: function (e) {
-      this.detail = e.detail.value
-    },
-    bindStepInput: function (e) {
-      console.log(e.currentTarget.dataset.index)
-      this.list[e.currentTarget.dataset.index] = e.detail.value
-    },
-    bindDateChange: function (e) {
-      this.date = e.detail.value
-    },
-    bindTimeChange: function (e) {
-      this.time = e.detail.value
+    };
+    events = {
+      'index-emit': (...args) => {
+        let $event = args[args.length - 1]
+        console.log(
+          `${this.$name} receive ${$event.name} from ${$event.source.$name}`
+        )
+      }
     }
-  };
-  events = {
-    'index-emit': (...args) => {
-      let $event = args[args.length - 1]
-      console.log(
-        `${this.$name} receive ${$event.name} from ${$event.source.$name}`
-      )
-    }
+    onLoad() {}
   }
-  onLoad() { }
-}
 </script>

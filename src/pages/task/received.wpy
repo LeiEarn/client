@@ -18,7 +18,7 @@
 </template>
 <script>
   import wepy from 'wepy'
-  import List from '../components/list'
+  import List from '../../components/list'
   export default class ReceivedTask extends wepy.page {
     config = {
       navigationBarTitleText: '已接受任务',
@@ -34,28 +34,28 @@
     }
     data = {
       ongoing: [{
-        icon: '../assets/background.jpg',
+        icon: '../../assets/background.jpg',
         title: '标题一',
         desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
         money: 0.5,
         left: 33
       },
       {
-        icon: '../assets/background.jpg',
+        icon: '../../assets/background.jpg',
         title: '标题二',
         desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
         money: 0.5,
         left: 20
       },
       {
-        icon: '../assets/background.jpg',
+        icon: '../../assets/background.jpg',
         title: '标题一',
         desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
         money: 0.5,
         left: 33
       },
       {
-        icon: '../assets/background.jpg',
+        icon: '../../assets/background.jpg',
         title: '标题二',
         desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
         money: 0.5,
@@ -63,7 +63,7 @@
       }
       ],
       complete: [{
-        icon: '../assets/background.jpg',
+        icon: '../../assets/background.jpg',
         title: '标题一',
         desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
         money: 0.5,
@@ -85,13 +85,13 @@
       }
     }
     onLoad() {
-      //   const rq = require('../lib/request.js')
-      //   var object = {
-      //     url: '/getRecTask'
-      //   }
-      //   rq.request(object).then(res => {
-      //     console.log(res)
-      //   })
+      const rq = require('../../lib/request.js')
+      var object = {
+        url: '/getRecTask'
+      }
+      rq.request(object).then(res => {
+        console.log(res)
+      })
     }
     load(list) {
       this.list = list
@@ -104,7 +104,7 @@
       this.$apply()
       console.log(this.list.length)
       setTimeout(function() {
-        const rq = require('../lib/request.js')
+        const rq = require('../../lib/request.js')
         var object = {}
         rq.request(object).then(res => {
           console.log(res)
