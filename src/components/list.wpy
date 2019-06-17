@@ -11,6 +11,7 @@
   }
 
   .money {
+    color: black;
   }
 </style>
 <template>

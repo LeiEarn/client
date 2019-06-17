@@ -16,6 +16,7 @@
     config = {
       navigationBarTitleText: 'Task',
       navigationBarTextStyle: 'black',
+      navigationBarBackgroundColor: '#E778E3'
     }
 
     components = {
