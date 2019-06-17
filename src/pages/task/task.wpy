@@ -1,0 +1,147 @@
+<style lang="less">
+</style>
+<template>
+  <view class="task">
+    <list :list.sync="list"/>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import List from '../../components/list'
+
+  export default class Task extends wepy.page {
+    config = {
+      navigationBarTitleText: 'Task',
+      navigationBarTextStyle: 'black',
+      navigationBarBackgroundColor: '#E7E8E3',
+      enablePullDownRefresh: true,
+      backgroundTextStyle: 'dark',
+      onReachBottomDistance: -300
+    }
+
+    components = {
+      list: List
+    }
+
+    data = {
+      list: [
+        {
+          icon: '../../assets/background.jpg',
+          title: '标题一',
+          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
+          money: 0.5,
+          left: 33
+        },
+        {
+          icon: '../../assets/background.jpg',
+          title: '标题二',
+          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
+          money: 0.5,
+          left: 20
+        },
+        {
+          icon: '../../assets/background.jpg',
+          title: '标题一',
+          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
+          money: 0.5,
+          left: 33
+        },
+        {
+          icon: '../../assets/background.jpg',
+          title: '标题二',
+          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
+          money: 0.5,
+          left: 20
+        },
+        {
+          icon: '../../assets/background.jpg',
+          title: '标题一',
+          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
+          money: 0.5,
+          left: 33
+        },
+        {
+          icon: '../../assets/background.jpg',
+          title: '标题二',
+          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
+          money: 0.5,
+          left: 20
+        },
+        {
+          icon: '../../assets/background.jpg',
+          title: '标题一',
+          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
+          money: 0.5,
+          left: 33
+        },
+        {
+          icon: '../../assets/background.jpg',
+          title: '标题二',
+          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
+          money: 0.5,
+          left: 20
+        },
+        {
+          icon: '../../assets/background.jpg',
+          title: '标题一',
+          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
+          money: 0.5,
+          left: 33
+        },
+        {
+          icon: '../../assets/background.jpg',
+          title: '标题二',
+          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
+          money: 0.5,
+          left: 20
+        }
+      ]
+    }
+
+    events = {
+    }
+
+    methods = {
+      tap () {
+        // this.num = this.num + 1
+        console.log('65465448')
+      },
+      add () {
+        let len = this.list.length
+        this.list.push({id: len + 1, title: 'title_' + len})
+      }
+    }
+
+    onLoad () {
+      const rq = require('../../lib/request.js')
+      var object = {
+        url: '/getAll',
+        method: 'GET'
+      }
+      rq.request(object).then(res => {
+        console.log(res)
+      })
+    }
+
+    load(list) {
+      this.list = list
+      this.$apply()
+    }
+
+    onPullDownRefresh() {
+      console.log('下拉刷新列表')
+      console.log(this.list.length)
+      this.list = this.list.concat(this.list)
+      this.$apply()
+      console.log(this.list.length)
+      setTimeout(function () {
+        const rq = require('../../lib/request.js')
+        var object = {}
+        rq.request(object).then(res => {
+          console.log(res)
+        })
+        wepy.stopPullDownRefresh()
+      }, 5000)
+    }
+  }
+</script>

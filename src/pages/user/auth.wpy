@@ -3,6 +3,11 @@
     width: 100%;
     height: 400rpx;
     padding: 10rpx;
+    padding-left: 0rpx;
+  }
+
+  .weui-btn-area {
+    margin-top: 100rpx;
   }
 </style>
 <template>
@@ -13,25 +18,25 @@
           <view class="weui-label">姓名</view>
         </view>
         <view class="weui-cell__bd">
-          <input class="weui-input" placeholder="请输入姓名" bindinput="name" />
+          <input class="weui-input" placeholder="请输入姓名" value="{{user.name}}" bindinput="name" disabled="{{hasAuthenticated}}" />
         </view>
       </view>
-      <view class="weui-cell weui-cell_input">
-        <view class="weui-cell__hd">
-          <view class="weui-label">性别</view>
-        </view>
-        <view class="weui-cell__bd">
-          <picker bindchange="bindSexChange" value="{{sexs_index}}" range="{{sexs}}">
-            <button type="default">{{user.sex}}</button>
-          </picker>
-        </view>
+      <view class="weui-cell weui-cell_select">
+          <view class="weui-cell__hd weui-cell__hd_in-select-after">
+              <view class="weui-label">性别</view>
+          </view>
+          <view class="weui-cell__bd">
+              <picker bindchange="bindSexChange" value="{{sexs_index}}" range="{{sexs}}" disabled="{{hasAuthenticated}}">
+                  <view class="weui-select weui-select_in-select-after">{{sexs[sexs_index]}}</view>
+              </picker>
+          </view>
       </view>
       <view class="weui-cell weui-cell_input weui-cell_vcode">
         <view class="weui-cell__hd">
           <view class="weui-label">手机号</view>
         </view>
         <view class="weui-cell__bd">
-          <input class="weui-input" placeholder="请输入手机号" bindinput="tel" />
+          <input class="weui-input" placeholder="请输入手机号" value="{{user.tel}}" bindinput="tel" disabled="{{hasAuthenticated}}" />
         </view>
         <view class="weui-cell__ft">
           <view class="weui-vcode-btn">获取验证码</view>
@@ -45,14 +50,14 @@
           <input class="weui-input" placeholder="请输入验证码" bindinput="verf" />
         </view>
       </view>
-      <view class="weui-cell weui-cell_input">
-        <view class="weui-cell__hd">
-          <view class="weui-label">身份</view>
+      <view class="weui-cell weui-cell_select">
+        <view class="weui-cell__hd weui-cell__hd_in-select-after">
+            <view class="weui-label">身份</view>
         </view>
         <view class="weui-cell__bd">
-          <picker bindchange="bindIdentityChange" value="{{idens_index}}" range="{{idens}}">
-            <button type="default">{{user.identity}}</button>
-          </picker>
+            <picker bindchange="bindIdentityChange" value="{{idens_index}}" range="{{idens}}" disabled="{{hasAuthenticated}}">
+                <view class="weui-select weui-select_in-select-after">{{idens[idens_index]}}</view>
+            </picker>
         </view>
       </view>
       <view class="weui-cell weui-cell_input">
@@ -60,7 +65,7 @@
           <view class="weui-label">{{id_name}}</view>
         </view>
         <view class="weui-cell__bd">
-          <input class="weui-input" placeholder="请输入{{id_name}}" bindinput="id" />
+          <input class="weui-input" placeholder="请输入{{id_name}}" value="{{user.id}}" bindinput="id" disabled="{{hasAuthenticated}}" />
         </view>
       </view>
       <view class="weui-cell weui-cell_input">
@@ -68,20 +73,19 @@
           <view class="weui-label">证明</view>
         </view>
         <view class="weui-cell__bd">
-          <image class="uploader" bindtap="chooseImage" src="{{ user.cert }}" />
+          <image class="uploader" bindtap="chooseImage" src="{{ cert }}" />
         </view>
       </view>
     </view>
-    <view class="page__bd page__bd_spacing">
-      <button @tap="submit" class="issue weui-btn">提交</button>
+    <view class="weui-btn-area">
+      <button class="weui-btn" type="primary" bindtap="submit" disabled="{{hasAuthenticated}}">提交</button>
     </view>
-    <view class="weui-cells__tips">底部说明文字底部说明文字</view>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
-  export default class Authentication extends wepy.page {
+  export default class Auth extends wepy.page {
     config = {
       navigationBarTitleText: '身份认证'
     }
@@ -94,13 +98,15 @@
       id_name: '学号',
       user: {
         name: '',
-        sex: '请选择性别',
-        identity: '请选择身份',
+        sex: '',
+        identity: '',
         tel: '',
         verf: '',
-        id: '',
-        cert: '../assets/background.jpg'
-      }
+        id: ''
+      },
+      cert: '../../assets/background.jpg',
+      userId: '',
+      hasAuthenticated: false
     }
     methods = {
       name: function(e) {
@@ -127,31 +133,35 @@
         }
       },
       chooseImage: function(e) {
+        if (this.hasAuthenticated) {
+          return
+        }
         var self = this
         wepy.chooseImage({
           sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
           sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
           success: function(res) {
             // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-            self.user.cert = res.tempFilePaths
+            self.cert = res.tempFilePaths
             self.$apply()
           }
         })
       },
       submit() {
         console.log(this.user)
-        const rq = require('../lib/request.js')
-        var object = {
-          url: 'http://127.0.0.1:8000/register',
-          data: {
-            name: 'hejiayu',
-            telephone: '13169766417',
-            username: 'mu',
-            password: '123456'
-          }
-        }
-        rq.request(object).then(res => {
-          console.log(res.data.msg)
+        let self = this
+        wepy.uploadFile({
+          url: '/auth', // 开发者服务器 url
+          filePath: self.cert, // 要上传文件资源的路径
+          name: 'auth', // 文件对应的 key , 开发者在服务器端通过这个 key 可以获取到文件二进制内容
+          formData: {
+            'idenInfo': JSON.parse(self.user)
+          },
+          success: res => {
+            self.user = res.data
+          },
+          fail: () => {},
+          complete: () => {}
         })
       }
     }
@@ -161,6 +171,39 @@
         console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
       }
     }
-    onLoad() {}
+    async onLoad() {
+      await this.getUserId()
+      if (this.$parent.globalData.hasAuthenticated) {
+        const rq = require('../../lib/request.js')
+        let self = this
+        var object = {
+          url: '/getAuthInfo',
+          data: {
+            userId: this.userId
+          },
+          method: 'GET'
+        }
+        rq.request(object).then(res => {
+          self.user = res.data.user
+          self.cert = res.data.cert
+          self.$apply()
+        })
+        this.hasAuthenticated = this.$parent.globalData.hasAuthenticated
+      }
+    }
+
+    async getUserId() {
+      if (this.$parent.globalData.userId) {
+        this.userId = this.$parent.globalData.userId
+      } else {
+        let self = this
+        this.$parent.getUserId(function(user) {
+          if (user) {
+            self.userId = user.userId
+            self.$apply()
+          }
+        })
+      }
+    }
   }
 </script>

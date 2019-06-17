@@ -16,11 +16,11 @@
 </style>
 <template>
   <view class="list">
-    <view class="weui-panel__hd">
+    <!-- <view class="weui-panel__hd">
       <button @tap="add" size="mini">添加列表</button>
-    </view>
+    </view> -->
     <block class="weui-panel__bd" wx:for-items="{{list}}" wx:for-index="index" wx:for-item="item" wx:key="id">
-      <view @tap="tap" data-index="{{index}}" class="weui-media-box weui-media-box_appmsg">
+      <view bindtap="tap" data-index="{{index}}" class="weui-media-box weui-media-box_appmsg">
         <!-- <text>\{{item.id}}</text>: \{{item.title}} -->
         <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
           <image class="weui-media-box__thumb" src="{{item.icon}}" />
@@ -35,12 +35,12 @@
         </view>
       </view>
     </block>
-    <view class="weui-panel__ft">
+    <!-- <view class="weui-panel__ft">
       <view class="weui-cell weui-cell_access weui-cell_link">
         <view class="weui-cell__bd">查看更多</view>
         <view class="weui-cell__ft weui-cell__ft_in-access"></view>
       </view>
-    </view>
+    </view> -->
   </view>
 </template>
 <script>
@@ -64,7 +64,7 @@
     methods = {
       tap (e) {
         // this.num = this.num + 1
-        this.$parent.$navigate({url: '../pages/taskdetail?json=' + JSON.stringify(this.list[e.currentTarget.dataset.index])})
+        this.$parent.$navigate({url: '../task/detail?json=' + JSON.stringify(this.list[e.currentTarget.dataset.index])})
       },
       add () {
         let len = this.list.length

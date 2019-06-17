@@ -1,5 +1,5 @@
 <style lang="less">
-@import '../style/iconfont.wxss';
+@import '../../style/iconfont.wxss';
   .page {
     position: fixed;
     height: 100%;
@@ -101,7 +101,7 @@
     };
 
     data = {
-      backgroundUrl: '../assets/background.jpg',
+      backgroundUrl: '../../assets/background.jpg',
       taskId: null,
       content: {
         title: 'loading',
@@ -115,17 +115,18 @@
         ]
       },
       userId: null,
-      hasReceived: 0
+      hasReceived: 0,
+      hasAuthenticated: false
     };
 
     methods = {
       accept() {
-        const rq = require('../lib/request.js')
+        const rq = require('../../lib/request.js')
         if (this.userId === null) {
           console.log('您还没有登录')
           wepy.showToast({
             title: '您还没有登录', // 提示的内容,
-            image: '../assets/warn.png',
+            image: '../../assets/warn.png',
             duration: 2000, // 延迟时间,
             mask: true, // 显示透明蒙层，防止触摸穿透,
             success: res => {}
@@ -134,14 +135,14 @@
           console.log('您还没有进行身份认证')
           wepy.showToast({
             title: '您还没有进行身份认证', // 提示的内容,
-            image: '../assets/warn.png',
+            image: '../../assets/warn.png',
             duration: 2000, // 延迟时间,
             mask: true, // 显示透明蒙层，防止触摸穿透,
             success: res => {}
           })
         } else {
           var object = {
-            url: 'http://172.26.91.210/auth/login',
+            url: '/auth/login',
             data: {
               userId: this.userId,
               taskId: this.taskId
@@ -181,6 +182,9 @@
     onLoad(res) {
       if (this.$parent.globalData.userId) {
         this.userId = this.$parent.globalData.userId
+      }
+      if (this.$parent.globalData.hasAuthenticated) {
+        this.hasAuthenticated = this.$parent.globalData.hasAuthenticated
       }
       var json = JSON.parse(res.json)
       console.log(json)

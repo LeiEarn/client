@@ -1,142 +1,159 @@
 <style lang="less">
-  @import './style/weui.wxss';
-  .container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    box-sizing: border-box;
-  }
+@import './style/weui.wxss';
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
 </style>
 
 <script>
-  import wepy from 'wepy'
-  import 'wepy-async-function'
-  import {
-    setStore
-  } from 'wepy-redux'
-  import configStore from './store'
-  const store = configStore()
-  setStore(store)
-  export default class extends wepy.app {
-    config = {
-      pages: [
-        'pages/taskdetail',
-        'pages/index',
-        'pages/info',
-        'pages/issue',
-        'pages/authentication',
-        'pages/task',
-        'pages/mine'
-      ],
-      window: {
-        backgroundTextStyle: 'light',
-        navigationBarBackgroundColor: '#fff',
-        navigationBarTitleText: 'WeChat',
-        navigationBarTextStyle: 'black'
-      },
-      tabBar: {
-        color: '#353535',
-        selectedColor: '#00C000',
-        list: [
-          {
-            pagePath: 'pages/index',
-            text: '首页',
-            iconPath: 'assets/index.png',
-            selectedIconPath: 'assets/index.png'
-          },
-          {
-            pagePath: 'pages/task',
-            text: '任务',
-            iconPath: 'assets/task.png',
-            selectedIconPath: 'assets/task.png'
-          },
-          {
-            pagePath: 'pages/issue',
-            text: '发布',
-            iconPath: 'assets/add.png',
-            selectedIconPath: 'assets/add.png'
-          },
-          {
-            pagePath: 'pages/mine',
-            text: '我的',
-            iconPath: 'assets/mine.png',
-            selectedIconPath: 'assets/mine.png'
-          }
-        ]
-      }
-    }
-    globalData = {
-      user: {
-        userInfo: null,
-        userId: null,
-        hasAuthenticated: false
-      }
-    }
-    constructor() {
-      super()
-      this.use('requestfix')
-    }
-    onLaunch() {
-      // this.testAsync()
-    }
-    sleep(s) {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve('promise resolved')
-        }, s * 1000)
-      })
-    }
-    async testAsync() {
-      const data = await this.sleep(3)
-      console.log(data)
-    }
-    getUserInfo(cb) {
-      if (this.globalData.user.userInfo) {
-        return this.globalData.user.userInfo
-      }
-      wepy.getUserInfo({
-        success(res) {
-          this.globalData.user.userInfo = res.userInfo
-          cb && cb(res.userInfo)
+import wepy from 'wepy'
+import 'wepy-async-function'
+import {
+  setStore
+} from 'wepy-redux'
+import configStore from './store'
+import cookieJar from './lib/cookieJar'
+const store = configStore()
+setStore(store)
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/issue',
+      'pages/index',
+      'pages/user/mine',
+      'pages/user/info',
+      'pages/user/auth',
+      'pages/task/task',
+      'pages/task/issued',
+      'pages/task/received',
+      'pages/task/detail'
+    ],
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: 'WeChat',
+      navigationBarTextStyle: 'black'
+    },
+    tabBar: {
+      color: '#353535',
+      selectedColor: '#00C000',
+      list: [
+        {
+          pagePath: 'pages/index',
+          text: '首页',
+          iconPath: 'assets/index.png',
+          selectedIconPath: 'assets/index.png'
+        },
+        {
+          pagePath: 'pages/task/task',
+          text: '任务',
+          iconPath: 'assets/task.png',
+          selectedIconPath: 'assets/task.png'
+        },
+        {
+          pagePath: 'pages/issue',
+          text: '发布',
+          iconPath: 'assets/add.png',
+          selectedIconPath: 'assets/add.png'
+        },
+        {
+          pagePath: 'pages/user/mine',
+          text: '我的',
+          iconPath: 'assets/mine.png',
+          selectedIconPath: 'assets/mine.png'
         }
-      })
+      ]
     }
-    getUserId(cb) {
-      if (this.globalData.user.userId) {
-        return this.globalData.user.userId
+  }
+  globalData = {
+    user: {
+      userInfo: null,
+      userId: null,
+      hasAuthenticated: false
+    }
+  }
+  constructor() {
+    super()
+    this.use('requestfix')
+  }
+  onLaunch() {
+    cookieJar.init()
+  }
+  getUserInfo(cb) {
+    if (this.globalData.user.userInfo) {
+      return this.globalData.user.userInfo
+    }
+    wepy.getUserInfo({
+      success(res) {
+        this.globalData.user.userInfo = res.userInfo
+        cb && cb(res.userInfo)
       }
-      const rq = require('./lib/request.js')
-      const APP_ID = 'wx2e515a1b9f28a15e'
-      const APP_SECRET = 'ded301bbd914c7a4083d15326be60073'
-      wepy.login({
-        success(res) {
-          if (res.code) {
-            wepy.getUserInfo({
-              success(res) {
-                var object = {
-                  url: 'http://172.26.91.210/auth/login',
-                  data: {
-                    appid: APP_ID,
-                    secret: APP_SECRET,
-                    js_code: res.code,
-                    encryptedData: res.encryptedData
-                  },
-                  method: 'GET'
-                }
-                rq.request(object).then(res => {
-                  this.globalData.user.userId = res.data
-                  console.log(res)
-                  cb && cb(res.data)
-                }).catch(res => {
-                  console.log(res)
-                })
+    })
+  }
+  getUserId(cb) {
+    if (this.globalData.user.userId) {
+      return this.globalData.user.userId
+    }
+    const rq = require('./lib/request.js')
+    let self = this
+    const APP_ID = 'wx2e515a1b9f28a15e'
+    const APP_SECRET = 'ded301bbd914c7a4083d15326be60073'
+    wepy.login({
+      success(res) {
+        if (res.code) {
+          wepy.getUserInfo({
+            success(res) {
+              var object = {
+                url: '/auth/login',
+                data: {
+                  appid: APP_ID,
+                  secret: APP_SECRET,
+                  js_code: res.code,
+                  encryptedData: res.encryptedData
+                },
+                method: 'GET'
               }
-            })
-          }
+              rq.request(object).then(res => {
+                self.globalData.user.userId = res.data.userId
+                self.globalData.user.userInfo = res.data.userInfo
+                self.$apply()
+                cb && cb(res.data)
+              }).catch(res => {
+                console.log(res)
+              })
+            }
+          })
         }
+      }
+    })
+  }
+  checkAuthState(cb) {
+    if (this.globalData.userId) {
+      if (this.globalData.hasAuthenticated) {
+        return this.globalData.hasAuthenticated
+      }
+      let self = this
+      const rq = require('./lib/request.js')
+      var object = {
+        url: '/checkAuthState',
+        data: {
+          userId: this.user.userId
+        },
+        method: 'GET'
+      }
+      rq.request(object).then(res => {
+        self.globalData.hasAuthenticated = res.data
+        self.$apply()
+        cb && cb(res.data)
+      }).catch(() => {
+        console.log('获取认证状态失败')
       })
     }
   }
+}
 </script>

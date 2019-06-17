@@ -45,7 +45,7 @@
     };
     data = {
       tabs: ['调查问卷', '调查问卷2', '其他'],
-      activeIndex: 0,
+      activeIndex: 2,
       sliderOffset: 0,
       sliderLeft: 0,
       sliderWidth: 96
