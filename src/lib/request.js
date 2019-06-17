@@ -1,10 +1,11 @@
 import wepy from 'wepy'
 import cookieJar from './cookieJar'
+import {resolve as urlResolve} from 'url'
 
 const request = (object) => {
   let promise = new Promise((resolve, reject) => {
     wepy.request({
-      url: object.url,
+      url: urlResolve(wepy.$appConfig.baseUrl, object.url),
       data: object.data,
       method: object.method,
       header: {

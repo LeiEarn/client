@@ -53,20 +53,20 @@
       <view bindtap="auth" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd iconfont icon">&#xe681;</view>
         <view class="weui-cell__bd">身份认证</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">未认证</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access"><icon type="success" size="18" hidden="{{!hasAuthenticated}}"></icon>{{hasAuthenticated ? "已" : "未"}}认证</view>
       </view>
     </view>
     <view class="weui-cells">
-      <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <view bindtap="received" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd iconfont icon">&#xe601;</view>
         <view class="weui-cell__bd">已接受任务</view>
         <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-      </navigator>
-      <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      </view>
+      <view bindtap="issued" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd iconfont icon">&#xe6a4;</view>
         <view class="weui-cell__bd">已发布任务</view>
         <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-      </navigator>
+      </view>
     </view>
     <view class="weui-cells">
       <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
@@ -94,7 +94,8 @@
     data = {
       userInfo: {},
       hasUserInfo: false,
-      canIUse: wepy.canIUse('button.open-type.getUserInfo')
+      canIUse: wepy.canIUse('button.open-type.getUserInfo'),
+      hasAuthenticated: false
     }
     methods = {
       getUserInfo(e) {
@@ -121,10 +122,25 @@
         if (this.checkState()) {
           wepy.navigateTo({ url: './authentication' })
         }
+      },
+      received() {
+        if (this.checkState()) {
+          wepy.navigateTo({ url: './receivedtask' })
+        }
+      },
+      issued() {
+        if (this.checkState()) {
+          wepy.navigateTo({ url: './issuedtask' })
+        }
       }
     }
   
-    onLoad() {
+    async onLoad() {
+      await this.getUser()
+      this.getAuthState()
+    }
+
+    async getUser() {
       let self = this
       if (this.$parent.globalData.userId) {
         console.log(this.$parent.globalData.userId)
@@ -142,13 +158,28 @@
         })
       }
     }
+
+    getAuthState() {
+      let self = this
+      if (this.$parent.globalData.hasAuthenticated) {
+        console.log(this.$parent.globalData.hasAuthenticated)
+        this.hasAuthenticated = this.$parent.globalData.hasAuthenticated
+      } else {
+        this.$parent.checkAuthState(function(hasAuthenticated) {
+          if (hasAuthenticated) {
+            self.hasAuthenticated = hasAuthenticated
+            self.$apply()
+          }
+        })
+      }
+    }
   
     checkState() {
       if (this.hasUserInfo === false) {
         wepy.showToast({
           title: '您还未登录', // 提示的内容,
           image: '../assets/warn.png', // 图标,
-          duration: 2000, // 延迟时间,
+          duration: 1000, // 延迟时间,
           mask: true, // 显示透明蒙层，防止触摸穿透,
           success: res => {}
         })

@@ -29,6 +29,8 @@ export default class extends wepy.app {
       'pages/issue',
       'pages/authentication',
       'pages/task',
+      'pages/issuedtask',
+      'pages/receivedtask',
       'pages/taskdetail'
     ],
     window: {
@@ -80,19 +82,7 @@ export default class extends wepy.app {
     this.use('requestfix')
   }
   onLaunch() {
-    // this.testAsync()
     cookieJar.init()
-  }
-  sleep(s) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve('promise resolved')
-      }, s * 1000)
-    })
-  }
-  async testAsync() {
-    const data = await this.sleep(3)
-    console.log(data)
   }
   getUserInfo(cb) {
     if (this.globalData.user.userInfo) {
@@ -110,6 +100,7 @@ export default class extends wepy.app {
       return this.globalData.user.userId
     }
     const rq = require('./lib/request.js')
+    let self = this
     const APP_ID = 'wx2e515a1b9f28a15e'
     const APP_SECRET = 'ded301bbd914c7a4083d15326be60073'
     wepy.login({
@@ -118,7 +109,7 @@ export default class extends wepy.app {
           wepy.getUserInfo({
             success(res) {
               var object = {
-                url: 'http://172.26.91.210/auth/login',
+                url: '/auth/login',
                 data: {
                   appid: APP_ID,
                   secret: APP_SECRET,
@@ -128,8 +119,9 @@ export default class extends wepy.app {
                 method: 'GET'
               }
               rq.request(object).then(res => {
-                this.globalData.user.userId = res.data
-                console.log(res)
+                self.globalData.user.userId = res.data.userId
+                self.globalData.user.userInfo = res.data.userInfo
+                self.$apply()
                 cb && cb(res.data)
               }).catch(res => {
                 console.log(res)
@@ -139,6 +131,29 @@ export default class extends wepy.app {
         }
       }
     })
+  }
+  checkAuthState(cb) {
+    if (this.globalData.userId) {
+      if (this.globalData.hasAuthenticated) {
+        return this.globalData.hasAuthenticated
+      }
+      let self = this
+      const rq = require('./lib/request.js')
+      var object = {
+        url: '/checkAuthState',
+        data: {
+          userId: this.user.userId
+        },
+        method: 'GET'
+      }
+      rq.request(object).then(res => {
+        self.globalData.hasAuthenticated = res.data
+        self.$apply()
+        cb && cb(res.data)
+      }).catch(() => {
+        console.log('获取认证状态失败')
+      })
+    }
   }
 }
 </script>
