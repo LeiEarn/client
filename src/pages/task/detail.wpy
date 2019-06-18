@@ -4,6 +4,7 @@
     position: fixed;
     height: 100%;
     width: 100%;
+    background-color: #f0f0f0;
   }
 
   .background {
@@ -14,13 +15,27 @@
     height: 100%;
   }
 
+  .weui-media-box__hd {
+    height: 200rpx;
+    width: 200rpx;
+  }
+
   .item {
     background-color: white;
-    width: 90%;
+    width: 92%;
     margin: 0 auto;
-    margin-top: 2%;
+    margin-top: 3%;
     border-radius: 10rpx;
     padding: 10rpx 20rpx;
+  }
+
+  .pop {
+    position: fixed;
+    bottom: 0;
+    width: 96%;
+    background-color: white;
+    padding: 10rpx 2%;
+    z-index: 2;
   }
 
   .money {
@@ -50,10 +65,38 @@
     padding-top: 15px;
     width: 60%;
   }
+
+  .mask-layer {
+    width:100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #000;
+    opacity: 0.2;
+    overflow: hidden;
+    z-index: 1;
+    color: #fff;
+  }
+  
+  .tips {
+    font-size: 8pt;
+    margin: 0;
+    color: #999;
+  }
 </style>
 <template>
   <view class="page">
-    <image class="background" src="{{ backgroundUrl }}"/>
+    <!-- <image class="background" src="{{ backgroundUrl }}"/> -->
+    <view class="weui-media-box_appmsg item">
+      <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+          <image class="weui-media-box__thumb" src="{{user.head}}" />
+      </view>
+      <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+          <view class="weui-media-box__title">昵称：{{ user.nickName }}</view>
+          <view class="weui-media-box__desc">联系电话：{{ user.tel }}</view>
+      </view>
+    </view>
     <view class="content item">
       <view class="money">赏{{ content.money }}元</view>
       <view class="title">{{ content.title }}</view>
@@ -62,6 +105,12 @@
     </view>
     <view class="condition item">
       <view class="title">条件限制</view>
+      <block wx:for-items="{{ content.conditions }}" wx:for-index="index" wx:for-item="item" wx:key="id">
+        <view class="tab">
+          <text>{{ index + 1 }}</text>
+          <text class="step">{{ item }}</text>
+        </view>
+      </block>
     </view>
     <view class="detail item">
       <view class="title">任务详情</view>
@@ -81,10 +130,40 @@
     </view>
     <view class="page__bd page__bd_spacing" hidden="{{ hasReceived === 0 }}">
       <view class="button-sp-area">
-        <button class="weui-btn" type="default" bindtap="complete" disabled="{{ hasReceived === 2 }}">{{ hasReceived === 2 ? "已" : "" }}完成</button>
+        <button class="weui-btn" type="primary" bindtap="complete" disabled="{{ hasReceived === 2 }}">{{ hasReceived === 2 ? "已" : "" }}完成</button>
       </view>
     </view>
-    <!-- <list class="list"></list> -->
+    <!-- 弹起浮层 -->
+    <view class="mask-layer" hidden="{{hidden}}" bindtap="hiddenPop"></view>
+    <view class="weui-uploader pop" hidden="{{hidden}}" animation="{{animationData}}">
+      <view class="weui-uploader__hd">
+          <view class="weui-uploader__title">完成证明上传<span class="tips">至多7张</span></view>
+          <view class="weui-uploader__info">{{files.length}}/7</view>
+      </view>
+      <view class="weui-uploader__bd">
+        <view class="weui-uploader__files" id="uploaderFiles">
+            <block wx:for="{{files}}" wx:key="*this">
+                <view class="weui-uploader__file" bindtap="previewImage" id="{{item}}">
+                    <image class="weui-uploader__img" src="{{item}}" mode="aspectFill" />
+                </view>
+            </block>
+        </view>
+        <view class="weui-uploader__input-box">
+            <view class="weui-uploader__input" bindtap="chooseImage"></view>
+        </view>
+      </view>
+      <view class="title">备注</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell">
+          <view class="weui-cell__bd">
+            <textarea class="weui-textarea" placeholder="如需备注，请输入" style="height: 5em" bindinput="bindDetailInput" minlength="0" />
+          </view>
+        </view>
+      </view>
+      <view class="button-sp-area">
+        <button class="weui-btn" type="primary">提交</button>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -93,7 +172,9 @@
 
   export default class TaskDetail extends wepy.page {
     config = {
-      navigationBarTitleText: '任务详情'
+      navigationBarTitleText: '任务详情',
+      navigationBarTextStyle: 'black',
+      navigationBarBackgroundColor: '#f0f0f0'
     };
 
     components = {
@@ -103,11 +184,20 @@
     data = {
       backgroundUrl: '../../assets/background.jpg',
       taskId: null,
+      user: {
+        head: '../../assets/background.jpg',
+        title: '获取失败',
+        tel: '获取失败'
+      },
       content: {
         title: 'loading',
         num: 0,
         left: 5,
         money: 1.7,
+        conditions: [
+          '软工8班班员',
+          '男生'
+        ],
         detail: '按照要求完成问卷即可完成任务。',
         steps: [
           '打开问卷，如实填写问卷',
@@ -116,7 +206,10 @@
       },
       userId: null,
       hasReceived: 0,
-      hasAuthenticated: false
+      hasAuthenticated: false,
+      files: [],
+      animationData: {},
+      hidden: true
     };
 
     methods = {
@@ -155,25 +248,56 @@
           })
         }
       },
-      complete() {
+      chooseImage: function (e) {
+        var that = this
         wepy.chooseImage({
-          count: '9', // 最多可以选择的图片张数,
-          success: res => {
-            var tempFilePaths = res.tempFilePaths
-            wepy.uploadFile({
-              url: 'url', // 开发者服务器 url
-              filePath: tempFilePaths, // 要上传文件资源的路径
-              name: 'cert', // 文件对应的 key , 开发者在服务器端通过这个 key 可以获取到文件二进制内容
-              success: res => {},
-              fail: () => {},
-              complete: () => {}
-            })
-          }, // 返回图片的本地文件路径列表 tempFilePaths,
-          fail: () => {},
-          complete: () => {}
+          sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+          sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+          success: function (res) {
+                // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+            that.files = that.files.concat(res.tempFilePaths)
+            that.$apply()
+          }
         })
+      },
+      previewImage: function(e) {
+        wepy.previewImage({
+          current: e.currentTarget.id, // 当前显示图片的http链接
+          urls: this.data.files // 需要预览的图片http链接列表
+        })
+      },
+      complete() {
+        let self = this
+        var animation = wepy.createAnimation({
+          duration: 500,
+          timingFunction: 'ease',
+          delay: 0
+        })
+        animation.translateY(300).step()
+        this.animationData = animation.export()
+        this.hidden = false
+        setTimeout(function() {
+          animation.translateY(0).step()
+          self.animationData = animation.export()
+          self.$apply()
+        }, 50)
+      },
+      hiddenPop() {
+        let self = this
+        var animation = wepy.createAnimation({
+          duration: 500,
+          timingFunction: 'ease',
+          delay: 0
+        })
+        animation.translateY(300).step()
+        this.animationData = animation.export()
+        setTimeout(function() {
+          animation.translateY(0).step()
+          self.animationData = animation.export()
+          self.hidden = true
+          self.$apply()
+        }, 200)
       }
-
     };
 
     events = {
@@ -191,6 +315,20 @@
       this.data.content.title = json.title
       this.data.content.money = json.money
       this.data.content.left = json.left
+      this.taskId = json.taskId
+      if (this.taskId) {
+        const rq = require('../../lib/request.js')
+        var object = {
+          url: '/getTaskDetail',
+          data: {
+            taskId: this.taskId
+          },
+          method: 'GET'
+        }
+        rq.request(object).then(res => {
+          console.log(res)
+        })
+      }
     };
   }
 </script>
