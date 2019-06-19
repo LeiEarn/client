@@ -1,0 +1,321 @@
+<style lang="less" scoped>
+::-webkit-scrollbar{
+  width: 0;
+  height: 0;
+  color: transparent;
+}
+.button-sp-area {
+  width: 300rpx;
+  margin: 0 auto;
+}
+.weui-btn {
+  margin-top: 120rpx;
+}
+.target {
+  color: #444;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 20rpx;
+}
+.groups {
+  max-height: 500rpx;
+  overflow: scroll;
+}
+.mask-layer {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #000;
+  opacity: 0.2;
+  overflow: hidden;
+  z-index: 2;
+  color: #fff;
+}
+.pop {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: white;
+  z-index: 3;
+}
+.confirm {
+  width: 300rpx;
+  margin: 20rpx auto;
+}
+</style>
+<template>
+  <view class="page">
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">标题</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input
+            class="weui-input"
+            placeholder="请输入标题"
+            bindinput="bindTitleInput"
+          />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">内容</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input
+            class="weui-input"
+            placeholder="请输入内容"
+            bindinput="bindDetailInput"
+          />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">问卷ID</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input
+            class="weui-input"
+            placeholder="请输入问卷ID"
+            bindinput="bindIdInput"
+          />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">问卷数量</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input
+            class="weui-input"
+            placeholder="请输入问卷数量"
+            bindinput="bindNumInput"
+          />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">发布对象</view>
+        </view>
+        <view class="weui-cell__bd">
+          <span>组织：</span><view
+            class="target"
+            bindtap="bindGroupChange"
+          >{{selectedGroups}}</view>
+          <span>性别：</span><view
+            class="target"
+            bindtap="bindSexChange"
+          >{{sexs[wjx.sexIndex]}}</view>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">赏金</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input
+            class="weui-input"
+            placeholder="请输入赏金"
+            bindInput="bindMoneyInput"
+          />
+        </view>
+      </view>
+    </view>
+    <view class="button-sp-area">
+      <button
+        bindtap="issue"
+        class="weui-btn"
+        type="primary"
+      >发布</button>
+    </view>
+    <!-- 弹起浮层 -->
+    <view
+      class="mask-layer"
+      hidden="{{hidden}}"
+      bindtap="cancel"
+    ></view>
+    <view
+      class="weui-cells weui-cells_after-title pop"
+      hidden="{{hidden}}" animation="{{animationData}}"
+    >
+      <checkbox-group class="groups" bindchange="checkboxChange">
+        <label
+          class="weui-cell weui-check__label"
+          wx:for="{{groups}}"
+          wx:key="value"
+        >
+          <checkbox
+            class="weui-check"
+            value="{{item.value}}"
+            checked="{{item.checked}}"
+          />
+          <view class="weui-cell__hd weui-check__hd_in-checkbox">
+            <icon
+              class="weui-icon-checkbox_circle"
+              type="circle"
+              size="23"
+              wx:if="{{!item.checked}}"
+            ></icon>
+            <icon
+              class="weui-icon-checkbox_success"
+              type="success"
+              size="23"
+              wx:if="{{item.checked}}"
+            ></icon>
+          </view>
+          <view class="weui-cell__bd">{{item.name}}</view>
+        </label>
+      </checkbox-group>
+      <button class="confirm" type="primary" plain="true" bindtap="confirm">确认</button>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class Wjx extends wepy.page {
+  data = {
+    selectedGroups: '全部',
+    tempSelectedGroups: '',
+    groups: [
+      { name: '全部', value: '0' },
+      { name: '校学生会', value: '1' },
+      { name: '明德园2号', value: '2' },
+      { name: '软工3班', value: '3' },
+      { name: '校学生会', value: '4' },
+      { name: '校学生会', value: '5' },
+      { name: '校学生会', value: '6' }
+    ],
+    sexs: ['全部', '男', '女'],
+    animationData: {},
+    hidden: true,
+    tempGroupsIndex: [],
+    wjx: {
+      title: '',
+      detail: '',
+      id: '',
+      num: '',
+      groupsIndex: [],
+      sexIndex: 0,
+      money: 0
+    }
+  }
+  events = {}
+  methods = {
+    bindTitleInput(e) {
+      this.wjx.title = e.detail.value
+    },
+    bindDetailInput(e) {
+      this.wjx.detail = e.detail.value
+    },
+    bindIdInput(e) {
+      this.wjx.id = e.detail.value
+    },
+    bindNumInput(e) {
+      this.wjx.num = e.detail.value
+    },
+    bindMoneyInput(e) {
+      this.wjx.money = e.detail.value
+    },
+    bindSexChange() {
+      let self = this
+      wepy.showActionSheet({
+        itemList: ['全部', '男', '女'], // 按钮的文字数组，数组长度最大为6个,
+        itemColor: '#000000', // 按钮的文字颜色,
+        showCancel: false,
+        success: res => {
+          if (!res.cancel) {
+            console.log(res.tapIndex)
+            self.wjx.sexIndex = res.tapIndex
+            self.$apply()
+          }
+        }
+      })
+    },
+    checkboxChange: function (e) {
+      console.log('checkbox发生change事件，携带value值为：', e.detail.value)
+      this.tempGroupsIndex = e.detail.value
+      var checkboxItems = this.groups
+      var values = e.detail.value
+      var lenI = checkboxItems.length
+      var lenJ = values.length
+      this.tempSelectedGroups = ''
+      for (var i = 0; i < lenI; ++i) {
+        checkboxItems[i].checked = false
+        for (var j = 0; j < lenJ; ++j) {
+          if (checkboxItems[i].value === values[j]) {
+            checkboxItems[i].checked = true
+            this.tempSelectedGroups = this.tempSelectedGroups + checkboxItems[i].name + ' '
+            break
+          }
+        }
+      }
+      this.groups = checkboxItems
+    },
+    confirm() {
+      this.selectedGroups = this.tempSelectedGroups
+      this.tempSelectedGroups = ''
+      this.wjx.groupsIndex = this.tempGroupsIndex
+      this.tempGroupsIndex = []
+      this.hiddenPop()
+    },
+    bindGroupChange() {
+      let self = this
+      var animation = wepy.createAnimation({
+        duration: 500,
+        timingFunction: 'ease',
+        delay: 0
+      })
+      animation.translateY(300).step()
+      this.animationData = animation.export()
+      this.hidden = false
+      setTimeout(function() {
+        animation.translateY(0).step()
+        self.animationData = animation.export()
+        self.$apply()
+      }, 50)
+    },
+    cancel() {
+      this.tempSelectedGroups = ''
+      this.tempGroupsIndex = []
+      for (var i = 0; i < this.groups.length; i++) {
+        this.groups[i].checked = false
+      }
+      this.hiddenPop()
+    },
+    issue() {
+      console.log(this.wjx)
+      const rq = require('../../lib/request.js')
+      var object = {
+        url: '',
+        data: this.wjx,
+        method: 'POST'
+      }
+      rq.request(object).then(res => {
+        console.log(res.data)
+      }).catch(err => {
+        console.log(err.data)
+      })
+    }
+  }
+  onLoad() { }
+  hiddenPop() {
+    let self = this
+    var animation = wepy.createAnimation({
+      duration: 500,
+      timingFunction: 'ease',
+      delay: 0
+    })
+    animation.translateY(300).step()
+    this.animationData = animation.export()
+    setTimeout(function() {
+      animation.translateY(0).step()
+      self.animationData = animation.export()
+      self.hidden = true
+      self.$apply()
+    }, 200)
+  }
+}
+</script>

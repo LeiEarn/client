@@ -31,7 +31,8 @@ export default class extends wepy.app {
       'pages/task/task',
       'pages/task/issued',
       'pages/task/received',
-      'pages/task/detail'
+      'pages/task/detail',
+      'pages/question/wjx'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -68,7 +69,10 @@ export default class extends wepy.app {
           selectedIconPath: 'assets/mine.png'
         }
       ]
-    }
+    },
+    navigateToMiniProgramAppIdList: [
+      'wxd947200f82267e58'
+    ]
   }
   globalData = {
     user: {

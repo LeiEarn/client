@@ -62,6 +62,11 @@
       font-size: 15pt;
     }
   }
+  .add {
+    width: 500rpx;
+    margin: 0 auto;
+    margin-top: 500rpx;
+  }
   .add-choice {
     background-color: white;
   }
@@ -76,7 +81,7 @@
 </style>
 <template>
   <view class="question">
-    <block wx:for-items="{{list}}" wx:for-index="index" wx:for-item="item" wx:key="id">
+    <!-- <block wx:for-items="{{list}}" wx:for-index="index" wx:for-item="item" wx:key="id">
       <view class="at-card">
         <view class="at-card__header">
           <input class="at-card__header-title" placeholder="{{item.title}}" />
@@ -98,14 +103,20 @@
         </view>
       </view>
     </block>
+    <button bindtap="click">123</button>
     <picker value="{{index}}" range="{{question}}" bindchange="addQuestion">
-      <button class="add-question">+</button>
+      <button class="add-question" type="primary">+</button>
+    </picker> -->
+    <picker class="add" value="{{index}}" range="{{type}}" bindchange="useType">
+      <button type="primary">添加问卷</button>
     </picker>
   </view>
 </template>
 <script>
   import wepy from 'wepy'
   export default class Questionnaire extends wepy.component {
+    components = {
+    }
     data = {
       list: [{
         type: '单选题',
@@ -113,10 +124,18 @@
         contents: ['cell standard1', 'cell standard2'],
         tips: 'sdaf'
       }],
-      question: ['单选题', '多选题', '简答题']
+      question: ['单选题', '多选题', '简答题'],
+      type: ['使用问卷星', '使用自制模板']
     }
     events = {}
     methods = {
+      useType(e) {
+        console.log(e.detail.value)
+        if (e.detail.value === '0') {
+          console.log('good')
+          wepy.navigateTo({ url: './question/wjx' })
+        }
+      },
       addChoice(e) {
         console.log(e.currentTarget.dataset.index)
         this.list[e.currentTarget.dataset.index].contents.push('werwewqr')

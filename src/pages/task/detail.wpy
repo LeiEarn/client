@@ -35,7 +35,7 @@
     width: 96%;
     background-color: white;
     padding: 10rpx 2%;
-    z-index: 2;
+    z-index: 3;
   }
 
   .money {
@@ -75,7 +75,7 @@
     background: #000;
     opacity: 0.2;
     overflow: hidden;
-    z-index: 1;
+    z-index: 2;
     color: #fff;
   }
   
@@ -126,6 +126,11 @@
     <view class="page__bd page__bd_spacing" hidden="{{ hasReceived !== 0 }}">
       <view class="button-sp-area">
         <button class="weui-btn" type="default" bindtap="accept">接受任务</button>
+      </view>
+    </view>
+    <view class="page__bd page__bd_spacing" wx:if="{{ hasReceived === 1 && content.type === '问卷星' }}">
+      <view class="button-sp-area">
+        <button class="weui-btn" type="default" bindtap="toComplete">去完成</button>
       </view>
     </view>
     <view class="page__bd page__bd_spacing" hidden="{{ hasReceived === 0 }}">
@@ -190,6 +195,8 @@
         tel: '获取失败'
       },
       content: {
+        type: '问卷星',
+        id: '39541637',
         title: 'loading',
         num: 0,
         left: 5,
@@ -251,6 +258,7 @@
       chooseImage: function (e) {
         var that = this
         wepy.chooseImage({
+          count: 7 - that.files.length,
           sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
           sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
           success: function (res) {
@@ -264,6 +272,14 @@
         wepy.previewImage({
           current: e.currentTarget.id, // 当前显示图片的http链接
           urls: this.data.files // 需要预览的图片http链接列表
+        })
+      },
+      toComplete() {
+        let self = this
+        wepy.navigateToMiniProgram({
+          appId: 'wxd947200f82267e58', // 要打开的小程序 appId,
+          path: 'pages/wjxqList/wjxqList?activityId=' + self.content.id, // 打开的页面路径，如果为空则打开首页,
+          success: res => {}
         })
       },
       complete() {
