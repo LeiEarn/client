@@ -31,7 +31,8 @@ export default class extends wepy.app {
       'pages/task/task',
       'pages/task/issued',
       'pages/task/received',
-      'pages/task/detail'
+      'pages/task/detail',
+      'pages/question/wjx'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -68,7 +69,10 @@ export default class extends wepy.app {
           selectedIconPath: 'assets/mine.png'
         }
       ]
-    }
+    },
+    navigateToMiniProgramAppIdList: [
+      'wxd947200f82267e58'
+    ]
   }
   globalData = {
     user: {
@@ -84,17 +88,6 @@ export default class extends wepy.app {
   onLaunch() {
     cookieJar.init()
   }
-  getUserInfo(cb) {
-    if (this.globalData.user.userInfo) {
-      return this.globalData.user.userInfo
-    }
-    wepy.getUserInfo({
-      success(res) {
-        this.globalData.user.userInfo = res.userInfo
-        cb && cb(res.userInfo)
-      }
-    })
-  }
   getUserId(cb) {
     if (this.globalData.user.userId) {
       return this.globalData.user.userId
@@ -106,14 +99,15 @@ export default class extends wepy.app {
     wepy.login({
       success(res) {
         if (res.code) {
+          var jsCode = res.code
           wepy.getUserInfo({
             success(res) {
               var object = {
-                url: '/auth/login',
+                url: '/login',
                 data: {
                   appid: APP_ID,
                   secret: APP_SECRET,
-                  js_code: res.code,
+                  js_code: jsCode,
                   encryptedData: res.encryptedData
                 },
                 method: 'GET'

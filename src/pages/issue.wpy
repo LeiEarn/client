@@ -20,8 +20,7 @@
         </view>
         <view class="weui-tab__panel">
           <questionnaire class="weui-tab__content" hidden="{{activeIndex != 0}}" />
-          <view class="weui-tab__content" hidden="{{activeIndex != 1}}">选项二的内容</view>
-          <other hidden="{{activeIndex != 2}}" />
+          <other hidden="{{activeIndex != 1}}" />
         </view>
       </view>
     </view>
@@ -35,7 +34,7 @@
   import Questionnaire from '../components/questionnaire'
   export default class Issue extends wepy.page {
     config = {
-      navigationBarTitleText: 'Add',
+      navigationBarTitleText: '发布任务',
       navigationBarTextStyle: 'black',
       navigationBarBackgroundColor: '#E7E8E3'
     };
@@ -44,8 +43,8 @@
       questionnaire: Questionnaire
     };
     data = {
-      tabs: ['调查问卷', '调查问卷2', '其他'],
-      activeIndex: 2,
+      tabs: ['调查问卷', '其他'],
+      activeIndex: 0,
       sliderOffset: 0,
       sliderLeft: 0,
       sliderWidth: 96
@@ -65,15 +64,12 @@
       }
     }
     onLoad() {
-      var that = this
-      wx.getSystemInfo({
+      let self = this
+      wepy.getSystemInfo({
         success: function(res) {
-          that.setData({
-            sliderLeft:
-              (res.windowWidth / that.data.tabs.length - that.data.sliderWidth) / 2,
-            sliderOffset:
-              (res.windowWidth / that.data.tabs.length) * that.data.activeIndex
-          })
+          self.sliderLeft = (res.windowWidth / self.tabs.length - self.sliderWidth) / 2
+          self.sliderOffset = (res.windowWidth / self.tabs.length) * self.activeIndex
+          self.$apply()
         }
       })
     }

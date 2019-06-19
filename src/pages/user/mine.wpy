@@ -183,7 +183,7 @@
           mask: true, // 显示透明蒙层，防止触摸穿透,
           success: res => {}
         })
-        return true
+        return false
       } else {
         return true
       }
