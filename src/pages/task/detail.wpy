@@ -62,8 +62,12 @@
 
   .button-sp-area{
     margin: 0 auto;
-    padding-top: 15px;
-    width: 60%;
+    padding-top: 20px;
+    width: 80%;
+  }
+
+  .weui-btn{
+    margin: 0 10rpx;
   }
 
   .mask-layer {
@@ -123,19 +127,30 @@
         </view>
       </block>
     </view>
-    <view class="page__bd page__bd_spacing" hidden="{{ hasReceived !== 0 }}">
-      <view class="button-sp-area">
-        <button class="weui-btn" type="default" bindtap="accept">接受任务</button>
+    <view hidden="{{ userId !== null && userId === user.userId }}">
+      <view class="page__bd page__bd_spacing" hidden="{{ hasReceived !== 0 }}">
+        <view class="button-sp-area">
+          <button class="weui-btn" type="primary" bindtap="accept">接受任务</button>
+        </view>
+      </view>
+      <view class="page__bd page__bd_spacing" hidden="{{ hasReceived === 0 }}">
+        <view class="button-sp-area" wx:if="{{ hasReceived === 1 && content.type === '问卷星' }}">
+          <button class="weui-btn" type="primary" bindtap="toComplete">去完成</button>
+        </view>
+        <view class="button-sp-area weui-flex">
+          <view class="weui-flex__item" wx:if="{{ hasReceived === 1 }}"><button class="weui-btn placeholder" type="warn" bindtap="abandon">放弃</button></view>
+          <view class="weui-flex__item" hidden="{{ hasReceived === 0 }}"><button class="weui-btn placeholder" type="primary" bindtap="complete" disabled="{{ hasReceived === 2 }}">{{ hasReceived === 2 ? "已" : "" }}完成</button></view>
+        </view>
       </view>
     </view>
-    <view class="page__bd page__bd_spacing" wx:if="{{ hasReceived === 1 && content.type === '问卷星' }}">
-      <view class="button-sp-area">
-        <button class="weui-btn" type="default" bindtap="toComplete">去完成</button>
-      </view>
-    </view>
-    <view class="page__bd page__bd_spacing" hidden="{{ hasReceived === 0 }}">
-      <view class="button-sp-area">
-        <button class="weui-btn" type="primary" bindtap="complete" disabled="{{ hasReceived === 2 }}">{{ hasReceived === 2 ? "已" : "" }}完成</button>
+    <view wx:if="{{ userId !== null && userId === user.userId }}">
+      <view class="page__bd page__bd_spacing">
+        <view class="button-sp-area">
+          <button class="weui-btn" type="primary" bindtap="viewAcc">查看接收者</button>
+        </view>
+        <view class="button-sp-area">
+          <button class="weui-btn" type="warn" bindtap="abort">中止任务</button>
+        </view>
       </view>
     </view>
     <!-- 弹起浮层 -->
@@ -174,6 +189,7 @@
 
 <script>
   import wepy from 'wepy'
+  import rq from '../../lib/request.js'
 
   export default class TaskDetail extends wepy.page {
     config = {
@@ -183,7 +199,6 @@
     };
 
     components = {
-      // list: TaskList
     };
 
     data = {
@@ -191,6 +206,7 @@
       userId: null,
       taskId: null,
       user: {
+        userId: null,
         head: '../../assets/background.jpg',
         title: '获取失败',
         tel: '获取失败'
@@ -224,26 +240,7 @@
 
     methods = {
       accept() {
-        const rq = require('../../lib/request.js')
-        if (this.userId === null) {
-          console.log('您还没有登录')
-          wepy.showToast({
-            title: '您还没有登录', // 提示的内容,
-            image: '../../assets/warn.png',
-            duration: 2000, // 延迟时间,
-            mask: true, // 显示透明蒙层，防止触摸穿透,
-            success: res => {}
-          })
-        } else if (this.hasAuthenticated === false) {
-          console.log('您还没有进行身份认证')
-          wepy.showToast({
-            title: '您还没有进行身份认证', // 提示的内容,
-            image: '../../assets/warn.png',
-            duration: 2000, // 延迟时间,
-            mask: true, // 显示透明蒙层，防止触摸穿透,
-            success: res => {}
-          })
-        } else {
+        if (this.checkState()) {
           let self = this
           var object = {
             url: '/receiveTask',
@@ -259,6 +256,35 @@
             self.$apply()
           })
         }
+      },
+      viewAcc() {
+        wepy.navigateTo({ url: './viewAcc' })
+      },
+      abandon() {
+        var object = {
+          url: '/abandonTask',
+          data: {
+            userId: this.userId,
+            taskId: this.taskId
+          },
+          method: 'POST'
+        }
+        rq.request(object).then(res => {
+          console.log(res.data)
+        })
+      },
+      abort() {
+        var object = {
+          url: '/abortTask',
+          data: {
+            userId: this.userId,
+            taskId: this.taskId
+          },
+          method: 'POST'
+        }
+        rq.request(object).then(res => {
+          console.log(res.data)
+        })
       },
       toComplete() {
         let self = this
@@ -289,7 +315,7 @@
       },
       submit() {
         let self = this
-        const rq = require('../../lib/request.js')
+
         var object = {
           url: '/completeTask',
           data: {
@@ -361,7 +387,6 @@
 
     async getTaskDetail() {
       let self = this
-      const rq = require('../../lib/request.js')
       var object = {
         url: '/getTaskDetail',
         data: {
@@ -377,6 +402,31 @@
         self.hasReceived = res.data.hasReceived
         self.$apply()
       })
+    }
+
+    checkState() {
+      if (this.userId === null) {
+        console.log('您还没有登录')
+        wepy.showToast({
+          title: '您还没有登录', // 提示的内容,
+          image: '../../assets/warn.png',
+          duration: 2000, // 延迟时间,
+          mask: true, // 显示透明蒙层，防止触摸穿透,
+          success: res => {}
+        })
+      } else if (this.hasAuthenticated === false) {
+        console.log('您还没有进行身份认证')
+        wepy.showToast({
+          title: '您还没有进行身份认证', // 提示的内容,
+          image: '../../assets/warn.png',
+          duration: 2000, // 延迟时间,
+          mask: true, // 显示透明蒙层，防止触摸穿透,
+          success: res => {}
+        })
+      } else {
+        return true
+      }
+      return false
     }
   }
 </script>

@@ -1,49 +1,63 @@
 <style lang="less">
-    @import '../style/iconfont.wxss';
-    @import '../style/weui.wxss';
-    .item {
-    background-color: white;
-    width: 92%;
-    margin: 0 auto;
-    margin-top: 3%;
-    border-radius: 10rpx;
-    padding: 10rpx 20rpx;
-    }
-    .alarm {
-        font-weight: 800;
-        text-indent: 2em;
-    }
-    .alarm1 {
-        font-weight: normal;
-    }
-
+@import '../../style/iconfont.wxss';
+.item {
+  background-color: white;
+  width: 92%;
+  margin: 0 auto;
+  margin-top: 3%;
+  border-radius: 10rpx;
+  padding: 10rpx 20rpx;
+}
+.alarm {
+  font-weight: 800;
+  text-indent: 2em;
+}
+.alarm1 {
+  font-weight: normal;
+}
 </style>
 
 <template>
 	<view class="page__bd">
-        <view class="weui-article">
-            <view class="weui-article__section">
-                <view class="weui-article__section">
-                    <view class="alarm1">
-                        1.不得发布侵犯他人知识产权的内容，如假冒，盗版等。
-						2.不得发布带有欺诈信息的内容。 
+		<view class="weui-article">
+			<view class="weui-article__section">
+				<view class="weui-article__section">
+					<view class="alarm1">
+						1.不得发布侵犯他人知识产权的内容，如假冒，盗版等。
+						2.不得发布带有欺诈信息的内容。
 						3.不得发布带有明显广告性质的内容。
-						4.应如实描述发布的内容信息。 
+						4.应如实描述发布的内容信息。
 						5.根据国家法律有关规定，严禁发布以下类别的内容：
 						(1) 毒品
 						(2) 任何形式的发票，不具有效性和流通性的为收藏目的转让的情况除外；
 						(3) 股票、公司债券及其他证券，不具有效性和流通性的为收藏目的转让的情况除外
 						(4) 彩票，不具有效性和流通性的为收藏目的转让的情况除外；
 						(5) 任何形式的政府文件，如身份证，档案，各类许可证、介绍信、学历证书、涉及国家秘密的资料或者文件等；
-						(6) 伪造、变造的物品，如伪造的证件、票据、钱币、执照和许可证等； 
+						(6) 伪造、变造的物品，如伪造的证件、票据、钱币、执照和许可证等；
 						(7) 人体器官（包括捐赠卵子、精子等）、遗体等；
 						(8) 黄色淫秽物品、性服务、或者宗教歧视或其他法律禁止内容的出版物、文件、资料等；
 						(9) 非法所得之物，如走私、盗窃或抢劫所得
 						(10) 任何形式的枪支、弹药及相关器材，如枪械、枪械仿制品（如仿真枪）、子（炮）弹、消音器、火药、麻醉注射枪等以及相关产品如说明书，包装盒等；
-                    </view>
-                </view>
-            </view>
-        </view>
-    </view>
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
 </template>
+<script>
+import wepy from 'wepy'
+export default class PublishItem extends wepy.page {
+  config = {
+    navigationBarTitleText: '任务发布条例',
+    enablePullDownRefresh: false,
+    backgroundTextStyle: 'dark',
+    onReachBottomDistance: -300
+  };
+  components = {};
+  data = {
 
+  };
+  methods = {
+  }
+}
+</script>
