@@ -24,8 +24,10 @@
     }
 
     data = {
+      pageId: 0,
       list: [
         {
+          id: '',
           icon: '../../assets/background.jpg',
           title: '标题一',
           desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
@@ -115,7 +117,10 @@
     onLoad () {
       const rq = require('../../lib/request.js')
       var object = {
-        url: '/getAll',
+        url: '/getTask',
+        data: {
+          pageId: this.pageId
+        },
         method: 'GET'
       }
       rq.request(object).then(res => {
@@ -130,15 +135,23 @@
 
     onPullDownRefresh() {
       console.log('下拉刷新列表')
-      console.log(this.list.length)
+      this.pageId = this.pageId + 1
       this.list = this.list.concat(this.list)
       this.$apply()
-      console.log(this.list.length)
       setTimeout(function () {
         const rq = require('../../lib/request.js')
-        var object = {}
+        let self = this
+        var object = {
+          url: '/getTask',
+          data: {
+            pageId: this.pageId
+          },
+          method: 'GET'
+        }
         rq.request(object).then(res => {
           console.log(res)
+          self.list = res.data.concat(self.list)
+          self.$apply()
         })
         wepy.stopPullDownRefresh()
       }, 5000)

@@ -149,9 +149,12 @@ export default class Info extends wepy.page {
         if (this.userInfo.avatarUrl !== this.temp.avatarUrl) {
           const self = this
           wepy.uploadFile({
-            url: 'url', // 开发者服务器 url
+            url: '/modify', // 开发者服务器 url
             filePath: self.temp.avatarUrl, // 要上传文件资源的路径
             name: 'img', // 文件对应的 key , 开发者在服务器端通过这个 key 可以获取到文件二进制内容
+            formData: {
+              'userInfo': JSON.parse(self.userInfo)
+            },
             success: res => {
               self.temp.avatarUrl = res.data
               self.userInfo.avatarUrl = res.data

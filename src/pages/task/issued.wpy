@@ -31,6 +31,7 @@ export default class IssuedTask extends wepy.page {
   }
 
   data = {
+    userId: null,
     issued: [
       {
         icon: '../../assets/background.jpg',
@@ -77,13 +78,9 @@ export default class IssuedTask extends wepy.page {
   }
 
   onLoad() {
-    const rq = require('../../lib/request.js')
-    var object = {
-      url: '/getRecTask'
+    if (this.$parent.globalData.userId) {
+      this.getIssuedTask()
     }
-    rq.request(object).then(res => {
-      console.log(res)
-    })
   }
 
   load(list) {
@@ -93,18 +90,27 @@ export default class IssuedTask extends wepy.page {
 
   onPullDownRefresh() {
     console.log('下拉刷新列表')
-    console.log(this.list.length)
-    this.list = this.list.concat(this.list)
-    this.$apply()
-    console.log(this.list.length)
     setTimeout(function () {
-      const rq = require('../../lib/request.js')
-      var object = {}
-      rq.request(object).then(res => {
-        console.log(res)
-      })
+      this.getIssuedTask()
       wepy.stopPullDownRefresh()
     }, 5000)
+  }
+
+  getIssuedTask() {
+    const rq = require('../../lib/request.js')
+    let self = this
+    this.userId = this.$parent.globalData.userId
+    var object = {
+      url: '/getIssuedTask',
+      data: {
+        userId: this.$parent.globalData.userId
+      },
+      method: 'GET'
+    }
+    rq.request(object).then(res => {
+      self.issued = res.data
+      self.$apply()
+    })
   }
 }
 </script>

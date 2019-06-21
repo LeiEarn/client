@@ -71,7 +71,7 @@
           </view>
           <view class="weui-cells__title">步骤</view>
           <view class="step">
-            <view class="weui-cell" wx:for-items="{{list}}" wx:for-index="index" wx:for-item="item" wx:key="id">
+            <view class="weui-cell" wx:for-items="{{steps}}" wx:for-index="index" wx:for-item="item" wx:key="id">
               <view class="weui-cell__hd">
                 <text class="step-title">步骤{{index+1}}</text>
               </view>
@@ -112,6 +112,14 @@
             <input class="weui-input" placeholder="请输入赏金" bindinput="bindMoneyInput" />
           </view>
         </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">数量</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input class="weui-input" placeholder="请输入数量" bindinput="bindNumInput" />
+          </view>
+        </view>
       </view>
       <view class="weui-btn-area">
         <button @tap="issue" class="issue weui-btn">发布</button>
@@ -126,24 +134,26 @@
     data = {
       title: '',
       detail: '',
-      list: [],
+      steps: [],
       date: '',
       time: '',
-      money: '',
+      money: 0,
+      num: 0,
       currentLen: 0
     };
     methods = {
       add() {
-        this.list.push('')
+        this.steps.push('')
       },
       issue() {
         console.log(this.data)
         var object = {
-          data: this.data
+          url: '/issueTask',
+          data: this.data,
+          method: 'POST'
         }
         const rq = require('../lib/request.js')
         rq.request(object).then(res => {
-          this.globalData.user.userId = res.data
           console.log(res)
         }).catch(res => {
           console.log(res)
@@ -160,13 +170,19 @@
       },
       bindStepInput: function(e) {
         console.log(e.currentTarget.dataset.index)
-        this.list[e.currentTarget.dataset.index] = e.detail.value
+        this.steps[e.currentTarget.dataset.index] = e.detail.value
       },
       bindDateChange: function(e) {
         this.date = e.detail.value
       },
       bindTimeChange: function(e) {
         this.time = e.detail.value
+      },
+      bindMoneyInput: function(e) {
+        this.money = e.detail.value
+      },
+      bindNumInput: function(e) {
+        this.num = e.detail.value
       }
     };
     events = {

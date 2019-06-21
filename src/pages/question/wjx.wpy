@@ -108,7 +108,7 @@
           <span>性别：</span><view
             class="target"
             bindtap="bindSexChange"
-          >{{sexs[wjx.sexIndex]}}</view>
+          >{{wjx.condition.sex}}</view>
         </view>
       </view>
       <view class="weui-cell weui-cell_input">
@@ -197,8 +197,10 @@ export default class Wjx extends wepy.page {
       detail: '',
       id: '',
       num: '',
-      groupsIndex: [],
-      sexIndex: 0,
+      condition: {
+        groups: [],
+        sex: '全部'
+      },
       money: 0
     }
   }
@@ -228,7 +230,7 @@ export default class Wjx extends wepy.page {
         success: res => {
           if (!res.cancel) {
             console.log(res.tapIndex)
-            self.wjx.sexIndex = res.tapIndex
+            self.wjx.condition.sex = self.sexs[res.tapIndex]
             self.$apply()
           }
         }
@@ -257,7 +259,7 @@ export default class Wjx extends wepy.page {
     confirm() {
       this.selectedGroups = this.tempSelectedGroups
       this.tempSelectedGroups = ''
-      this.wjx.groupsIndex = this.tempGroupsIndex
+      this.wjx.condition.groups = this.groups[this.tempGroupsIndex].name
       this.tempGroupsIndex = []
       this.hiddenPop()
     },
