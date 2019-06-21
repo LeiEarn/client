@@ -69,16 +69,16 @@
       </view>
     </view>
     <view class="weui-cells">
-      <navigator url="./cancel.wpy" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <view bindtap="cancel" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd iconfont icon">&#xe62d;</view>
         <view class="weui-cell__bd">设置</view>
         <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-      </navigator>
-      <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      </view>
+      <view bindtap="about" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd iconfont icon">&#xe641;</view>
         <view class="weui-cell__bd">关于</view>
         <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-      </navigator>
+      </view>
     </view>
   </view>
 </template>
@@ -132,6 +132,15 @@
         if (this.checkState()) {
           wepy.navigateTo({ url: '../task/issued' })
         }
+      },
+      cancel() {
+        if (this.checkState()) {
+          wepy.navigateTo({ url: './cancel' })
+        }
+        // wepy.navigateTo({ url: './cancel' })
+      },
+      about() {
+        wepy.navigateTo({ url: '../about' })
       }
     }
   
