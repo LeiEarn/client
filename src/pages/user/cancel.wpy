@@ -1,0 +1,85 @@
+<style type="less">
+	@import '../../style/iconfont.wxss';
+	.button-sp-area{
+    margin: 0 auto;
+    padding-top: 30px;
+    width: 80%;
+	}
+	.mini-btn{
+    margin-right: 5px;
+	}
+	.logout {
+  	margin-top: 30rpx;
+  	height: 100rpx;
+  	width: 100%;
+  	line-height: 100rpx;
+  	text-align: center;
+  	background: #fff;
+  	color: red;
+  	font-size: 30rpx;
+	}
+</style>
+
+
+<template>
+	<view class="page">
+		<view class="button-sp-area">
+	    <button bindtap="logout" class="weui-btn" type="default">退出登陆</button>
+	    <button bindtap="cancel" class="weui-btn" type="warn">注销账号</button>
+  	</view>
+	</view>
+</template>
+
+<script>
+	import wepy from 'wepy'
+	export default class Cancel extends wepy.page {
+		config = {
+			navigationBarTitleText: '账号设置',
+    	backgroundTextStyle: 'dark',
+    	onReachBottomDistance: -300
+		};
+		components = {};
+		data = {};
+		methods = {
+			logout() {
+				wepy.showModal({
+					title: '提示',
+					confirmColor: '#b4282d',
+					content: '退出登陆?',
+					success (res) {
+						if (res.confirm) {
+							wx.showToast({
+            		title: '已退出',
+            		icon: 'success',
+            		duration: 3000
+        			});
+							wepy.navigateTo({ url: '../index'});
+						} else if (res.cancel) {
+							return;
+						}
+					}
+				})
+			},
+			cancel() {
+				wepy.showModal({
+					title: '提示',
+					confirmColor: '#b4282d',
+					content: '注销账号将删除您在此小程序中的所有数据',
+					success (res) {
+						if (res.confirm) {
+							wx.showToast({
+            		title: '已注销',
+            		icon: 'success',
+            		duration: 3000
+        			});
+							wepy.navigateTo({ url: '../index'});
+						} else if (res.cancel) {
+							return;
+						}
+					}
+				})
+			}
+		}
+	}
+
+</script>

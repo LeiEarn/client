@@ -1,0 +1,48 @@
+<style lang="less">
+    @import '../style/iconfont.wxss';
+    @import '../style/weui.wxss';
+    .item {
+    background-color: white;
+    width: 92%;
+    margin: 0 auto;
+    margin-top: 3%;
+    border-radius: 10rpx;
+    padding: 10rpx 20rpx;
+    }
+    .alarm {
+        font-weight: 800;
+        text-indent: 2em;
+    }
+    .alarm1 {
+        font-weight: normal;
+    }
+
+</style>
+
+<template>
+	<view class="page__bd">
+        <view class="weui-article">
+            <view class="weui-article__h1"></view>
+            <view class="weui-article__section">
+                <view class="weui-article__section">
+                    <view class="alarm">
+                        挣闲钱(“我们”）尊重并保护所有使用挣闲钱平台服务的用户的个人信息及个人隐私。本隐私权条款包含了我们收集、存储、使用、共享和保护用户（“
+                        您”）的个人信息的条款，我们希望通过本隐私权条款向您清晰地介绍我们对为您提供的访问、更新、控制和保护您个人信息的方式，因此我们建议您
+                        完整地阅读本《转转隐私权条款》（下称“本隐私权条款”），以帮助您了解维护自己隐私权的方式。如果您对本隐私权条款有任
+                        何疑问，您可以与我们联系。如果您不同意本隐私权条款的任何内容，您应立即停止使用挣闲钱平台服务。当您使用挣闲钱平台提供的任一服务时，即
+                        表示您已同意我们按照本隐私权条款来合法使用和保护您的个人信息。
+                    </view>
+                </view>
+                <view class="weui-article__section">
+                    <view class="alarm1">您向我们提供下述信息或使用我们的服务时，即表示您同意我们按照本隐私权条款规定收集信息。我们收集信息的种类如下：</view>
+                    <view class="alarm">
+                        为了遵守法律法规的要求，以及向您提供更个性化、更便捷的服务，我们需要识别您的身份，当您通过微信账户注册登录转转账户及您在使用我们的相关服务无时，需要您填写、提交及/或以其他任何方式提供您的个人信息，包括但不限于您的姓名、性别、出生年月日、身份证号码、电话号码、收货地址及相关附加信息（如您地址中的所在省份和城市、邮政编码等）或其他支付工具的账户信息等信息。在您主动注销账号时，我们将根据适用法律法规的要求尽快使其匿名或删除您的个人信息。您在转转发布信息内容过程中所提交的任何文字、照片、视频等各种形式的信息，也可能会包含或者关联到您的个人信息。
+                    </view>
+                </view>
+            </view>
+        </view>
+    </view>
+
+</template>
+
+
