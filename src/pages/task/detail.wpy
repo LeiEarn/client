@@ -143,11 +143,11 @@
     <view class="weui-uploader pop" hidden="{{hidden}}" animation="{{animationData}}">
       <view class="weui-uploader__hd">
           <view class="weui-uploader__title">完成证明上传<span class="tips">至多7张</span></view>
-          <view class="weui-uploader__info">{{files.length}}/7</view>
+          <view class="weui-uploader__info">{{cert.files.length}}/7</view>
       </view>
       <view class="weui-uploader__bd">
         <view class="weui-uploader__files" id="uploaderFiles">
-            <block wx:for="{{files}}" wx:key="*this">
+            <block wx:for="{{cert.files}}" wx:key="*this">
                 <view class="weui-uploader__file" bindtap="previewImage" id="{{item}}">
                     <image class="weui-uploader__img" src="{{item}}" mode="aspectFill" />
                 </view>
@@ -161,12 +161,12 @@
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell">
           <view class="weui-cell__bd">
-            <textarea class="weui-textarea" placeholder="如需备注，请输入" style="height: 5em" bindinput="bindDetailInput" minlength="0" />
+            <textarea class="weui-textarea" placeholder="如需备注，请输入" style="height: 5em" bindinput="bindRemarksInput" minlength="0" />
           </view>
         </view>
       </view>
       <view class="button-sp-area">
-        <button class="weui-btn" type="primary">提交</button>
+        <button class="weui-btn" type="primary" bindtap="submit">提交</button>
       </view>
     </view>
   </view>
@@ -188,6 +188,7 @@
 
     data = {
       backgroundUrl: '../../assets/background.jpg',
+      userId: null,
       taskId: null,
       user: {
         head: '../../assets/background.jpg',
@@ -211,10 +212,12 @@
           '添加填写完成证明'
         ]
       },
-      userId: null,
       hasReceived: 0,
       hasAuthenticated: false,
-      files: [],
+      cert: {
+        files: [],
+        remarks: ''
+      },
       animationData: {},
       hidden: true
     };
@@ -241,8 +244,9 @@
             success: res => {}
           })
         } else {
+          let self = this
           var object = {
-            url: '/auth/login',
+            url: '/receiveTask',
             data: {
               userId: this.userId,
               taskId: this.taskId
@@ -251,28 +255,10 @@
           }
           rq.request(object).then(res => {
             console.log(res.data)
-            this.hasReceived = 1
+            self.hasReceived = 1
+            self.$apply()
           })
         }
-      },
-      chooseImage: function (e) {
-        var that = this
-        wepy.chooseImage({
-          count: 7 - that.files.length,
-          sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-          sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-          success: function (res) {
-                // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-            that.files = that.files.concat(res.tempFilePaths)
-            that.$apply()
-          }
-        })
-      },
-      previewImage: function(e) {
-        wepy.previewImage({
-          current: e.currentTarget.id, // 当前显示图片的http链接
-          urls: this.data.files // 需要预览的图片http链接列表
-        })
       },
       toComplete() {
         let self = this
@@ -280,6 +266,42 @@
           appId: 'wxd947200f82267e58', // 要打开的小程序 appId,
           path: 'pages/wjxqList/wjxqList?activityId=' + self.content.id, // 打开的页面路径，如果为空则打开首页,
           success: res => {}
+        })
+      },
+      chooseImage: function (e) {
+        var that = this
+        wepy.chooseImage({
+          count: 7 - that.cert.files.length,
+          sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+          sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+          success: function (res) {
+                // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+            that.cert.files = that.cert.files.concat(res.tempFilePaths)
+            that.$apply()
+          }
+        })
+      },
+      previewImage: function(e) {
+        wepy.previewImage({
+          current: e.currentTarget.id, // 当前显示图片的http链接
+          urls: this.data.cert.files // 需要预览的图片http链接列表
+        })
+      },
+      submit() {
+        let self = this
+        const rq = require('../../lib/request.js')
+        var object = {
+          url: '/completeTask',
+          data: {
+            userId: this.userId,
+            taskId: this.taskId
+          },
+          method: 'POST'
+        }
+        rq.request(object).then(res => {
+          console.log(res.data)
+          self.hasReceived = 1
+          self.$apply()
         })
       },
       complete() {
@@ -319,7 +341,7 @@
     events = {
     };
 
-    onLoad(res) {
+    async onLoad(res) {
       if (this.$parent.globalData.userId) {
         this.userId = this.$parent.globalData.userId
       }
@@ -333,18 +355,28 @@
       this.data.content.left = json.left
       this.taskId = json.taskId
       if (this.taskId) {
-        const rq = require('../../lib/request.js')
-        var object = {
-          url: '/getTaskDetail',
-          data: {
-            taskId: this.taskId
-          },
-          method: 'GET'
-        }
-        rq.request(object).then(res => {
-          console.log(res)
-        })
+        await this.getTaskDetail()
       }
     };
+
+    async getTaskDetail() {
+      let self = this
+      const rq = require('../../lib/request.js')
+      var object = {
+        url: '/getTaskDetail',
+        data: {
+          userId: this.userId,
+          taskId: this.taskId
+        },
+        method: 'GET'
+      }
+      rq.request(object).then(res => {
+        console.log(res.data)
+        self.user = res.data.user
+        self.content = res.data.content
+        self.hasReceived = res.data.hasReceived
+        self.$apply()
+      })
+    }
   }
 </script>

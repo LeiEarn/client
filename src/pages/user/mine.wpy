@@ -17,11 +17,19 @@
         display: block;
       }
       .login {
-        display: block;
+        display: inline-block;
         width: 150rpx;
         color: gray;
         border: 1rpx solid gray;
         border-radius: 30rpx;
+      }
+      .register {
+        display: inline-block;
+        width: 150rpx;
+        color: gray;
+        border: 1rpx solid gray;
+        border-radius: 30rpx;
+        margin-left: 20rpx;
       }
     }
     .icon {
@@ -43,6 +51,7 @@
         <text class="name">{{userInfo.nickName}}</text>
       </block>
       <button class="weui-btn login" type="primary" plain="true" size='mini' open-type="getUserInfo" bindgetuserinfo="getUserInfo">{{hasUserInfo?"修改":"登录"}}</button>
+      <button class="weui-btn register" type="primary" plain="true" size='mini' bindtap="register" hidden="{{ hasUserInfo }}">注册</button>
     </view>
     <view class="weui-cells">
       <view bindtap="balance" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
@@ -112,6 +121,9 @@
             }
           })
         }
+      },
+      register() {
+        wepy.navigateTo({ url: './auth' })
       },
       balance() {
         if (this.checkState()) {

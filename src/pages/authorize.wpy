@@ -1,0 +1,72 @@
+<style lang="less">
+page {
+  height: 100%;
+  width: 100%;
+}
+.icon {
+  height: 200rpx;
+  width: 200rpx;
+  border-radius: 50%;
+  margin-top: 30%;
+  margin-bottom: 10%;
+}
+.footer {
+  font-size: 11pt;
+  color: #999;
+  margin-top: 20rpx;
+}
+.commit {
+  width: 90%;
+  background-color: orange;
+  color: white;
+  display: block;
+  margin-top: 10%;
+}
+</style>
+<template>
+  <view class="page">
+    <view class="container">
+      <image class="icon" src="{{avartUrl}}" mode="scaleToFill" lazy-load="false" />
+      <view>挣闲钱申请获得以下权限 :</view>
+      <view class="footer">获得你的公开信息(昵称，头像等)</view>
+      <button class="commit" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">确认授权</button>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import Dialog from '../components/dialog'
+
+export default class Authorize extends wepy.page {
+  config = {
+    navigationBarTitleText: '挣闲钱授权登录',
+    navigationBarTextStyle: 'black',
+    navigationBarBackgroundColor: '#E7E8E3'
+  }
+  components = {
+    dialog: Dialog
+  }
+
+  data = {
+    avartUrl: '../assets/background.jpg'
+  }
+
+  methods = {
+    bindGetUserInfo(e) {
+      this.a = true
+      console.log(e)
+    }
+  }
+
+  events = {
+    'index-emit': (...args) => {
+      let $event = args[args.length - 1]
+      console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
+    }
+  }
+
+  onLoad() {
+  }
+}
+</script>

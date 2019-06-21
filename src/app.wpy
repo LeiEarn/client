@@ -23,6 +23,7 @@ setStore(store)
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/authorize',
       'pages/index',
       'pages/issue',
       'pages/about',
@@ -92,6 +93,12 @@ export default class extends wepy.app {
   }
   onLaunch() {
     cookieJar.init()
+    // wepy.getSetting({ success: res => {
+    //   console.log(res.authSetting)
+    //   if (!res.authSetting['scope.userInfo']) {
+    //     wepy.navigateTo({ url: './authorize' })
+    //   }
+    // } })
   }
   getUserId(cb) {
     if (this.globalData.user.userId) {
@@ -115,7 +122,7 @@ export default class extends wepy.app {
                   js_code: jsCode,
                   encryptedData: res.encryptedData
                 },
-                method: 'GET'
+                method: 'POST'
               }
               rq.request(object).then(res => {
                 self.globalData.user.userId = res.data.userId
@@ -131,7 +138,7 @@ export default class extends wepy.app {
       }
     })
   }
-  checkAuthState(cb) {
+  getAuthState(cb) {
     if (this.globalData.userId) {
       if (this.globalData.hasAuthenticated) {
         return this.globalData.hasAuthenticated
@@ -139,16 +146,16 @@ export default class extends wepy.app {
       let self = this
       const rq = require('./lib/request.js')
       var object = {
-        url: '/checkAuthState',
+        url: '/getAuthState',
         data: {
           userId: this.user.userId
         },
         method: 'GET'
       }
       rq.request(object).then(res => {
-        self.globalData.hasAuthenticated = res.data
+        self.globalData.hasAuthenticated = res.data.hasAuthenticated
         self.$apply()
-        cb && cb(res.data)
+        cb && cb(res.data.hasAuthenticated)
       }).catch(() => {
         console.log('获取认证状态失败')
       })
