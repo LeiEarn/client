@@ -1,0 +1,59 @@
+<style type="less">
+.weui-btn {
+  position: absolute;
+  bottom: 50rpx;
+  width: 100%;
+}
+</style>
+
+
+<template>
+  <view class="page">
+    <view class="page__bd">
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell">
+          <view class="weui-cell__bd">账户余额</view>
+          <view class="weui-cell__ft">0</view>
+        </view>
+      </view>
+      
+    </view>
+    <button class="weui-btn" type="primary" bindtap="recharge">充值</button>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class Balance extends wepy.page {
+  config = {
+    navigationBarTitleText: '余额',
+    backgroundTextStyle: 'dark'
+  };
+  components = {};
+  data = {
+    userId: null,
+    balance: 0
+  };
+  methods = {
+    recharge() {
+      let self = this
+      const rq = require('../../lib/request.js')
+      var object = {
+        url: '/recharge',
+        data: {
+          userId: this.userId
+        },
+        method: 'POST'
+      }
+      rq.request(object).then(res => {
+        self.balance = res.data.balance
+        self.$apply()
+      })
+    }
+  }
+  onload() {
+
+  }
+}
+
+</script>
