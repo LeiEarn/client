@@ -16,7 +16,7 @@
       .name {
         display: block;
       }
-      .login {
+      .modify {
         display: inline-block;
         width: 150rpx;
         color: gray;
@@ -46,12 +46,11 @@
 <template>
   <view class="mine">
     <view class="info mine_item">
-      <block hidden="{{!hasUserInfo && canIUse}}">
+      <block>
         <image class="head" src="{{userInfo.avatarUrl}}" mode="cover" />
         <text class="name">{{userInfo.nickName}}</text>
       </block>
-      <button class="weui-btn login" type="primary" plain="true" size='mini' open-type="getUserInfo" bindgetuserinfo="getUserInfo">{{hasUserInfo?"修改":"登录"}}</button>
-      <button class="weui-btn register" type="primary" plain="true" size='mini' bindtap="register" hidden="{{ hasUserInfo }}">注册</button>
+      <button class="weui-btn modify" type="primary" plain="true" size='mini' bindtap="modify" hidden="{{!hasUserInfo}}">修改</button>
     </view>
     <view class="weui-cells">
       <view bindtap="balance" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
@@ -62,7 +61,7 @@
       <view bindtap="auth" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd iconfont icon">&#xe681;</view>
         <view class="weui-cell__bd">身份认证</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access"><icon type="success" size="18" hidden="{{!hasAuthenticated}}"></icon>{{hasAuthenticated ? "已" : "未"}}认证</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access"><icon type="success" size="18" hidden="{{hasAuthenticated !== '已认证'}}"></icon>{{hasAuthenticated}}</view>
       </view>
     </view>
     <view class="weui-cells">
@@ -101,29 +100,19 @@
     }
     components = {}
     data = {
-      userInfo: {},
+      userInfo: {
+        avatarUrl: '../../assets/background.jpg'
+      },
       hasUserInfo: false,
-      canIUse: wepy.canIUse('button.open-type.getUserInfo'),
-      hasAuthenticated: false
+      hasAuthenticated: '未认证'
     }
     methods = {
       getUserInfo(e) {
         if (this.hasUserInfo) {
-          console.log(this.userInfo)
-          console.log(this.$parent.globalData.openId)
           this.$navigate({
             url: './info'
           })
-        } else {
-          this.$parent.getUserId(function(userId) {
-            if (userId) {
-              console.log(userId)
-            }
-          })
         }
-      },
-      register() {
-        wepy.navigateTo({ url: './auth' })
       },
       balance() {
         if (this.checkState()) {
@@ -149,7 +138,15 @@
   
     async onLoad() {
       await this.getUser()
-      this.getAuthState()
+    }
+
+    onShow() {
+      // wepy.getSetting({ success: res => {
+      //   console.log(res.authSetting)
+      //   if (res.authSetting['scope.userInfo'] === false) {
+      //     wepy.navigateTo({ url: './authorize' })
+      //   }
+      // } })
     }
 
     async getUser() {
@@ -160,26 +157,11 @@
         this.userId = this.$parent.globalData.userId
         this.hasUserInfo = true
       } else {
-        this.$parent.getUserId(function(user) {
+        this.$parent.getUserInfo(function(user) {
           if (user) {
             self.userInfo = user.userInfo
             self.userId = user.userId
             self.hasUserInfo = true
-            self.$apply()
-          }
-        })
-      }
-    }
-
-    getAuthState() {
-      let self = this
-      if (this.$parent.globalData.hasAuthenticated) {
-        console.log(this.$parent.globalData.hasAuthenticated)
-        this.hasAuthenticated = this.$parent.globalData.hasAuthenticated
-      } else {
-        this.$parent.checkAuthState(function(hasAuthenticated) {
-          if (hasAuthenticated) {
-            self.hasAuthenticated = hasAuthenticated
             self.$apply()
           }
         })

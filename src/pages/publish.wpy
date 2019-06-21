@@ -32,7 +32,7 @@
   import wepy from 'wepy'
   import Other from '../components/other'
   import Questionnaire from '../components/questionnaire'
-  export default class Issue extends wepy.page {
+  export default class Publish extends wepy.page {
     config = {
       navigationBarTitleText: '发布任务',
       navigationBarTextStyle: 'black',
@@ -72,6 +72,14 @@
           self.$apply()
         }
       })
+    }
+    onShow() {
+      // wepy.getSetting({ success: res => {
+      //   console.log(res.authSetting)
+      //   if (res.authSetting['scope.userInfo'] === false) {
+      //     wepy.navigateTo({ url: './authorize' })
+      //   }
+      // } })
     }
   }
 </script>

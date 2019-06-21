@@ -16,7 +16,7 @@
 import wepy from 'wepy'
 import List from '../../components/list'
 
-export default class IssuedTask extends wepy.page {
+export default class PublishedTask extends wepy.page {
   config = {
     navigationBarTitleText: '已发布任务',
     navigationBarTextStyle: 'black',

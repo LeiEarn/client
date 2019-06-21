@@ -23,15 +23,15 @@ setStore(store)
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/authorize',
       'pages/index',
-      'pages/issue',
+      'pages/publish',
+      'pages/authorize',
       'pages/user/mine',
       'pages/user/info',
       'pages/user/auth',
       'pages/task/task',
-      'pages/task/issued',
-      'pages/task/received',
+      'pages/task/published',
+      'pages/task/accepted',
       'pages/task/detail',
       'pages/question/wjx'
     ],
@@ -58,7 +58,7 @@ export default class extends wepy.app {
           selectedIconPath: 'assets/task.png'
         },
         {
-          pagePath: 'pages/issue',
+          pagePath: 'pages/publish',
           text: '发布',
           iconPath: 'assets/add.png',
           selectedIconPath: 'assets/add.png'
@@ -79,7 +79,7 @@ export default class extends wepy.app {
     user: {
       userInfo: null,
       userId: null,
-      hasAuthenticated: false
+      hasAuthenticated: ''
     }
   }
   constructor() {
@@ -88,16 +88,10 @@ export default class extends wepy.app {
   }
   onLaunch() {
     cookieJar.init()
-    // wepy.getSetting({ success: res => {
-    //   console.log(res.authSetting)
-    //   if (!res.authSetting['scope.userInfo']) {
-    //     wepy.navigateTo({ url: './authorize' })
-    //   }
-    // } })
   }
-  getUserId(cb) {
+  getUserInfo(cb) {
     if (this.globalData.user.userId) {
-      return this.globalData.user.userId
+      return this.globalData.user
     }
     const rq = require('./lib/request.js')
     let self = this
@@ -122,11 +116,15 @@ export default class extends wepy.app {
               rq.request(object).then(res => {
                 self.globalData.user.userId = res.data.userId
                 self.globalData.user.userInfo = res.data.userInfo
+                self.globalData.uesr.hasAuthenticated = res.data.hasAuthenticated
                 self.$apply()
                 cb && cb(res.data)
               }).catch(res => {
                 console.log(res)
               })
+            },
+            fail: () => {
+              console.log('你还没有授权')
             }
           })
         }

@@ -19,7 +19,7 @@
 <script>
   import wepy from 'wepy'
   import List from '../../components/list'
-  export default class ReceivedTask extends wepy.page {
+  export default class AcceptedTask extends wepy.page {
     config = {
       navigationBarTitleText: '已接受任务',
       navigationBarTextStyle: 'black',

@@ -36,7 +36,6 @@ page {
 
 <script>
 import wepy from 'wepy'
-import Dialog from '../components/dialog'
 
 export default class Authorize extends wepy.page {
   config = {
@@ -45,7 +44,6 @@ export default class Authorize extends wepy.page {
     navigationBarBackgroundColor: '#E7E8E3'
   }
   components = {
-    dialog: Dialog
   }
 
   data = {
@@ -54,7 +52,6 @@ export default class Authorize extends wepy.page {
 
   methods = {
     bindGetUserInfo(e) {
-      this.a = true
       console.log(e)
     }
   }
