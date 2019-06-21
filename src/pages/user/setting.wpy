@@ -40,7 +40,7 @@
 
 <script>
 import wepy from 'wepy'
-export default class Cancel extends wepy.page {
+export default class Setting extends wepy.page {
   config = {
     navigationBarTitleText: '账号设置',
     backgroundTextStyle: 'dark',

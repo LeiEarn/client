@@ -101,13 +101,14 @@
     components = {}
     data = {
       userInfo: {
-        avatarUrl: '../../assets/background.jpg'
+        avatarUrl: '../../assets/background.jpg',
+        nickName: '狗芙蓉'
       },
       hasUserInfo: false,
       hasAuthenticated: '未认证'
     }
     methods = {
-      getUserInfo(e) {
+      modify() {
         if (this.hasUserInfo) {
           this.$navigate({
             url: './info'
@@ -121,7 +122,7 @@
       },
       auth() {
         if (this.checkState()) {
-          wepy.navigateTo({ url: './auth' })
+          wepy.navigateTo({ url: './balance' })
         }
       },
       received() {
@@ -138,7 +139,7 @@
         // if (this.checkState()) {
         //   wepy.navigateTo({ url: './cancel' })
         // }
-        wepy.navigateTo({ url: './cancel' })
+        wepy.navigateTo({ url: './setting' })
       },
       about() {
         wepy.navigateTo({ url: '../about' })

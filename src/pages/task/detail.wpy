@@ -135,7 +135,7 @@
       </view>
       <view class="page__bd page__bd_spacing" hidden="{{ hasReceived === 0 }}">
         <view class="button-sp-area" wx:if="{{ hasReceived === 1 && content.type === '问卷星' }}">
-          <button class="weui-btn" type="primary" bindtap="toComplete">去完成</button>
+          <button class="weui-btn" plain="true" type="primary" bindtap="toComplete">去完成</button>
         </view>
         <view class="button-sp-area weui-flex">
           <view class="weui-flex__item" wx:if="{{ hasReceived === 1 }}"><button class="weui-btn placeholder" type="warn" bindtap="abandon">放弃</button></view>
@@ -148,40 +148,56 @@
         <view class="button-sp-area">
           <button class="weui-btn" type="primary" bindtap="viewAcc">查看接收者</button>
         </view>
-        <view class="button-sp-area">
-          <button class="weui-btn" type="warn" bindtap="abort">中止任务</button>
+        <view class="button-sp-area weui-flex">
+          <view class="weui-flex__item"><button class="weui-btn placeholder" plain="true" type="primary" bindtap="addTaskInfo">添加额外信息</button></view>
+          <view class="weui-flex__item"><button class="weui-btn placeholder" type="warn" bindtap="abort">中止任务</button></view>
         </view>
       </view>
     </view>
     <!-- 弹起浮层 -->
-    <view class="mask-layer" hidden="{{hidden}}" bindtap="hiddenPop"></view>
-    <view class="weui-uploader pop" hidden="{{hidden}}" animation="{{animationData}}">
-      <view class="weui-uploader__hd">
-          <view class="weui-uploader__title">完成证明上传<span class="tips">至多7张</span></view>
-          <view class="weui-uploader__info">{{cert.files.length}}/7</view>
-      </view>
-      <view class="weui-uploader__bd">
-        <view class="weui-uploader__files" id="uploaderFiles">
-            <block wx:for="{{cert.files}}" wx:key="*this">
-                <view class="weui-uploader__file" bindtap="previewImage" id="{{item}}">
-                    <image class="weui-uploader__img" src="{{item}}" mode="aspectFill" />
-                </view>
-            </block>
+    <view class="mask-layer" hidden="{{hidden}}" bindtap="cancel"></view>
+    <view class="pop" hidden="{{hidden}}" animation="{{animationData}}">
+      <view class="weui-uploader" hidden="{{ userId !== null && userId === user.userId}}">
+        <view class="weui-uploader__hd">
+            <view class="weui-uploader__title">完成证明上传<span class="tips">至多7张</span></view>
+            <view class="weui-uploader__info">{{cert.files.length}}/7</view>
         </view>
-        <view class="weui-uploader__input-box">
-            <view class="weui-uploader__input" bindtap="chooseImage"></view>
-        </view>
-      </view>
-      <view class="title">备注</view>
-      <view class="weui-cells weui-cells_after-title">
-        <view class="weui-cell">
-          <view class="weui-cell__bd">
-            <textarea class="weui-textarea" placeholder="如需备注，请输入" style="height: 5em" bindinput="bindRemarksInput" minlength="0" />
+        <view class="weui-uploader__bd">
+          <view class="weui-uploader__files" id="uploaderFiles">
+              <block wx:for="{{cert.files}}" wx:key="*this">
+                  <view class="weui-uploader__file" bindtap="previewImage" id="{{item}}">
+                      <image class="weui-uploader__img" src="{{item}}" mode="aspectFill" />
+                  </view>
+              </block>
+          </view>
+          <view class="weui-uploader__input-box">
+              <view class="weui-uploader__input" bindtap="chooseImage"></view>
           </view>
         </view>
+        <view class="title">备注</view>
+        <view class="weui-cells weui-cells_after-title">
+          <view class="weui-cell">
+            <view class="weui-cell__bd">
+              <textarea class="weui-textarea" placeholder="如需备注，请输入" style="height: 5em" bindinput="bindRemarksInput" minlength="0" />
+            </view>
+          </view>
+        </view>
+        <view class="button-sp-area">
+          <button class="weui-btn" type="primary" bindtap="submit">提交</button>
+        </view>
       </view>
-      <view class="button-sp-area">
-        <button class="weui-btn" type="primary" bindtap="submit">提交</button>
+      <view class="extraInfo" wx:if="{{ userId !== null && userId === user.userId}}">
+        <view class="title">额外信息</view>
+        <view class="weui-cells weui-cells_after-title">
+          <view class="weui-cell">
+            <view class="weui-cell__bd">
+              <textarea class="weui-textarea" placeholder="请输入额外信息" style="height: 5em" bindinput="bindExtraInfoInput" minlength="0" />
+            </view>
+          </view>
+        </view>
+        <view class="button-sp-area">
+          <button class="weui-btn" type="primary" bindtap="submit2">提交</button>
+        </view>
       </view>
     </view>
   </view>
@@ -202,11 +218,9 @@
     };
 
     data = {
-      backgroundUrl: '../../assets/background.jpg',
       userId: null,
       taskId: null,
       user: {
-        userId: null,
         head: '../../assets/background.jpg',
         title: '获取失败',
         tel: '获取失败'
@@ -230,10 +244,13 @@
       },
       hasReceived: 0,
       hasAuthenticated: false,
+
       cert: {
         files: [],
         remarks: ''
       },
+      extraInfo: '',
+  
       animationData: {},
       hidden: true
     };
@@ -257,8 +274,17 @@
           })
         }
       },
-      viewAcc() {
-        wepy.navigateTo({ url: './viewAcc' })
+
+      toComplete() {
+        let self = this
+        wepy.navigateToMiniProgram({
+          appId: 'wxd947200f82267e58', // 要打开的小程序 appId,
+          path: 'pages/wjxqList/wjxqList?activityId=' + self.content.id, // 打开的页面路径，如果为空则打开首页,
+          success: res => {}
+        })
+      },
+      complete() {
+        this.showPop()
       },
       abandon() {
         var object = {
@@ -273,6 +299,13 @@
           console.log(res.data)
         })
       },
+
+      viewAcc() {
+        wepy.navigateTo({ url: './viewAcc' })
+      },
+      addTaskInfo() {
+        this.showPop()
+      },
       abort() {
         var object = {
           url: '/abortTask',
@@ -286,13 +319,12 @@
           console.log(res.data)
         })
       },
-      toComplete() {
-        let self = this
-        wepy.navigateToMiniProgram({
-          appId: 'wxd947200f82267e58', // 要打开的小程序 appId,
-          path: 'pages/wjxqList/wjxqList?activityId=' + self.content.id, // 打开的页面路径，如果为空则打开首页,
-          success: res => {}
-        })
+
+      cancel() {
+        this.hiddenPop()
+      },
+      bindRemarksInput(e) {
+        this.cert.remarks = e.detail.value
       },
       chooseImage: function (e) {
         var that = this
@@ -315,7 +347,6 @@
       },
       submit() {
         let self = this
-
         var object = {
           url: '/completeTask',
           data: {
@@ -330,37 +361,26 @@
           self.$apply()
         })
       },
-      complete() {
-        let self = this
-        var animation = wepy.createAnimation({
-          duration: 500,
-          timingFunction: 'ease',
-          delay: 0
-        })
-        animation.translateY(300).step()
-        this.animationData = animation.export()
-        this.hidden = false
-        setTimeout(function() {
-          animation.translateY(0).step()
-          self.animationData = animation.export()
-          self.$apply()
-        }, 50)
+  
+      bindExtraInfoInput(e) {
+        this.extraInfo = e.detail.value
       },
-      hiddenPop() {
+      submit2() {
         let self = this
-        var animation = wepy.createAnimation({
-          duration: 500,
-          timingFunction: 'ease',
-          delay: 0
-        })
-        animation.translateY(300).step()
-        this.animationData = animation.export()
-        setTimeout(function() {
-          animation.translateY(0).step()
-          self.animationData = animation.export()
-          self.hidden = true
+        var object = {
+          url: '/addTaskInfo',
+          data: {
+            userId: this.userId,
+            taskId: this.taskId,
+            extraInfo: this.extraInfo
+          },
+          method: 'POST'
+        }
+        rq.request(object).then(res => {
+          console.log(res.data)
+          self.hasReceived = 1
           self.$apply()
-        }, 200)
+        })
       }
     };
 
@@ -427,6 +447,40 @@
         return true
       }
       return false
+    }
+
+    showPop() {
+      let self = this
+      var animation = wepy.createAnimation({
+        duration: 500,
+        timingFunction: 'ease',
+        delay: 0
+      })
+      animation.translateY(300).step()
+      this.animationData = animation.export()
+      this.hidden = false
+      setTimeout(function() {
+        animation.translateY(0).step()
+        self.animationData = animation.export()
+        self.$apply()
+      }, 50)
+    }
+
+    hiddenPop() {
+      let self = this
+      var animation = wepy.createAnimation({
+        duration: 500,
+        timingFunction: 'ease',
+        delay: 0
+      })
+      animation.translateY(300).step()
+      this.animationData = animation.export()
+      setTimeout(function() {
+        animation.translateY(0).step()
+        self.animationData = animation.export()
+        self.hidden = true
+        self.$apply()
+      }, 200)
     }
   }
 </script>

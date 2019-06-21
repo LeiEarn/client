@@ -22,8 +22,7 @@ export default class PublishedTask extends wepy.page {
     navigationBarTextStyle: 'black',
     navigationBarBackgroundColor: '#E7E8E3',
     enablePullDownRefresh: true,
-    backgroundTextStyle: 'dark',
-    onReachBottomDistance: -300
+    backgroundTextStyle: 'dark'
   }
 
   components = {
