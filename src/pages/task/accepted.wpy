@@ -32,6 +32,7 @@
       complete: TaskList
     }
     data = {
+      userId: null,
       ongoing: [{
         icon: '../../assets/background.jpg',
         title: '标题一',
@@ -85,6 +86,7 @@
     }
     onLoad() {
       if (this.$parent.globalData.userId) {
+        this.userId = this.$parent.globalData.userId
         this.getReceivedTask()
       }
     }
@@ -98,7 +100,6 @@
     getReceivedTask() {
       const rq = require('../../lib/request.js')
       let self = this
-      this.userId = this.$parent.globalData.userId
       var object = {
         url: '/getReceivedTask',
         data: {
