@@ -2,7 +2,7 @@
 @import '../../style/iconfont.wxss';
 .page {
   border: 5px, dashed, grey;
-  background-color: #ffeaa7;
+  background: rgba(255, 234, 167,0.5);
   width: 92%;
   margin: auto;
   margin-top: 5%;
