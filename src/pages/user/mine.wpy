@@ -65,6 +65,13 @@
       </view>
     </view>
     <view class="weui-cells">
+      <view bindtap="team" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+        <view class="weui-cell__hd iconfont icon">&#xe7ae;</view>
+        <view class="weui-cell__bd">我的组织</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+      </view>  
+    </view> 
+    <view class="weui-cells">
       <view bindtap="received" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd iconfont icon">&#xe601;</view>
         <view class="weui-cell__bd">已接受任务</view>
@@ -119,6 +126,12 @@
         if (this.checkState()) {
           wepy.navigateTo({ url: './auth' })
         }
+      },
+      team() {
+        // if (this.checkState()) {
+        //   wepy.navigateTo({ url: './team' })
+        // }
+        wepy.navigateTo({ url: './team' })
       },
       auth() {
         if (this.checkState()) {
