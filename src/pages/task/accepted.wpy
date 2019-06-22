@@ -18,19 +18,18 @@
 </template>
 <script>
   import wepy from 'wepy'
-  import List from '../../components/list'
+  import TaskList from '../../components/tasklist'
   export default class AcceptedTask extends wepy.page {
     config = {
       navigationBarTitleText: '已接受任务',
       navigationBarTextStyle: 'black',
       navigationBarBackgroundColor: '#E7E8E3',
       enablePullDownRefresh: true,
-      backgroundTextStyle: 'dark',
-      onReachBottomDistance: -300
+      backgroundTextStyle: 'dark'
     }
     components = {
-      ongoing: List,
-      complete: List
+      ongoing: TaskList,
+      complete: TaskList
     }
     data = {
       ongoing: [{

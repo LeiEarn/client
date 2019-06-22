@@ -1,0 +1,214 @@
+<style lang="less">
+::-webkit-scrollbar{
+  width: 0;
+  height: 0;
+  color: transparent;
+}
+.button-sp-area {
+  width: 300rpx;
+  margin: 80rpx auto;
+}
+.target {
+  color: #444;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 20rpx;
+  border-radius: 5rpx;
+}
+</style>
+<template>
+  <view class="page">
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">标题</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input
+            class="weui-input"
+            placeholder="请输入标题"
+            bindinput="bindTitleInput"
+          />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">内容</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input
+            class="weui-input"
+            placeholder="请输入内容"
+            bindinput="bindDetailInput"
+          />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">问卷ID</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input
+            class="weui-input"
+            placeholder="请输入问卷ID"
+            bindinput="bindIdInput"
+          />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">发布对象</view>
+        </view>
+        <view class="weui-cell__bd">
+          <span>组织：</span>
+          <groupspicker class="target" :groups="groups" @change.user="bindGroupChange"></groupspicker>
+          <span>性别：</span><view
+            class="target"
+            bindtap="bindSexChange"
+          >{{wjx.condition.sex}}</view>
+        </view>
+      </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">时间</view>
+          </view>
+          <view class="weui-cell__bd">
+            <datetimepicker class="time" minuteStep="5" timeFormat="HH:mm" @change.user="bindTimeChange"></datetimepicker>
+          </view>
+        </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">赏金</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input
+            class="weui-input"
+            placeholder="请输入赏金"
+            bindInput="bindMoneyInput"
+          />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">问卷数量</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input
+            class="weui-input"
+            placeholder="请输入问卷数量"
+            bindinput="bindNumInput"
+          />
+        </view>
+      </view>
+    </view>
+    <view class="button-sp-area">
+      <button
+        bindtap="publish"
+        class="weui-btn"
+        type="primary"
+      >发布</button>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import Datetimepicker from '../../components/datetimepicker'
+import GroupsPicker from '../../components/groupspicker'
+export default class Wjx extends wepy.page {
+  config = {
+    navigationBarTitleText: '发布任务',
+    navigationBarTextStyle: 'black',
+    navigationBarBackgroundColor: '#E7E8E3'
+  }
+  components = {
+    datetimepicker: Datetimepicker,
+    groupspicker: GroupsPicker
+  }
+  data = {
+    groups: [
+      { name: '中山大学', value: '0' },
+      { name: '校学生会', value: '1' },
+      { name: '明德园2号', value: '2' },
+      { name: '软工3班', value: '3' },
+      { name: '校学生会', value: '4' },
+      { name: '校学生会', value: '5' },
+      { name: '校学生会', value: '6' }
+    ],
+    sexs: ['全部', '男', '女'],
+
+    wjx: {
+      title: '',
+      detail: '',
+      wjxId: '',
+      condition: {
+        groups: [],
+        sex: '全部'
+      },
+      time: '',
+      money: 0,
+      num: ''
+    }
+  }
+  events = {}
+  methods = {
+    bindTitleInput(e) {
+      this.wjx.title = e.detail.value
+    },
+    bindDetailInput(e) {
+      this.wjx.detail = e.detail.value
+    },
+    bindIdInput(e) {
+      this.wjx.id = e.detail.value
+    },
+    bindNumInput(e) {
+      this.wjx.num = e.detail.value
+    },
+    bindMoneyInput(e) {
+      this.wjx.money = e.detail.value
+    },
+    onOpenDatetime() {
+      this.$invoke('datetimepicker', 'input', {})
+    },
+    bindTimeChange: function(e) {
+      this.time = e.value
+    },
+    bindSexChange() {
+      let self = this
+      wepy.showActionSheet({
+        itemList: ['全部', '男', '女'], // 按钮的文字数组，数组长度最大为6个,
+        itemColor: '#000000', // 按钮的文字颜色,
+        showCancel: false,
+        success: res => {
+          if (!res.cancel) {
+            console.log(res.tapIndex)
+            self.wjx.condition.sex = self.sexs[res.tapIndex]
+            self.$apply()
+          }
+        }
+      })
+    },
+    bindGroupChange(e) {
+      this.wjx.condition.groups = []
+      for (var i = 0; i < e.tempGroupsIndex.length; i++) {
+        var temp = e.tempGroupsIndex[i]
+        this.wjx.condition.groups.push(this.groups[temp].name)
+      }
+    },
+    publish() {
+      console.log(this.wjx)
+      const rq = require('../../lib/request.js')
+      var object = {
+        url: '',
+        data: this.wjx,
+        method: 'POST'
+      }
+      rq.request(object).then(res => {
+        console.log(res.data)
+      }).catch(err => {
+        console.log(err.data)
+      })
+    }
+  }
+  onLoad() { }
+}
+</script>

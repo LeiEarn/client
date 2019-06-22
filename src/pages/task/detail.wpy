@@ -127,7 +127,7 @@
         </view>
       </block>
     </view>
-    <view hidden="{{ userId !== null && userId === user.userId }}">
+    <view hidden="{{ isPublisher }}">
       <view class="page__bd page__bd_spacing" hidden="{{ hasReceived !== 0 }}">
         <view class="button-sp-area">
           <button class="weui-btn" type="primary" bindtap="accept">接受任务</button>
@@ -143,7 +143,7 @@
         </view>
       </view>
     </view>
-    <view wx:if="{{ userId !== null && userId === user.userId }}">
+    <view wx:if="{{ isPublisher }}">
       <view class="page__bd page__bd_spacing">
         <view class="button-sp-area">
           <button class="weui-btn" type="primary" bindtap="viewAcc">查看接收者</button>
@@ -243,7 +243,8 @@
         ]
       },
       hasReceived: 0,
-      hasAuthenticated: false,
+      authState: '未认证',
+      isPublisher: false,
 
       cert: {
         files: [],
@@ -301,7 +302,7 @@
       },
 
       viewAcc() {
-        wepy.navigateTo({ url: './viewAcc' })
+        this.$navigate({url: './accepter?taskId=' + this.taskId})
       },
       addTaskInfo() {
         this.showPop()
@@ -391,8 +392,8 @@
       if (this.$parent.globalData.userId) {
         this.userId = this.$parent.globalData.userId
       }
-      if (this.$parent.globalData.hasAuthenticated) {
-        this.hasAuthenticated = this.$parent.globalData.hasAuthenticated
+      if (this.$parent.globalData.authState) {
+        this.authState = this.$parent.globalData.authState
       }
       var json = JSON.parse(res.json)
       console.log(json)
@@ -434,10 +435,10 @@
           mask: true, // 显示透明蒙层，防止触摸穿透,
           success: res => {}
         })
-      } else if (this.hasAuthenticated === false) {
-        console.log('您还没有进行身份认证')
+      } else if (this.authState !== '已认证') {
+        console.log('您的身份认证还没有成功')
         wepy.showToast({
-          title: '您还没有进行身份认证', // 提示的内容,
+          title: '您的身份认证还没有成功', // 提示的内容,
           image: '../../assets/warn.png',
           duration: 2000, // 延迟时间,
           mask: true, // 显示透明蒙层，防止触摸穿透,

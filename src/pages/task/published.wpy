@@ -14,7 +14,7 @@
 </template>
 <script>
 import wepy from 'wepy'
-import List from '../../components/list'
+import TaskList from '../../components/tasklist'
 
 export default class PublishedTask extends wepy.page {
   config = {
@@ -26,7 +26,7 @@ export default class PublishedTask extends wepy.page {
   }
 
   components = {
-    issued: List
+    issued: TaskList
   }
 
   data = {

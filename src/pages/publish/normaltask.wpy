@@ -35,10 +35,17 @@
     margin-right: 5rpx;
     margin-bottom: 5rpx;
   }
-  .issue {
+  .publish {
     color: white;
     background-color: #00c000;
     width: 300rpx;
+  }
+  .target {
+    color: #444;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 20rpx;
+    border-radius: 5rpx;
   }
 </style>
 <template>
@@ -86,12 +93,15 @@
         </view>
         <view class="weui-cell weui-cell_input">
           <view class="weui-cell__hd">
-            <view class="weui-label">日期</view>
+            <view class="weui-label">发布对象</view>
           </view>
           <view class="weui-cell__bd">
-            <picker mode="date" value="{{date}}" start="2015-09-01" end="2017-09-01" bindchange="bindDateChange">
-              <view class="weui-input">{{date}}</view>
-            </picker>
+            <span>组织：</span>
+            <groupspicker class="target" :groups="groups" @change.user="bindGroupChange"></groupspicker>
+            <span>性别：</span><view
+              class="target"
+              bindtap="bindSexChange"
+            >{{task.condition.sex}}</view>
           </view>
         </view>
         <view class="weui-cell weui-cell_input">
@@ -99,9 +109,7 @@
             <view class="weui-label">时间</view>
           </view>
           <view class="weui-cell__bd">
-            <picker mode="time" value="{{time}}" start="09:01" end="21:01" bindchange="bindTimeChange">
-              <view class="weui-input">{{time}}</view>
-            </picker>
+            <datetimepicker class="time" minuteStep="5" timeFormat="HH:mm" @change.user="bindTimeChange"></datetimepicker>
           </view>
         </view>
         <view class="weui-cell weui-cell_input">
@@ -122,7 +130,7 @@
         </view>
       </view>
       <view class="weui-btn-area">
-        <button @tap="issue" class="issue weui-btn">发布</button>
+        <button @tap="publish" class="publish weui-btn">发布</button>
       </view>
     </view>
   </view>
@@ -130,29 +138,56 @@
 
 <script>
   import wepy from 'wepy'
-  export default class Other extends wepy.component {
+  import Datetimepicker from '../../components/datetimepicker'
+import GroupsPicker from '../../components/groupspicker'
+  export default class NormalTask extends wepy.page {
+    config = {
+      navigationBarTitleText: '发布任务',
+      navigationBarTextStyle: 'black',
+      navigationBarBackgroundColor: '#E7E8E3'
+    }
     data = {
-      title: '',
-      detail: '',
-      steps: [],
-      date: '',
-      time: '',
-      money: 0,
-      num: 0,
+      groups: [
+        { name: '中山大学', value: '0' },
+        { name: '校学生会', value: '1' },
+        { name: '明德园2号', value: '2' },
+        { name: '软工3班', value: '3' },
+        { name: '校学生会', value: '4' },
+        { name: '校学生会', value: '5' },
+        { name: '校学生会', value: '6' }
+      ],
+      sexs: ['全部', '男', '女'],
+  
+      task: {
+        title: '',
+        detail: '',
+        steps: [],
+        condition: {
+          groups: [],
+          sex: '全部'
+        },
+        time: '',
+        money: 0,
+        num: 0
+      },
       currentLen: 0
     };
+    components ={
+      datetimepicker: Datetimepicker,
+      groupspicker: GroupsPicker
+    }
     methods = {
       add() {
-        this.steps.push('')
+        this.taks.steps.push('')
       },
-      issue() {
+      publish() {
         console.log(this.data)
         var object = {
-          url: '/issueTask',
-          data: this.data,
+          url: '/publishTask',
+          data: this.task,
           method: 'POST'
         }
-        const rq = require('../lib/request.js')
+        const rq = require('../../lib/request.js')
         rq.request(object).then(res => {
           console.log(res)
         }).catch(res => {
@@ -160,38 +195,51 @@
         })
       },
       bindTitleInput: function(e) {
-        this.title = e.detail.value
+        this.task.title = e.detail.value
       },
       bindDetailInput: function(e) {
         var value = e.detail.value
         var len = parseInt(value.length)
         this.currentLen = len
-        this.detail = e.detail.value
+        this.task.detail = e.detail.value
       },
       bindStepInput: function(e) {
         console.log(e.currentTarget.dataset.index)
-        this.steps[e.currentTarget.dataset.index] = e.detail.value
-      },
-      bindDateChange: function(e) {
-        this.date = e.detail.value
+        this.task.steps[e.currentTarget.dataset.index] = e.detail.value
       },
       bindTimeChange: function(e) {
-        this.time = e.detail.value
+        this.task.time = e.value
       },
       bindMoneyInput: function(e) {
-        this.money = e.detail.value
+        this.task.money = e.detail.value
       },
       bindNumInput: function(e) {
-        this.num = e.detail.value
+        this.task.num = e.detail.value
+      },
+      bindSexChange() {
+        let self = this
+        wepy.showActionSheet({
+          itemList: ['全部', '男', '女'], // 按钮的文字数组，数组长度最大为6个,
+          itemColor: '#000000', // 按钮的文字颜色,
+          showCancel: false,
+          success: res => {
+            if (!res.cancel) {
+              console.log(res.tapIndex)
+              self.task.condition.sex = self.sexs[res.tapIndex]
+              self.$apply()
+            }
+          }
+        })
+      },
+      bindGroupChange(e) {
+        this.task.condition.groups = []
+        for (var i = 0; i < e.tempGroupsIndex.length; i++) {
+          var temp = e.tempGroupsIndex[i]
+          this.task.condition.groups.push(this.groups[temp].name)
+        }
       }
     };
     events = {
-      'index-emit': (...args) => {
-        let $event = args[args.length - 1]
-        console.log(
-          `${this.$name} receive ${$event.name} from ${$event.source.$name}`
-        )
-      }
     }
     onLoad() {}
   }

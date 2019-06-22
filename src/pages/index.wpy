@@ -53,7 +53,7 @@ page, .container {
 
 <script>
   import wepy from 'wepy'
-  import List from '../components/list'
+  import Datetimepicker from '../components/datetimepicker'
 
   export default class Index extends wepy.page {
     config = {
@@ -62,7 +62,7 @@ page, .container {
       navigationBarBackgroundColor: '#E7E8E3'
     }
     components = {
-      list: List
+      datetimepicker: Datetimepicker
     }
 
     data = {
@@ -71,9 +71,6 @@ page, .container {
     }
 
     methods = {
-      log_in () {
-        this.$navigate({url: './login'})
-      }
     }
 
     events = {

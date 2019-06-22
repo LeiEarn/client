@@ -1,0 +1,171 @@
+<style lang="less" scoped>
+::-webkit-scrollbar{
+  width: 0;
+  height: 0;
+  color: transparent;
+}
+.groups {
+  max-height: 500rpx;
+  overflow: scroll;
+}
+.mask-layer {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  z-index: 2;
+}
+.pop {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: white;
+  z-index: 3;
+}
+.confirm {
+  width: 200rpx;
+  margin: 20rpx auto;
+}
+</style>
+<template>
+  <view class="page" bindtap="openPicker">
+    <span>{{tempSelectedGroups || '全部'}}</span>
+    <!-- 弹起浮层 -->
+    <view
+      class="mask-layer"
+      hidden="{{hidden}}"
+      catchtap="cancel"
+    >
+      <view
+        class="weui-cells weui-cells_after-title pop"
+        hidden="{{hidden}}" animation="{{animationData}}"
+        catchtap="stopEvent"
+      >
+        <checkbox-group class="groups" bindchange="checkboxChange">
+          <label
+            class="weui-cell weui-check__label"
+            wx:for="{{groups}}"
+            wx:key="value"
+          >
+            <checkbox
+              class="weui-check"
+              value="{{item.value}}"
+              checked="{{item.checked}}"
+            />
+            <view class="weui-cell__hd weui-check__hd_in-checkbox">
+              <icon
+                class="weui-icon-checkbox_circle"
+                type="circle"
+                size="23"
+                wx:if="{{!item.checked}}"
+              ></icon>
+              <icon
+                class="weui-icon-checkbox_success"
+                type="success"
+                size="23"
+                wx:if="{{item.checked}}"
+              ></icon>
+            </view>
+            <view class="weui-cell__bd">{{item.name}}</view>
+          </label>
+        </checkbox-group>
+        <button class="confirm" type="primary" bindtap="confirm">确认</button>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class GroupsPicker extends wepy.component {
+  props = {
+    groups: {
+      type: Array
+    }
+  }
+  components = {
+  }
+  data = {
+    tempSelectedGroups: '全部',
+    animationData: {},
+    hidden: true,
+    tempGroupsIndex: []
+  }
+  events = {}
+  methods = {
+    checkboxChange: function (e) {
+      console.log('checkbox发生change事件，携带value值为：', e.detail.value)
+      this.tempGroupsIndex = e.detail.value
+      var checkboxItems = this.groups
+      var values = e.detail.value
+      var lenI = checkboxItems.length
+      var lenJ = values.length
+      this.tempSelectedGroups = ''
+      for (var i = 0; i < lenI; ++i) {
+        checkboxItems[i].checked = false
+        for (var j = 0; j < lenJ; ++j) {
+          if (checkboxItems[i].value === values[j]) {
+            checkboxItems[i].checked = true
+            this.tempSelectedGroups = this.tempSelectedGroups + checkboxItems[i].name + ' '
+            break
+          }
+        }
+      }
+      this.groups = checkboxItems
+    },
+    confirm() {
+      this.notifyEvent('change')
+      this.hiddenPop()
+    },
+    cancel() {
+      this.hiddenPop()
+    },
+    openPicker() {
+      this.showPop()
+    },
+    stopEvent() {
+
+    }
+  }
+  onLoad() { }
+
+  showPop() {
+    let self = this
+    var animation = wepy.createAnimation({
+      duration: 500,
+      timingFunction: 'ease',
+      delay: 0
+    })
+    animation.translateY(300).step()
+    this.animationData = animation.export()
+    this.hidden = false
+    setTimeout(function() {
+      animation.translateY(0).step()
+      self.animationData = animation.export()
+      self.$apply()
+    }, 50)
+  }
+  hiddenPop() {
+    let self = this
+    var animation = wepy.createAnimation({
+      duration: 500,
+      timingFunction: 'ease',
+      delay: 0
+    })
+    animation.translateY(300).step()
+    this.animationData = animation.export()
+    setTimeout(function() {
+      animation.translateY(0).step()
+      self.animationData = animation.export()
+      self.hidden = true
+      self.$apply()
+    }, 200)
+  }
+  notifyEvent(event) {
+    this.$emit(event, { tempGroupsIndex: this.tempGroupsIndex })
+    this.$apply()
+  }
+}
+</script>

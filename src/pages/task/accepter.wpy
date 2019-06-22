@@ -1,0 +1,118 @@
+<style lang="less">
+  .weui-panel__hd {
+    font-size: 12pt;
+    color: black;
+  }
+</style>
+<template>
+  <view class="weui-panel weui-panel_access">
+    <view class="weui-panel__hd">已接受该任务的用户</view>
+    <view class="accepted">
+      <accepted :list.sync="accepted" />
+    </view>
+    <view class="weui-panel__hd">已完成该任务的用户</view>
+    <view class="completed">
+      <completed :list.sync="completed" />
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import UserList from '../../components/userlist'
+  export default class Accepter extends wepy.page {
+    config = {
+      navigationBarTitleText: '任务接受者',
+      navigationBarTextStyle: 'black',
+      navigationBarBackgroundColor: '#E7E8E3',
+      enablePullDownRefresh: true,
+      backgroundTextStyle: 'dark',
+      onReachBottomDistance: -300
+    }
+    components = {
+      accepted: UserList,
+      completed: UserList
+    }
+    data = {
+      taskId: null,
+      accepted: [{
+        icon: '../../assets/background.jpg',
+        nickName: '大脸猫(蒋侑伸)',
+        tel: '电话号码：13169766417',
+        credit: 90
+      },
+      {
+        icon: '../../assets/background.jpg',
+        nickName: '大脸猫(蒋侑伸)',
+        tel: '电话号码：13169766417',
+        credit: 20
+      },
+      {
+        icon: '../../assets/background.jpg',
+        nickName: '大脸猫(蒋侑伸)',
+        tel: '电话号码：13169766417',
+        credit: 80
+      },
+      {
+        icon: '../../assets/background.jpg',
+        nickName: '大脸猫(蒋侑伸)',
+        tel: '电话号码：13169766417',
+        credit: 60
+      }
+      ],
+      completed: [{
+        icon: '../../assets/background.jpg',
+        nickName: '大脸猫(蒋侑伸)',
+        tel: '电话号码：13169766417',
+        credit: 33
+      }]
+    }
+    events = {}
+    methods = {
+    }
+    onLoad(res) {
+      this.taskId = res.taskId
+      if (this.$parent.globalData.userId) {
+        this.getAccepter()
+      }
+      this.accepted = this.load(this.accepted)
+      this.completed = this.load(this.completed)
+    }
+    load(list) {
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].credit >= 90) {
+          list[i].creditColor = '#44BB00'
+        } else if (list[i].credit >= 60) {
+          list[i].creditColor = '#F68855'
+        } else {
+          list[i].creditColor = '#F44444'
+        }
+      }
+      return list
+    }
+    onPullDownRefresh() {
+      console.log('下拉刷新列表')
+      setTimeout(function() {
+        this.getAccepter()
+        wepy.stopPullDownRefresh()
+      }, 5000)
+    }
+    getAccepter() {
+      const rq = require('../../lib/request.js')
+      let self = this
+      this.userId = this.$parent.globalData.userId
+      var object = {
+        url: '/getAccepter',
+        data: {
+          userId: this.$parent.globalData.userId,
+          taskId: this.taskId
+        },
+        method: 'GET'
+      }
+      rq.request(object).then(res => {
+        self.accepted = res.data.accepted
+        self.completed = res.data.completed
+        self.$apply()
+      })
+    }
+  }
+</script>
