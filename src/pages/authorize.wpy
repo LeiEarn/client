@@ -53,6 +53,7 @@ export default class Authorize extends wepy.page {
   methods = {
     bindGetUserInfo(e) {
       console.log(e)
+      wepy.reLaunch({ url: './user/mine' })
     }
   }
 

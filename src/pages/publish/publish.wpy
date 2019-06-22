@@ -51,5 +51,14 @@
       }
     }
     onLoad() {}
+
+    onShow() {
+      // wepy.getSetting({ success: res => {
+      //   console.log(res.authSetting)
+      //   if (res.authSetting['scope.userInfo'] === false) {
+      //     wepy.navigateTo({ url: '../authorize' })
+      //   }
+      // } })
+    }
   }
 </script>

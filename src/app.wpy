@@ -97,7 +97,7 @@ export default class extends wepy.app {
   onLaunch() {
     cookieJar.init()
   }
-  getUserInfo(cb) {
+  login(cb) {
     if (this.globalData.user.userId) {
       return this.globalData.user
     }

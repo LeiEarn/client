@@ -154,7 +154,7 @@
       // wepy.getSetting({ success: res => {
       //   console.log(res.authSetting)
       //   if (res.authSetting['scope.userInfo'] === false) {
-      //     wepy.navigateTo({ url: './authorize' })
+      //     wepy.navigateTo({ url: '../authorize' })
       //   }
       // } })
     }
@@ -167,7 +167,7 @@
         this.userId = this.$parent.globalData.userId
         this.hasUserInfo = true
       } else {
-        this.$parent.getUserInfo(function(user) {
+        this.$parent.login(function(user) {
           if (user) {
             self.userInfo = user.userInfo
             self.userId = user.userId
