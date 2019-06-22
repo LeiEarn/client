@@ -112,6 +112,9 @@
         self.accepted = res.data.accepted
         self.completed = res.data.completed
         self.$apply()
+      }).catch(err => {
+        console.log(err)
+        this.$parent.reLogin()
       })
     }
   }

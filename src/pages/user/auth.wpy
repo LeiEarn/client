@@ -163,7 +163,9 @@
             self.$parent.hasAuthenticated = res.data.hasAuthenticated
             self.$apply()
           },
-          fail: () => {},
+          fail: () => {
+            this.$parent.reLogin()
+          },
           complete: () => {}
         })
       }
@@ -190,6 +192,9 @@
           self.user = res.data.user
           self.cert = res.data.cert
           self.$apply()
+        }).catch(err => {
+          console.log(err)
+          this.$parent.reLogin()
         })
         this.hasAuthenticated = this.$parent.globalData.hasAuthenticated
       }

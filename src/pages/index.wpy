@@ -57,7 +57,7 @@ page, .container {
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: 'Index',
+      navigationBarTitleText: '主页',
       navigationBarTextStyle: 'black',
       navigationBarBackgroundColor: '#E7E8E3'
     }
@@ -71,6 +71,9 @@ page, .container {
     }
 
     methods = {
+      log_in() {
+        this.$parent.reLogin()
+      }
     }
 
     events = {
@@ -81,22 +84,6 @@ page, .container {
     }
 
     onLoad() {
-      // const rq = require('../lib/request.js')
-      // const APP_ID = 'wx2e515a1b9f28a15e'
-      // const APP_SECRET = 'ded301bbd914c7a4083d15326be60073'
-      // var object = {
-      //   url: 'http://172.26.18.172/index',
-      //   data: {
-      //     appid: APP_ID,
-      //     secret: APP_SECRET
-      //   },
-      //   method: 'GET'
-      // }
-      // rq.request(object).then(res => {
-      //   console.log(res)
-      // }).catch(res => {
-      //   console.log(res)
-      // })
     }
 
     onShow() {

@@ -87,7 +87,7 @@ export default class extends wepy.app {
     user: {
       userInfo: null,
       userId: null,
-      hasAuthenticated: ''
+      authState: ''
     }
   }
   constructor() {
@@ -124,7 +124,7 @@ export default class extends wepy.app {
               rq.request(object).then(res => {
                 self.globalData.user.userId = res.data.userId
                 self.globalData.user.userInfo = res.data.userInfo
-                self.globalData.uesr.hasAuthenticated = res.data.hasAuthenticated
+                self.globalData.uesr.authState = res.data.authState
                 self.$apply()
                 cb && cb(res.data)
               }).catch(res => {
@@ -141,8 +141,8 @@ export default class extends wepy.app {
   }
   getAuthState(cb) {
     if (this.globalData.userId) {
-      if (this.globalData.hasAuthenticated) {
-        return this.globalData.hasAuthenticated
+      if (this.globalData.authState) {
+        return this.globalData.authState
       }
       let self = this
       const rq = require('./lib/request.js')
@@ -154,13 +154,27 @@ export default class extends wepy.app {
         method: 'GET'
       }
       rq.request(object).then(res => {
-        self.globalData.hasAuthenticated = res.data.hasAuthenticated
+        self.globalData.authState = res.data.authState
         self.$apply()
-        cb && cb(res.data.hasAuthenticated)
+        cb && cb(res.data.authState)
       }).catch(() => {
         console.log('获取认证状态失败')
       })
     }
+  }
+  reLogin() {
+    wepy.showLoading({
+      title: '重新登录中', // 提示的内容,
+      mask: true, // 显示透明蒙层，防止触摸穿透,
+      success: res => {}
+    })
+    this.login(function(user) {
+      if (user) {
+        self.userId = user.userId
+        self.$apply()
+        wepy.hideLoading()
+      }
+    })
   }
 }
 </script>
