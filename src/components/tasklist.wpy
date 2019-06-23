@@ -1,4 +1,8 @@
 <style lang="less">
+  .weui-media-box {
+    background-color: white;
+  }
+  
   .weui-media-box__ft {
     text-align: right;
     font-size: 10pt;

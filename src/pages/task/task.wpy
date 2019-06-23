@@ -113,18 +113,8 @@
       }
     }
 
-    onLoad () {
-      const rq = require('../../lib/request.js')
-      var object = {
-        url: '/getTask',
-        data: {
-          pageId: this.pageId
-        },
-        method: 'GET'
-      }
-      rq.request(object).then(res => {
-        console.log(res)
-      })
+    async onLoad () {
+      await this.getTask()
     }
 
     load(list) {
@@ -138,22 +128,28 @@
       this.list = this.list.concat(this.list)
       this.$apply()
       setTimeout(function () {
-        const rq = require('../../lib/request.js')
-        let self = this
-        var object = {
-          url: '/getTask',
-          data: {
-            pageId: this.pageId
-          },
-          method: 'GET'
-        }
-        rq.request(object).then(res => {
-          console.log(res)
-          self.list = res.data.concat(self.list)
-          self.$apply()
-        })
+        this.getTask()
         wepy.stopPullDownRefresh()
       }, 5000)
+    }
+  
+    getTask() {
+      const rq = require('../../lib/request.js')
+      let self = this
+      var object = {
+        url: '/getTask',
+        data: {
+          pageId: this.pageId
+        },
+        method: 'GET'
+      }
+      rq.request(object).then(res => {
+        console.log(res)
+        self.list = res.data.concat(self.list)
+        self.$apply()
+      }).catch(err => {
+        console.log(err)
+      })
     }
   }
 </script>

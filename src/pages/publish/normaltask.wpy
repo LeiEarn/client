@@ -159,6 +159,7 @@ import GroupsPicker from '../../components/groupspicker'
       sexs: ['全部', '男', '女'],
       steps: [],
   
+      userId: null,
       task: {
         title: '',
         detail: '',
@@ -184,7 +185,10 @@ import GroupsPicker from '../../components/groupspicker'
         this.task.detail = this.task.detail + '&&' + JSON.stringify(this.steps)
         var object = {
           url: '/publishTask',
-          data: this.task,
+          data: {
+            userId: this.userId,
+            content: this.task
+          },
           method: 'POST'
         }
         const rq = require('../../lib/request.js')
@@ -192,6 +196,7 @@ import GroupsPicker from '../../components/groupspicker'
           console.log(res)
         }).catch(res => {
           console.log(res)
+          this.$parent.reLogin()
         })
       },
       bindTitleInput: function(e) {

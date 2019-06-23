@@ -106,6 +106,7 @@ export default class Info extends wepy.page {
   }
   components = {}
   data = {
+    userId: null,
     userInfo: null,
     temp: null,
     modify: 0
@@ -153,6 +154,7 @@ export default class Info extends wepy.page {
             filePath: self.temp.avatarUrl, // 要上传文件资源的路径
             name: 'img', // 文件对应的 key , 开发者在服务器端通过这个 key 可以获取到文件二进制内容
             formData: {
+              'userId': self.userId,
               'userInfo': JSON.parse(self.userInfo)
             },
             success: res => {
@@ -162,6 +164,7 @@ export default class Info extends wepy.page {
             },
             fail: () => {
               console.log('上传失败')
+              this.$parent.reLogin()
             },
             complete: () => { }
           })

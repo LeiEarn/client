@@ -136,6 +136,7 @@ export default class Wjx extends wepy.page {
     ],
     sexs: ['全部', '男', '女'],
 
+    userId: null,
     wjx: {
       title: '',
       detail: '',
@@ -198,14 +199,18 @@ export default class Wjx extends wepy.page {
       console.log(this.wjx)
       const rq = require('../../lib/request.js')
       var object = {
-        url: '',
-        data: this.wjx,
+        url: '/publishTask',
+        data: {
+          userId: this.userId,
+          content: this.wjx
+        },
         method: 'POST'
       }
       rq.request(object).then(res => {
         console.log(res.data)
       }).catch(err => {
         console.log(err.data)
+        this.$parent.reLogin()
       })
     }
   }

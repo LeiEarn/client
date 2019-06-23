@@ -1,0 +1,44 @@
+<style lang="less" scoped>
+.swiper{
+  width: 750rpx;
+  height: 390rpx;
+  swiper-item{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    image{
+      display: block;
+      width: 100%;
+    }
+  }
+}
+</style>
+
+<template>
+  <swiper indicator-dots="true"
+          class="swiper"
+          autoplay="true" 
+          indicator-color="rgba(255,255,255,.5)"
+          indicator-active-color="#ec4942"
+          interval="5000" 
+          circular="true"
+          duration="800">
+  <block wx:for="{{SwiperImg}}" 
+         wx:key="{{index}}">
+    <swiper-item>
+      <image src="{{item}}" class="slide-image" width="100%" height="100%"/>
+    </swiper-item>
+  </block>
+</swiper>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class SwiperView extends wepy.component {
+  data = {};
+
+  props = {
+    SwiperImg: {}
+  };
+}
+</script>

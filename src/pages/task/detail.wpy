@@ -272,6 +272,9 @@
             console.log(res.data)
             self.hasReceived = 1
             self.$apply()
+          }).catch(err => {
+            console.log(err)
+            this.$parent.reLogin()
           })
         }
       },
@@ -298,6 +301,9 @@
         }
         rq.request(object).then(res => {
           console.log(res.data)
+        }).catch(err => {
+          console.log(err)
+          this.$parent.reLogin()
         })
       },
 
@@ -318,6 +324,9 @@
         }
         rq.request(object).then(res => {
           console.log(res.data)
+        }).catch(err => {
+          console.log(err)
+          this.$parent.reLogin()
         })
       },
 
@@ -360,6 +369,9 @@
           console.log(res.data)
           self.hasReceived = 1
           self.$apply()
+        }).catch(err => {
+          console.log(err)
+          this.$parent.reLogin()
         })
       },
   
@@ -381,6 +393,9 @@
           console.log(res.data)
           self.hasReceived = 1
           self.$apply()
+        }).catch(err => {
+          console.log(err)
+          this.$parent.reLogin()
         })
       }
     };
@@ -422,6 +437,9 @@
         self.content = res.data.content
         self.hasReceived = res.data.hasReceived
         self.$apply()
+      }).catch(err => {
+        console.log(err)
+        this.$parent.reLogin()
       })
     }
 

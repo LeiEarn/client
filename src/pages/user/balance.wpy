@@ -48,6 +48,9 @@ export default class Balance extends wepy.page {
       rq.request(object).then(res => {
         self.balance = res.data.balance
         self.$apply()
+      }).catch(err => {
+        console.log(err)
+        this.$parent.reLogin()
       })
     }
   }
