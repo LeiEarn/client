@@ -1,59 +1,73 @@
 <style lang="less">
 @import '../style/iconfont.wxss';
-page, .container {
-  position: fixed;
-  height: 100%;
-  width: 100%;
-}
-
 .index {
-  z-index: 1;
-  position: fixed;
-  height: 100%;
-  width: 100%;
+  background-color: rgb(245, 245, 245);
 }
 
-.tab_item {
-  height: 100%;
-}
-
-.background {
-  background-size: cover;
+.weui-search-bar {
+  background-color: rgba(0, 0, 0, 0);
   position: absolute;
+  top: 0;
   width: 100%;
-  height: 100%;
 }
 
-.navigate {
-  position: relative;
-  top: 1100rpx;
-  width: 50%;
-  color: #439DA9;
-  opacity: 0.6;
-  font-size: 1.2em;
+.weui-search-bar__label {
+  background-color: rgba(0, 0, 0, 0);
+  color: white;
+  border: 1rpx solid white;
   border-radius: 50rpx;
+  height: 64rpx;
 }
 
-.pp {
-  width: 200rpx;
-  height: 50rpx;
-  position: relative;
-  top: 1000rpx;
-  left: 200rpx;
+.weui-flex__item {
+  background-color: white;
+  text-align: center;
+}
+
+.area {
+  margin: 30rpx 20rpx;
+}
+
+.placeholder {
+  margin: 8rpx 0;
+  font-size: 13pt;
+}
+
+.recommend {
+  margin-top: 20rpx;
 }
 </style>
 <template>
   <view class="container">
     <view class="index">
-      <image class="background" src="{{ backgroundUrl }}"/>
-      <button class="iconfont navigate" @tap="log_in" size="mid">&#xe637;开启新世界</button>
+      <view class="weui-search-bar">
+          <view class="weui-search-bar__form">
+              <view class="weui-search-bar__label" bindtap="search">
+                  <view class="iconfont weui-search-bar__text">&#xe601; 搜索</view>
+              </view>
+          </view>
+      </view>
+      <swiperview :SwiperImg.sync="swiperImg" />
+      <view class="page__bd page__bd_spacing">
+        <view class="weui-flex">
+            <view class="weui-flex__item area"><view class="placeholder">weui</view></view>
+            <view class="weui-flex__item area"><view class="placeholder">weui</view></view>
+        </view>
+      </view>
+      <view class="page__bd page__bd_spacing">
+        <view class="weui-flex">
+            <view class="weui-flex__item"><view class="placeholder">推荐任务</view></view>
+        </view>
+      </view>
+      <list class="recommend" :list.sync="list" />
     </view>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
-  import Datetimepicker from '../components/datetimepicker'
+  import SwiperView from '../components/swiper'
+  import TaskList from '../components/tasklist'
 
   export default class Index extends wepy.page {
     config = {
@@ -62,17 +76,99 @@ page, .container {
       navigationBarBackgroundColor: '#E7E8E3'
     }
     components = {
-      datetimepicker: Datetimepicker
+      swiperview: SwiperView,
+      list: TaskList
     }
 
     data = {
       backgroundUrl: '../assets/background.jpg',
-      currentTab: 0
+      currentTab: 0,
+      swiperImg: [
+        'http://iph.href.lu/750x390',
+        'http://iph.href.lu/750x390',
+        'http://iph.href.lu/750x390'
+      ],
+      list: [
+        {
+          id: '',
+          icon: '../assets/background.jpg',
+          title: '标题一',
+          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
+          money: 0.5,
+          left: 33
+        },
+        {
+          icon: '../assets/background.jpg',
+          title: '标题二',
+          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
+          money: 0.5,
+          left: 20
+        },
+        {
+          icon: '../assets/background.jpg',
+          title: '标题一',
+          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
+          money: 0.5,
+          left: 33
+        },
+        {
+          icon: '../assets/background.jpg',
+          title: '标题二',
+          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
+          money: 0.5,
+          left: 20
+        },
+        {
+          icon: '../assets/background.jpg',
+          title: '标题一',
+          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
+          money: 0.5,
+          left: 33
+        },
+        {
+          icon: '../assets/background.jpg',
+          title: '标题二',
+          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
+          money: 0.5,
+          left: 20
+        },
+        {
+          icon: '../assets/background.jpg',
+          title: '标题一',
+          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
+          money: 0.5,
+          left: 33
+        },
+        {
+          icon: '../assets/background.jpg',
+          title: '标题二',
+          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
+          money: 0.5,
+          left: 20
+        },
+        {
+          icon: '../assets/background.jpg',
+          title: '标题一',
+          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
+          money: 0.5,
+          left: 33
+        },
+        {
+          icon: '../assets/background.jpg',
+          title: '标题二',
+          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
+          money: 0.5,
+          left: 20
+        }
+      ]
     }
 
     methods = {
       log_in() {
         this.$parent.reLogin()
+      },
+      search() {
+        wepy.navigateTo({ url: './search' })
       }
     }
 
@@ -93,6 +189,10 @@ page, .container {
       //     wepy.navigateTo({ url: './authorize' })
       //   }
       // } })
+    }
+
+    onReachBottom() {
+      console.log(558)
     }
   }
 </script>

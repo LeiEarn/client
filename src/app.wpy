@@ -26,6 +26,7 @@ export default class extends wepy.app {
       'pages/index',
       'pages/authorize',
       'pages/about',
+      'pages/search',
       'pages/about/behaviorItem',
       'pages/about/privacyItem',
       'pages/about/publishItem',
