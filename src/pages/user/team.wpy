@@ -1,5 +1,7 @@
-<style type="less">
-	.page,
+<style lang = "less">
+	.smallpage{
+
+  }
 	.page__bd{
     	height: 100%;
 	}
@@ -26,8 +28,17 @@
                 <view class="weui-navbar__slider" style="left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
             </view>
             <view class="weui-tab__panel">
-                <view class="weui-tab__content" hidden="{{activeIndex != 0}}">我加入的组织</view>
-                <view class="weui-tab__content" hidden="{{activeIndex != 1}}">创建组织</view>
+                <view class="weui-tab__content" hidden="{{activeIndex != 0}}">
+                  <view class="smallpage">
+                    <view class="team">
+                       <list :list.sync="list"/>
+                    </view>
+                  </view>
+                </view>
+                <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
+                  
+
+                </view>
             </view>
         </view>
     </view>
@@ -36,33 +47,59 @@
 </template>
 
 <script >
-	var sliderWidth = 96; // 需要设置slider的宽度，用于计算中间位置
+	import wepy from 'wepy'
+  import TeamList from '../../components/teamlist'
+	export default class Team extends wepy.page {
+    config = {
+      navigationBarTitleText: '我的组织',
+      navigationBarTextStyle: 'black',
+      navigationBarBackgroundColor: '#E7E8E3',
+      enablePullDownRefresh: true,
+      backgroundTextStyle: 'dark'
+    }
 
-	Page({
-	    data: {
-	        tabs: ["我加入的组织", "创建组织"],
-	        activeIndex: 0,
-	        sliderOffset: 0,
-	        sliderLeft: 0
-	    },
-	    onLoad: function () {
-	        var that = this;
-	        wx.getSystemInfo({
-	            success: function(res) {
-	                that.setData({
-	                    sliderLeft: (res.windowWidth / that.data.tabs.length - sliderWidth) / 2,
-	                    sliderOffset: res.windowWidth / that.data.tabs.length * that.data.activeIndex
-	                });
-	            }
-	        });
-	    },
-	    tabClick: function (e) {
-	        this.setData({
-	            sliderOffset: e.currentTarget.offsetLeft,
-	            activeIndex: e.currentTarget.id
-	        });
-	    }
-	});
+    components = {
+      list: TeamList
+    }
 
+		data = {
+			tabs: ["我加入的组织", "创建组织"],
+      list: [
+        {
+          icon: '../../assets/background.jpg',
+          title: '这是组织名称',
+          desc: '这里是组织介绍'
+        },
+        {
+          icon: '../../assets/background.jpg',
+          title: '这是组织名称1',
+          desc: '这里是组织介绍1'
+        },
+        {
+          icon: '../../assets/background.jpg',
+          title: '这是组织名称2',
+          desc: '这里是组织介绍2'
+        }
+      ],
+	    activeIndex: 0,
+      sliderOffset: 0,
+      sliderLeft: 0
+    }
+    async onLoad() {
+      // var sliderWidth = 144
+      wx.getSystemInfo({
+        success: function(res) {
+          this.sliderLeft=(res.windowWidth / this.data.tabs.length - 144) / 2
+          this.sliderOffset=res.windowWidth / this.data.tabs.length * this.data.activeIndex
+          this.$apply()
+        }
+      });
+    }
+    tabClick(e) {
+      this.sliderOffset=e.currentTarget.offsetLeft
+      this.activeIndex=e.currentTarget.id
+      this.$apply()
+    }
+  }
 
 </script>

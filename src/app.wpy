@@ -36,6 +36,7 @@ export default class extends wepy.app {
       'pages/user/balance',
       'pages/user/setting',
       'pages/user/team',
+      'pages/user/teamdetial',
       'pages/task/task',
       'pages/task/published',
       'pages/task/accepted',

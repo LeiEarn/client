@@ -1,0 +1,448 @@
+<style lang="less">
+@import '../../style/iconfont.wxss';
+  .page {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: #f0f0f0;
+  }
+
+  .background {
+    background-size: cover;
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+  }
+
+  .weui-media-box__hd {
+    height: 200rpx;
+    width: 200rpx;
+  }
+
+  .item {
+    background-color: white;
+    width: 92%;
+    margin: 0 auto;
+    margin-top: 3%;
+    border-radius: 10rpx;
+    padding: 10rpx 20rpx;
+  }
+
+  .pop {
+    position: fixed;
+    bottom: 0;
+    width: 96%;
+    background-color: white;
+    padding: 10rpx 2%;
+    z-index: 3;
+  }
+
+  .money {
+    float: right;
+    color: red;
+  }
+
+  .num, .left {
+    font-size: 10pt;
+  }
+
+  .title, .money {
+    font-size: 14pt;
+    font-weight: 580;
+  }
+
+  .detail, .step {
+    font-size: 12pt;
+  }
+
+  .tab {
+    margin-left: 20rpx;
+  }
+
+  .button-sp-area{
+    margin: 0 auto;
+    padding-top: 20px;
+    width: 80%;
+  }
+
+  .weui-btn{
+    margin: 0 10rpx;
+  }
+
+  .mask-layer {
+    width:100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #000;
+    opacity: 0.2;
+    overflow: hidden;
+    z-index: 2;
+    color: #fff;
+  }
+  
+  .tips {
+    font-size: 8pt;
+    margin: 0;
+    color: #999;
+  }
+</style>
+<template>
+  <view class="page">
+    <!-- <image class="background" src="{{ backgroundUrl }}"/> -->
+    <view class="weui-media-box_appmsg item">
+      <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+          <image class="weui-media-box__thumb" src="{{user.head}}" />
+      </view>
+      <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+          <view class="weui-media-box__title">组织名称：{{ user.nickName }}</view>
+          <view class="weui-media-box__desc">联系电话：{{ user.tel }}</view>
+      </view>
+    </view>
+    <view class="content item">
+      <view class="money">赏{{ content.money }}元</view>
+      <view class="title">{{ content.title }}</view>
+      <view class="num">{{ content.num }}人已赚到赏金</view>
+      <view class="left">剩余名额：{{ content.left }}个</view>
+    </view>
+    <view class="condition item">
+      <view class="title">条件限制</view>
+      <block wx:for-items="{{ content.conditions }}" wx:for-index="index" wx:for-item="item" wx:key="id">
+        <view class="tab">
+          <text>{{ index + 1 }}</text>
+          <text class="step">{{ item }}</text>
+        </view>
+      </block>
+    </view>
+    <view class="detail item">
+      <view class="title">任务详情</view>
+      <view class="tab">{{ content.detail }}</view>
+      <view class="title">步骤</view>
+      <block wx:for-items="{{ content.steps }}" wx:for-index="index" wx:for-item="item" wx:key="id">
+        <view class="tab">
+          <text>{{ index + 1 }}</text>
+          <text class="step">{{ item }}</text>
+        </view>
+      </block>
+    </view>
+    <view hidden="{{ isPublisher }}">
+      <view class="page__bd page__bd_spacing" hidden="{{ hasReceived !== 0 }}">
+        <view class="button-sp-area">
+          <button class="weui-btn" type="primary" bindtap="accept">接受任务</button>
+        </view>
+      </view>
+      <view class="page__bd page__bd_spacing" hidden="{{ hasReceived === 0 }}">
+        <view class="button-sp-area" wx:if="{{ hasReceived === 1 && content.type === '问卷星' }}">
+          <button class="weui-btn" plain="true" type="primary" bindtap="toComplete">去完成</button>
+        </view>
+        <view class="button-sp-area weui-flex">
+          <view class="weui-flex__item" wx:if="{{ hasReceived === 1 }}"><button class="weui-btn placeholder" type="warn" bindtap="abandon">放弃</button></view>
+          <view class="weui-flex__item" hidden="{{ hasReceived === 0 }}"><button class="weui-btn placeholder" type="primary" bindtap="complete" disabled="{{ hasReceived === 2 }}">{{ hasReceived === 2 ? "已" : "" }}完成</button></view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import rq from '../../lib/request.js'
+
+  export default class TaskDetail extends wepy.page {
+    config = {
+      navigationBarTitleText: '组织详情',
+      navigationBarTextStyle: 'black',
+      navigationBarBackgroundColor: '#f0f0f0'
+    };
+
+    components = {
+    };
+
+    data = {
+      userId: null,
+      taskId: null,
+      user: {
+        head: '../../assets/background.jpg',
+        title: '获取失败',
+        tel: '获取失败'
+      },
+      content: {
+        type: '问卷星',
+        id: '39541637',
+        title: 'loading',
+        num: 0,
+        left: 5,
+        money: 1.7,
+        conditions: [
+          '软工8班班员',
+          '男生'
+        ],
+        detail: '按照要求完成问卷即可完成任务。',
+        steps: [
+          '打开问卷，如实填写问卷',
+          '添加填写完成证明'
+        ]
+      },
+      hasReceived: 0,
+      authState: '未认证',
+      isPublisher: false,
+
+      cert: {
+        files: [],
+        remarks: ''
+      },
+      extraInfo: '',
+  
+      animationData: {},
+      hidden: true
+    };
+
+    methods = {
+      accept() {
+        if (this.checkState()) {
+          let self = this
+          var object = {
+            url: '/receiveTask',
+            data: {
+              userId: this.userId,
+              taskId: this.taskId
+            },
+            method: 'POST'
+          }
+          rq.request(object).then(res => {
+            console.log(res.data)
+            self.hasReceived = 1
+            self.$apply()
+          }).catch(err => {
+            console.log(err)
+            this.$parent.reLogin()
+          })
+        }
+      },
+
+      toComplete() {
+        let self = this
+        wepy.navigateToMiniProgram({
+          appId: 'wxd947200f82267e58', // 要打开的小程序 appId,
+          path: 'pages/wjxqList/wjxqList?activityId=' + self.content.id, // 打开的页面路径，如果为空则打开首页,
+          success: res => {}
+        })
+      },
+      complete() {
+        this.showPop()
+      },
+      abandon() {
+        var object = {
+          url: '/abandonTask',
+          data: {
+            userId: this.userId,
+            taskId: this.taskId
+          },
+          method: 'POST'
+        }
+        rq.request(object).then(res => {
+          console.log(res.data)
+        }).catch(err => {
+          console.log(err)
+          this.$parent.reLogin()
+        })
+      },
+
+      viewAcc() {
+        this.$navigate({url: './accepter?taskId=' + this.taskId})
+      },
+      addTaskInfo() {
+        this.showPop()
+      },
+      abort() {
+        var object = {
+          url: '/abortTask',
+          data: {
+            userId: this.userId,
+            taskId: this.taskId
+          },
+          method: 'POST'
+        }
+        rq.request(object).then(res => {
+          console.log(res.data)
+        }).catch(err => {
+          console.log(err)
+          this.$parent.reLogin()
+        })
+      },
+
+      cancel() {
+        this.hiddenPop()
+      },
+      bindRemarksInput(e) {
+        this.cert.remarks = e.detail.value
+      },
+      chooseImage: function (e) {
+        var that = this
+        wepy.chooseImage({
+          count: 7 - that.cert.files.length,
+          sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+          sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+          success: function (res) {
+                // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+            that.cert.files = that.cert.files.concat(res.tempFilePaths)
+            that.$apply()
+          }
+        })
+      },
+      previewImage: function(e) {
+        wepy.previewImage({
+          current: e.currentTarget.id, // 当前显示图片的http链接
+          urls: this.data.cert.files // 需要预览的图片http链接列表
+        })
+      },
+      submit() {
+        let self = this
+        var object = {
+          url: '/completeTask',
+          data: {
+            userId: this.userId,
+            taskId: this.taskId
+          },
+          method: 'POST'
+        }
+        rq.request(object).then(res => {
+          console.log(res.data)
+          self.hasReceived = 1
+          self.$apply()
+        }).catch(err => {
+          console.log(err)
+          this.$parent.reLogin()
+        })
+      },
+  
+      bindExtraInfoInput(e) {
+        this.extraInfo = e.detail.value
+      },
+      submit2() {
+        let self = this
+        var object = {
+          url: '/addTaskInfo',
+          data: {
+            userId: this.userId,
+            taskId: this.taskId,
+            extraInfo: this.extraInfo
+          },
+          method: 'POST'
+        }
+        rq.request(object).then(res => {
+          console.log(res.data)
+          self.hasReceived = 1
+          self.$apply()
+        }).catch(err => {
+          console.log(err)
+          this.$parent.reLogin()
+        })
+      }
+    };
+
+    events = {
+    };
+
+    async onLoad(res) {
+      if (this.$parent.globalData.userId) {
+        this.userId = this.$parent.globalData.userId
+      }
+      if (this.$parent.globalData.authState) {
+        this.authState = this.$parent.globalData.authState
+      }
+      var json = JSON.parse(res.json)
+      console.log(json)
+      this.data.content.title = json.title
+      this.data.content.money = json.money
+      this.data.content.left = json.left
+      this.taskId = json.taskId
+      if (this.taskId) {
+        await this.getTaskDetail()
+      }
+    };
+
+    async getTaskDetail() {
+      let self = this
+      var object = {
+        url: '/getTaskDetail',
+        data: {
+          userId: this.userId,
+          taskId: this.taskId
+        },
+        method: 'GET'
+      }
+      rq.request(object).then(res => {
+        console.log(res.data)
+        self.user = res.data.user
+        self.content = res.data.content
+        self.hasReceived = res.data.hasReceived
+        self.$apply()
+      }).catch(err => {
+        console.log(err)
+        this.$parent.reLogin()
+      })
+    }
+
+    checkState() {
+      if (this.userId === null) {
+        console.log('您还没有登录')
+        wepy.showToast({
+          title: '您还没有登录', // 提示的内容,
+          image: '../../assets/warn.png',
+          duration: 2000, // 延迟时间,
+          mask: true, // 显示透明蒙层，防止触摸穿透,
+          success: res => {}
+        })
+      } else if (this.authState !== '已认证') {
+        console.log('您的身份认证还没有成功')
+        wepy.showToast({
+          title: '您的身份认证还没有成功', // 提示的内容,
+          image: '../../assets/warn.png',
+          duration: 2000, // 延迟时间,
+          mask: true, // 显示透明蒙层，防止触摸穿透,
+          success: res => {}
+        })
+      } else {
+        return true
+      }
+      return false
+    }
+
+    showPop() {
+      let self = this
+      var animation = wepy.createAnimation({
+        duration: 500,
+        timingFunction: 'ease',
+        delay: 0
+      })
+      animation.translateY(300).step()
+      this.animationData = animation.export()
+      this.hidden = false
+      setTimeout(function() {
+        animation.translateY(0).step()
+        self.animationData = animation.export()
+        self.$apply()
+      }, 50)
+    }
+
+    hiddenPop() {
+      let self = this
+      var animation = wepy.createAnimation({
+        duration: 500,
+        timingFunction: 'ease',
+        delay: 0
+      })
+      animation.translateY(300).step()
+      this.animationData = animation.export()
+      setTimeout(function() {
+        animation.translateY(0).step()
+        self.animationData = animation.export()
+        self.hidden = true
+        self.$apply()
+      }, 200)
+    }
+  }
+</script>
