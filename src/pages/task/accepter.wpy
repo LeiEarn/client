@@ -74,20 +74,6 @@
       if (this.$parent.globalData.userId) {
         this.getAccepter()
       }
-      this.accepted = this.load(this.accepted)
-      this.completed = this.load(this.completed)
-    }
-    load(list) {
-      for (var i = 0; i < list.length; i++) {
-        if (list[i].credit >= 90) {
-          list[i].creditColor = '#44BB00'
-        } else if (list[i].credit >= 60) {
-          list[i].creditColor = '#F68855'
-        } else {
-          list[i].creditColor = '#F44444'
-        }
-      }
-      return list
     }
     onPullDownRefresh() {
       console.log('下拉刷新列表')

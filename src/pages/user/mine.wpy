@@ -128,10 +128,9 @@
         }
       },
       team() {
-        // if (this.checkState()) {
-        //   wepy.navigateTo({ url: './team' })
-        // }
-        wepy.navigateTo({ url: './team' })
+        if (this.checkState()) {
+          wepy.navigateTo({ url: './team' })
+        }
       },
       auth() {
         if (this.checkState()) {
@@ -149,10 +148,9 @@
         }
       },
       setting() {
-        // if (this.checkState()) {
-        //   wepy.navigateTo({ url: './cancel' })
-        // }
-        wepy.navigateTo({ url: './setting' })
+        if (this.checkState()) {
+          wepy.navigateTo({ url: './setting' })
+        }
       },
       about() {
         wepy.navigateTo({ url: '../about' })

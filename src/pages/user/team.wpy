@@ -1,105 +1,211 @@
 <style lang = "less">
-	.smallpage{
-
-  }
-	.page__bd{
-    	height: 100%;
-	}
-	.page__bd{
-    	padding-bottom: 0;
-	}
-	.weui-tab__content{
-    	padding-top: 60px;
-    	text-align: center;
-	}
 </style>
 
 
 <template>
-	<view class="page">
+  <view class="page">
     <view class="page__bd">
-        <view class="weui-tab">
-            <view class="weui-navbar">
-                <block wx:for="{{tabs}}" wx:key="*this">
-                    <view id="{{index}}" class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" bindtap="tabClick">
-                        <view class="weui-navbar__title">{{item}}</view>
-                    </view>
-                </block>
-                <view class="weui-navbar__slider" style="left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
+      <view class="weui-tab">
+        <view class="weui-navbar">
+          <block
+            wx:for="{{tabs}}"
+            wx:key="*this"
+          >
+            <view
+              id="{{index}}"
+              class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}"
+              bindtap="tabClick"
+            >
+              <view class="weui-navbar__title">{{item}}</view>
             </view>
-            <view class="weui-tab__panel">
-                <view class="weui-tab__content" hidden="{{activeIndex != 0}}">
-                  <view class="smallpage">
-                    <view class="team">
-                       <list :list.sync="list"/>
-                    </view>
-                  </view>
-                </view>
-                <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
-                  
-
-                </view>
-            </view>
+          </block>
+          <view
+            class="weui-navbar__slider"
+            style="left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"
+          ></view>
         </view>
+        <view class="weui-tab__panel">
+          <view
+            class="weui-tab__content"
+            hidden="{{activeIndex != 0}}"
+          >
+            <view class="smallpage">
+              <view class="team">
+                <list :list.sync="list" />
+              </view>
+            </view>
+          </view>
+          <view
+            class="weui-tab__content"
+            hidden="{{activeIndex != 1}}"
+          >
+            <view class="weui-cells weui-cells_after-title">
+              <view class="weui-cell weui-cell_input">
+                <view class="weui-cell__bd">
+                  <input class="weui-input" placeholder="请输入组织" />
+                </view>
+              </view>
+            </view>
+            <view class="weui-btn-area">
+              <button class="weui-btn" type="primary" bindtap="joinGroup">申请加入</button>
+            </view> 
+          </view>
+          <view
+            class="weui-tab__content"
+            hidden="{{activeIndex != 2}}"
+          >
+            <view class="weui-cells weui-cells_after-title">
+              <view class="weui-cell weui-cell_input">
+                <view class="weui-cell__bd">
+                  <input class="weui-input" placeholder="请输入组织" />
+                </view>
+              </view>
+            </view>
+            <view class="weui-btn-area">
+              <button class="weui-btn" type="primary" bindtap="createGroup">创建</button>
+            </view>
+          </view>
+        </view>
+      </view>
     </view>
-</view>
+  </view>
 
 </template>
 
 <script >
-	import wepy from 'wepy'
-  import TeamList from '../../components/teamlist'
-	export default class Team extends wepy.page {
-    config = {
-      navigationBarTitleText: '我的组织',
-      navigationBarTextStyle: 'black',
-      navigationBarBackgroundColor: '#E7E8E3',
-      enablePullDownRefresh: true,
-      backgroundTextStyle: 'dark'
-    }
+import wepy from 'wepy'
+import TeamList from '../../components/teamlist'
+export default class Team extends wepy.page {
+  config = {
+    navigationBarTitleText: '我的组织',
+    navigationBarTextStyle: 'black',
+    navigationBarBackgroundColor: '#E7E8E3'
+  }
 
-    components = {
-      list: TeamList
-    }
+  components = {
+    list: TeamList
+  }
 
-		data = {
-			tabs: ["我加入的组织", "创建组织"],
-      list: [
-        {
-          icon: '../../assets/background.jpg',
-          title: '这是组织名称',
-          desc: '这里是组织介绍'
+  data = {
+    tabs: ['我加入的组织', '加入组织', '创建组织'],
+    list: [
+      {
+        icon: '../../assets/background.jpg',
+        title: '这是组织名称',
+        desc: '这里是组织介绍'
+      },
+      {
+        icon: '../../assets/background.jpg',
+        title: '这是组织名称1',
+        desc: '这里是组织介绍1'
+      },
+      {
+        icon: '../../assets/background.jpg',
+        title: '这是组织名称2',
+        desc: '这里是组织介绍2'
+      }
+    ],
+    activeIndex: 0,
+    sliderOffset: 0,
+    sliderLeft: 0,
+
+    userId: null,
+    createGroupName: '',
+    joinGroupName: ''
+  }
+
+  methods = {
+    createGroup() {
+      const rq = require('../../lib/request.js')
+      var object = {
+        url: '/createGroup',
+        data: {
+          userId: this.userId,
+          groupName: this.groupName
         },
-        {
-          icon: '../../assets/background.jpg',
-          title: '这是组织名称1',
-          desc: '这里是组织介绍1'
+        method: 'POST'
+      }
+      rq.request(object).then(res => {
+        console.log(res)
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    joinGroup() {
+      const rq = require('../../lib/request.js')
+      var object = {
+        url: '/joinGroup',
+        data: {
+          userId: this.userId,
+          groupName: this.groupName
         },
-        {
-          icon: '../../assets/background.jpg',
-          title: '这是组织名称2',
-          desc: '这里是组织介绍2'
-        }
-      ],
-	    activeIndex: 0,
-      sliderOffset: 0,
-      sliderLeft: 0
-    }
-    async onLoad() {
-      // var sliderWidth = 144
-      wx.getSystemInfo({
-        success: function(res) {
-          this.sliderLeft=(res.windowWidth / this.data.tabs.length - 144) / 2
-          this.sliderOffset=res.windowWidth / this.data.tabs.length * this.data.activeIndex
-          this.$apply()
-        }
-      });
-    }
-    tabClick(e) {
-      this.sliderOffset=e.currentTarget.offsetLeft
-      this.activeIndex=e.currentTarget.id
-      this.$apply()
+        method: 'POST'
+      }
+      rq.request(object).then(res => {
+        console.log(res)
+      }).catch(err => {
+        console.log(err)
+      })
     }
   }
+
+  async onLoad() {
+    this.userId = this.$parent.userId
+    var sliderWidth = 114
+    let self = this
+    wepy.getSystemInfo({
+      success: function (res) {
+        self.sliderLeft = (res.windowWidth / self.tabs.length - sliderWidth) / 2
+        self.sliderOffset = res.windowWidth / self.tabs.length * self.activeIndex
+        self.$apply()
+      }
+    })
+    await this.getCreatedGroup()
+    await this.getJoinedGroup()
+  }
+  async tabClick(e) {
+    if (e.currentTarget.id === '0') {
+      await this.getCreatedGroup()
+      await this.getJoinedGroup()
+    }
+    this.sliderOffset = e.currentTarget.offsetLeft
+    this.activeIndex = e.currentTarget.id
+  }
+  getCreatedGroup() {
+    const rq = require('../../lib/request.js')
+    let self = this
+    var object = {
+      url: '/getCreatedGroup',
+      data: {
+        userId: this.userId
+      },
+      method: 'POST'
+    }
+    rq.request(object).then(res => {
+      console.log(res)
+      self.list = res.list
+      self.$apply()
+    }).catch(err => {
+      console.log(err)
+    })
+  }
+  getJoinedGroup() {
+    const rq = require('../../lib/request.js')
+    var object = {
+      url: '/getJoinedGroup',
+      data: {
+        userId: this.userId
+      },
+      method: 'POST'
+    }
+    rq.request(object).then(res => {
+      console.log(res)
+      self.list = res.list
+      self.$apply()
+    }).catch(err => {
+      console.log(err)
+    })
+  }
+}
 
 </script>

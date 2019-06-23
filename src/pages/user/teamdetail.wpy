@@ -1,0 +1,80 @@
+<style lang="less" scoped>
+@import '../../style/iconfont.wxss';
+.page {
+  background-color: rgb(245, 245, 245);
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+.group {
+  width: 90%;
+  margin: 10rpx auto;
+  background-color: white;
+  border-radius: 20rpx;
+  .weui-media-box__thumb {
+    border-radius: 50%;
+    width: 180rpx;
+    height: 180rpx;
+    margin: 20rpx;
+  }
+}
+</style>
+<template>
+  <view class="page">
+    <view class="weui-media-box_appmsg group">
+      <view class="icon">
+          <image class="weui-media-box__thumb" src="{{group.icon}}" />
+      </view>
+      <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+          <view class="weui-media-box__title">{{ group.title }}</view>
+          <view class="weui-media-box__desc">{{ group.desc }}</view>
+      </view>
+    </view>
+    <view style="padding: 10rpx">组织成员：</view>
+    <userlist :list.sync="list" />
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+import UserList from '../../components/userlist'
+
+  export default class TeamDetail extends wepy.page {
+    config = {
+      navigationBarTitleText: '组织详情',
+      navigationBarTextStyle: 'black',
+      navigationBarBackgroundColor: '#f0f0f0'
+    };
+
+    components = {
+      userlist: UserList
+    };
+
+    data = {
+      group: {
+        icon: '',
+        title: '',
+        desc: ''
+      },
+
+      list: [
+        {
+          icon: '../../assets/background.jpg',
+          nickName: '123123',
+          tel: '12312321',
+          credit: 100
+        }
+      ]
+    };
+
+    methods = {
+    };
+
+    events = {
+    };
+
+    onLoad(res) {
+      this.group = JSON.parse(res.json)
+    }
+  }
+</script>
