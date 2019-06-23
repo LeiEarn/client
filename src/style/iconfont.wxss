@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-
-=======
 @font-face {
   font-family: 'iconfont';  /* project id 1189535 */
   src: url('//at.alicdn.com/t/font_1189535_f645htydg1a.eot');
@@ -10,7 +7,6 @@
   url('//at.alicdn.com/t/font_1189535_f645htydg1a.ttf') format('truetype'),
   url('//at.alicdn.com/t/font_1189535_f645htydg1a.svg#iconfont') format('svg');
 }
->>>>>>> d230d418b2332d329a82bc4225bf81d5bce4d2e1
 
 .iconfont {
   font-family: "iconfont" !important;
