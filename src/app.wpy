@@ -38,11 +38,12 @@ export default class extends wepy.app {
       'pages/user/team',
       'pages/user/teamdetail',
       'pages/task/task',
+      'pages/task/detail',
       'pages/task/published',
       'pages/task/accepted',
       'pages/task/accepter',
       'pages/task/job',
-      'pages/task/detail',
+      'pages/task/jobdetail',
       'pages/publish/publish',
       'pages/publish/normaltask',
       'pages/publish/wjx'
@@ -137,6 +138,7 @@ export default class extends wepy.app {
                 cb && cb(this.globalData.user)
               }).catch(res => {
                 console.log(res)
+                cb && cb(null)
               })
             },
             fail: () => {

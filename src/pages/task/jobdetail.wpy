@@ -1,0 +1,83 @@
+<style lang="less">
+.weui-btn {
+  width: 90%;
+  margin-bottom: 40rpx;
+}
+</style>
+<template>
+  <view class="page_bd page__bd_spacing">
+    <view class="weui-article">
+      <view class="weui-article__section">
+          <view class="weui-article__p">{{ remarks }}</view>
+          <block class="weui-article__p" wx:for-items="{{cert}}" wx:for-index="index" wx:for-item="item" wx:key="id">
+              <image class="weui-article__img" src="{{item}}" mode="aspectFit" style="height: 180px" />
+          </block>
+      </view>
+    </view>
+    <view class="button-sp-area weui-flex">
+      <view class="weui-flex__item"><button class="weui-btn placeholder" type="warn" bindtap="reject">拒绝</button></view>
+      <view class="weui-flex__item"><button class="weui-btn placeholder" type="primary" bindtap="confirm">确认</button></view>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  export default class JobDetail extends wepy.page {
+    config = {
+      navigationBarTitleText: '工作详情',
+      navigationBarTextStyle: 'black',
+      navigationBarBackgroundColor: '#E7E8E3'
+    }
+    components = {
+    }
+    data = {
+      remarks: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+      cert: [
+        'http://iph.href.lu/750x390',
+        'http://iph.href.lu/750x390',
+        'http://iph.href.lu/750x390',
+        'http://iph.href.lu/750x390'
+      ]
+    }
+    events = {}
+    methods = {
+      confirm() {
+        const rq = require('../../lib/request.js')
+        var obj = {
+          url: '/task/' + this.taskId + '/job?userId=' + this.userId + '&state=agree',
+          data: {},
+          method: 'PUT'
+        }
+        rq.request(obj).then(res => {
+          console.log(res)
+        }).catch(err => {
+          console.log(err)
+        })
+      },
+      reject() {
+        const rq = require('../../lib/request.js')
+        var obj = {
+          url: '/task/' + this.taskId + '/job?userId=' + this.userId + '&state=reject',
+          data: {},
+          method: 'PUT'
+        }
+        rq.request(obj).then(res => {
+          console.log(res)
+        }).catch(err => {
+          console.log(err)
+        })
+      }
+    }
+    onLoad(res) {
+      res = JSON.parse(res.json)
+      this.remarks = res.remarks
+      this.cert = res.files
+    }
+    onPullDownRefresh() {
+      console.log('下拉刷新列表')
+      setTimeout(function() {
+        wepy.stopPullDownRefresh()
+      }, 5000)
+    }
+  }
+</script>

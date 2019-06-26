@@ -34,39 +34,46 @@
     }
     data = {
       taskId: null,
-      accepted: [{
-        icon: '../../assets/background.jpg',
-        nickName: '大脸猫(蒋侑伸)',
-        tel: '电话号码：13169766417',
-        credit: 90
-      },
-      {
-        icon: '../../assets/background.jpg',
-        nickName: '大脸猫(蒋侑伸)',
-        tel: '电话号码：13169766417',
-        credit: 20
-      },
-      {
-        icon: '../../assets/background.jpg',
-        nickName: '大脸猫(蒋侑伸)',
-        tel: '电话号码：13169766417',
-        credit: 80
-      },
-      {
-        icon: '../../assets/background.jpg',
-        nickName: '大脸猫(蒋侑伸)',
-        tel: '电话号码：13169766417',
-        credit: 60
-      }
+      accepted: [
+        {
+          userId: '',
+          avatarUrl: '../../assets/background.jpg',
+          nickName: '大脸猫(蒋侑伸)',
+          tel: '电话号码：13169766417'
+        },
+        {
+          userId: '',
+          avatarUrl: '../../assets/background.jpg',
+          nickName: '大脸猫(蒋侑伸)',
+          tel: '电话号码：13169766417'
+        },
+        {
+          userId: '',
+          avatarUrl: '../../assets/background.jpg',
+          nickName: '大脸猫(蒋侑伸)',
+          tel: '电话号码：13169766417'
+        },
+        {
+          userId: '',
+          avatarUrl: '../../assets/background.jpg',
+          nickName: '大脸猫(蒋侑伸)',
+          tel: '电话号码：13169766417'
+        }
       ],
-      completed: [{
-        icon: '../../assets/background.jpg',
-        nickName: '大脸猫(蒋侑伸)',
-        tel: '电话号码：13169766417',
-        credit: 33
-      }]
+      completed: [
+        {
+          userId: '',
+          avatarUrl: '../../assets/background.jpg',
+          nickName: '大脸猫(蒋侑伸)',
+          tel: '电话号码：13169766417'
+        }
+      ]
     }
-    events = {}
+    events = {
+      TapUser(e) {
+        console.log(e.index)
+      }
+    }
     methods = {
     }
     onLoad(res) {
