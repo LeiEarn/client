@@ -165,7 +165,8 @@ import GroupsPicker from '../../components/groupspicker'
         detail: '',
         condition: {
           groups: [],
-          sex: '全部'
+          sex: '全部',
+          creditScore: 0
         },
         time: '',
         money: 0,
@@ -184,10 +185,15 @@ import GroupsPicker from '../../components/groupspicker'
       publish() {
         this.task.detail = this.task.detail + '&&' + JSON.stringify(this.steps)
         var object = {
-          url: '/task/',
+          url: '/task/' + this.userId,
           data: {
-            userId: this.userId,
-            content: this.task
+            type: 'normal',
+            title: this.task.title,
+            desc: this.task.desc,
+            time: this.task.time,
+            money: this.task.money,
+            maxNum: this.task.num,
+            condition: this.task.condition
           },
           method: 'POST'
         }
@@ -246,6 +252,10 @@ import GroupsPicker from '../../components/groupspicker'
     };
     events = {
     }
-    onLoad() {}
+    onLoad() {
+      if (this.$parent.globalData.user.userId) {
+        this.userId = this.$parent.globalData.user.userId
+      }
+    }
   }
 </script>

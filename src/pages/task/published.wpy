@@ -93,9 +93,8 @@ export default class PublishedTask extends wepy.page {
     const rq = require('../../lib/request.js')
     let self = this
     var object = {
-      url: '/getIssuedTask',
+      url: '/task/' + this.$parent.globalData.userId + '?type=publishment',
       data: {
-        userId: this.$parent.globalData.userId
       },
       method: 'GET'
     }

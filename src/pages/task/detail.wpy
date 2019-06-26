@@ -261,10 +261,8 @@
         if (this.checkState()) {
           let self = this
           var object = {
-            url: '/receiveTask',
+            url: '/task' + this.taskId + '/accepter?userId=' + this.userId,
             data: {
-              userId: this.userId,
-              taskId: this.taskId
             },
             method: 'POST'
           }
@@ -292,12 +290,10 @@
       },
       abandon() {
         var object = {
-          url: '/abandonTask',
+          url: '/task' + this.taskId + '/accepter?userId=' + this.userId,
           data: {
-            userId: this.userId,
-            taskId: this.taskId
           },
-          method: 'POST'
+          method: 'DELETE'
         }
         rq.request(object).then(res => {
           console.log(res.data)
@@ -315,12 +311,10 @@
       },
       abort() {
         var object = {
-          url: '/abortTask',
+          url: '/task/' + this.taskId + '/info?userId=' + this.userId,
           data: {
-            userId: this.userId,
-            taskId: this.taskId
           },
-          method: 'POST'
+          method: 'DELETE'
         }
         rq.request(object).then(res => {
           console.log(res.data)
@@ -355,13 +349,15 @@
           urls: this.data.cert.files // 需要预览的图片http链接列表
         })
       },
-      submit() {
+      async submit() {
+        await this.uploadImgs(this.cert.files)
         let self = this
         var object = {
-          url: '/completeTask',
+          url: '/task' + this.taskId + '/job',
           data: {
             userId: this.userId,
-            taskId: this.taskId
+            files: this.cert.files,
+            remarks: this.cert.remarks
           },
           method: 'POST'
         }
@@ -381,17 +377,15 @@
       submit2() {
         let self = this
         var object = {
-          url: '/addTaskInfo',
+          url: '/task/' + this.taskId + '/info',
           data: {
             userId: this.userId,
-            taskId: this.taskId,
-            extraInfo: this.extraInfo
+            content: this.extraInfo
           },
-          method: 'POST'
+          method: 'PUT'
         }
         rq.request(object).then(res => {
           console.log(res.data)
-          self.hasReceived = 1
           self.$apply()
         }).catch(err => {
           console.log(err)
@@ -424,10 +418,8 @@
     async getTaskDetail() {
       let self = this
       var object = {
-        url: '/getTaskDetail',
+        url: '/task/' + this.taskId + '/info',
         data: {
-          userId: this.userId,
-          taskId: this.taskId
         },
         method: 'GET'
       }
@@ -436,11 +428,32 @@
         self.user = res.data.user
         self.content = res.data.content
         self.hasReceived = res.data.hasReceived
+        self.isPublisher = res.data.isPublisher
         self.$apply()
       }).catch(err => {
         console.log(err)
         this.$parent.reLogin()
       })
+    }
+
+    uploadImgs(data) {
+      let self = this
+      for (var i = 0; i < data.length; i++) {
+        wepy.uploadFile({
+          url: wepy.$appConfig.baseUrl + '/images', // 开发者服务器 url
+          filePath: data[i], // 要上传文件资源的路径
+          name: 'photo', // 文件对应的 key , 开发者在服务器端通过这个 key 可以获取到文件二进制内容
+          success: res => {
+            console.log(res.data)
+            res.data = JSON.parse(res.data)
+            self.cert.files[i] = res.data.img
+          },
+          fail: () => {
+          },
+          complete: () => {}
+        })
+        self.$apply()
+      }
     }
 
     checkState() {

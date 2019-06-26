@@ -101,9 +101,8 @@
       const rq = require('../../lib/request.js')
       let self = this
       var object = {
-        url: '/getReceivedTask',
+        url: '/task/' + this.$parent.globalData.userId + '?type=acceptment',
         data: {
-          userId: this.$parent.globalData.userId
         },
         method: 'GET'
       }

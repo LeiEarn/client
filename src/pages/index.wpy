@@ -84,9 +84,9 @@
       backgroundUrl: '../assets/background.jpg',
       currentTab: 0,
       swiperImg: [
-        'http://iph.href.lu/750x390',
-        'http://iph.href.lu/750x390',
-        'http://iph.href.lu/750x390'
+        '../assets/1.png',
+        '../assets/2.png',
+        '../assets/3.png'
       ],
       list: [
         {

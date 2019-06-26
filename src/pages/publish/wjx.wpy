@@ -138,16 +138,18 @@ export default class Wjx extends wepy.page {
 
     userId: null,
     wjx: {
-      title: '',
-      detail: '',
+      type: 'wjx',
       wjxId: '',
-      condition: {
-        groups: [],
-        sex: '全部'
-      },
+      title: '',
+      desc: '',
       time: '',
       money: 0,
-      num: ''
+      maxNum: '',
+      condition: {
+        groups: [],
+        sex: '全部',
+        creditScore: 0
+      }
     }
   }
   events = {}
@@ -199,11 +201,8 @@ export default class Wjx extends wepy.page {
       console.log(this.wjx)
       const rq = require('../../lib/request.js')
       var object = {
-        url: '/publishTask',
-        data: {
-          userId: this.userId,
-          content: this.wjx
-        },
+        url: '/task/' + this.userId,
+        data: this.wjx,
         method: 'POST'
       }
       rq.request(object).then(res => {
@@ -214,6 +213,10 @@ export default class Wjx extends wepy.page {
       })
     }
   }
-  onLoad() { }
+  onLoad() {
+    if (this.$parent.globalData.user.userId) {
+      this.userId = this.$parent.globalData.user.userId
+    }
+  }
 }
 </script>
