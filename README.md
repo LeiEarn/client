@@ -21,8 +21,8 @@
 │   │   └── ...
 │   ├── lib                         # 杂项库
 │   │   ├── cookieJar.js            # cookie库
-│   │   └──  request.js             # http 请求库
-│   ├── style                       # scss 全局变量
+│   │   └──  request.js             # 网络请求库
+│   ├── style                       # wxss 全局变量
 │   │   ├── iconfont.wxss           # iconfont 资源
 │   │   └── weui.wxss               # weui 样式库
 │   ├── mixins                      # 混合组件
@@ -30,16 +30,26 @@
 │   └── pages                       # 小程序页面
 │       ├── index.wpy               # 主页
 │       ├── issue.wpy               # 任务发布页面
+│       ├── authorize.wpy               # 授权页面
+│       ├── search.wpy               # 搜索页面
+│       ├── about.wpy               # 小程序关于页面
 │       ├── user                    # 用户
 │       │   ├── mine.wpy            # 我的 页面
 │       │   ├── info.wpy            # 信息修改 页面
-│       │   └── auth.wpy            # 身份认证 页面
+│       │   ├── auth.wpy            # 身份认证 页面
+│       │   ├── balance.wpy            # 余额 页面
+│       │   ├── team.wpy            # 组织 页面
+│       │   ├── teamdetail.wpy            # 组织详情 页面
+│       │   └── setting.wpy            # 设置 页面
 │       ├── task                    # task
 │       │   ├── task.wpy            # 任务 页面
-│       │   ├── issued.wpy          # 我的已发布 页面
-│       │   ├── received.wpy        # 我的已接受 页面
+│       │   ├── published.wpy          # 我的已发布任务 页面
+│       │   ├── accepted.wpy        # 我的已接受任务 页面
+│       │   ├── accepter.wpy        # 任务的接收者 页面
 │       │   └── detail.wpy          # 任务 页面
-│       └── question                # 调查问卷发布页面
+│       └── publish                # 发布
+│           ├── publish.wpy             # 发布 页面
+│           ├── normaltask.wpy             # 普通任务发布 页面
 │           └── wjx.wpy             # 问卷星发布 页面
 └── wepy.config.js                  # wepy 构建配置
 ```
