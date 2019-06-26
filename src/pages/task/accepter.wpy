@@ -72,7 +72,7 @@
     onLoad(res) {
       this.taskId = res.taskId
       if (this.$parent.globalData.userId) {
-        this.getAccepter()
+        this.getAccepter(res.taskId, this.$parent.globalData.userId)
       }
     }
     onPullDownRefresh() {
@@ -82,15 +82,13 @@
         wepy.stopPullDownRefresh()
       }, 5000)
     }
-    getAccepter() {
+    getAccepter(taskId, userId) {
       const rq = require('../../lib/request.js')
       let self = this
       this.userId = this.$parent.globalData.userId
       var object = {
-        url: '/getAccepter',
+        url: '/task' + taskId + '/accepter?userId=' + userId,
         data: {
-          userId: this.$parent.globalData.userId,
-          taskId: this.taskId
         },
         method: 'GET'
       }

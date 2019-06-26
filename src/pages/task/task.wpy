@@ -137,9 +137,8 @@
       const rq = require('../../lib/request.js')
       let self = this
       var object = {
-        url: '/getTask',
+        url: '/tasks?pageId=' + this.pageId,
         data: {
-          pageId: this.pageId
         },
         method: 'GET'
       }
