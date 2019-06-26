@@ -404,7 +404,7 @@ export default class Datetimepicker extends wepy.component {
     this.value = datetime.format(format)
 
     if (!first) {
-      this.notifyEvent('change')
+      this.notifyEvent('timechange')
     }
   }
 

@@ -127,7 +127,7 @@ export default class GroupsPicker extends wepy.component {
       this.groups = checkboxItems
     },
     confirm() {
-      this.notifyEvent('change')
+      this.notifyEvent('groupschange')
       this.hiddenPop()
     },
     cancel() {

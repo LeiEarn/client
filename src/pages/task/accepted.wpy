@@ -70,7 +70,11 @@
         left: 33
       }]
     }
-    events = {}
+    events = {
+      TapTask(e) {
+        wepy.navigateTo({ url: './detail?json=' + JSON.stringify(e.task) })
+      }
+    }
     methods = {
       tap() {
         // this.num = this.num + 1

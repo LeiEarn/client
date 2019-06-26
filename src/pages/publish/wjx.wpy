@@ -61,7 +61,7 @@
         </view>
         <view class="weui-cell__bd">
           <span>组织：</span>
-          <groupspicker class="target" :groups="groups" @change.user="bindGroupChange"></groupspicker>
+          <groupspicker class="target" :groups="groups"></groupspicker>
           <span>性别：</span><view
             class="target"
             bindtap="bindSexChange"
@@ -73,7 +73,7 @@
             <view class="weui-label">时间</view>
           </view>
           <view class="weui-cell__bd">
-            <datetimepicker class="time" minuteStep="5" timeFormat="HH:mm" @change.user="bindTimeChange"></datetimepicker>
+            <datetimepicker class="time" minuteStep="5" timeFormat="HH:mm"></datetimepicker>
           </view>
         </view>
       <view class="weui-cell weui-cell_input">
@@ -152,7 +152,18 @@ export default class Wjx extends wepy.page {
       }
     }
   }
-  events = {}
+  events = {
+    timechange(e) {
+      this.wjx.time = e.value
+    },
+    groupschange(e) {
+      this.wjx.condition.groups = []
+      for (var i = 0; i < e.tempGroupsIndex.length; i++) {
+        var temp = e.tempGroupsIndex[i]
+        this.wjx.condition.groups.push(this.groups[temp].name)
+      }
+    }
+  }
   methods = {
     bindTitleInput(e) {
       this.wjx.title = e.detail.value
@@ -172,9 +183,6 @@ export default class Wjx extends wepy.page {
     onOpenDatetime() {
       this.$invoke('datetimepicker', 'input', {})
     },
-    bindTimeChange: function(e) {
-      this.time = e.value
-    },
     bindSexChange() {
       let self = this
       wepy.showActionSheet({
@@ -189,13 +197,6 @@ export default class Wjx extends wepy.page {
           }
         }
       })
-    },
-    bindGroupChange(e) {
-      this.wjx.condition.groups = []
-      for (var i = 0; i < e.tempGroupsIndex.length; i++) {
-        var temp = e.tempGroupsIndex[i]
-        this.wjx.condition.groups.push(this.groups[temp].name)
-      }
     },
     publish() {
       console.log(this.wjx)

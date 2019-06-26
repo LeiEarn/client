@@ -64,6 +64,9 @@ export default class PublishedTask extends wepy.page {
   }
 
   events = {
+    TapTask(e) {
+      wepy.navigateTo({ url: './detail?json=' + JSON.stringify(e.task) })
+    }
   }
 
   methods = {

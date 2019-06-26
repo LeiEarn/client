@@ -1,4 +1,5 @@
 <style lang="less">
+@import '../style/iconfont.less';
 .index {
   background-color: rgb(245, 245, 245);
 }
@@ -49,8 +50,8 @@
       <swiperview :SwiperImg.sync="swiperImg" />
       <view class="page__bd page__bd_spacing">
         <view class="weui-flex">
-            <view class="weui-flex__item area"><view class="placeholder">weui</view></view>
-            <view class="weui-flex__item area"><view class="placeholder">weui</view></view>
+            <view class="weui-flex__item area"><view class="placeholder">简单任务</view></view>
+            <view class="weui-flex__item area"><view class="placeholder">调查问卷</view></view>
         </view>
       </view>
       <view class="page__bd page__bd_spacing">
@@ -172,9 +173,8 @@
     }
 
     events = {
-      'index-emit': (...args) => {
-        let $event = args[args.length - 1]
-        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
+      TapTask(e) {
+        wepy.navigateTo({ url: './task/detail?json=' + JSON.stringify(e.task) })
       }
     }
 

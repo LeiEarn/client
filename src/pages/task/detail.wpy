@@ -110,7 +110,7 @@
       <view class="title">条件限制</view>
       <block wx:for-items="{{ content.conditions }}" wx:for-index="index" wx:for-item="item" wx:key="id">
         <view class="tab">
-          <text>{{ index + 1 }}</text>
+          <text>{{ index + 1 }}{{ conditions[index] }}:</text>
           <text class="step">{{ item }}</text>
         </view>
       </block>
@@ -126,7 +126,7 @@
         </view>
       </block>
     </view>
-    <view hidden="{{ isPublisher }}">
+    <view hidden="{{ userId !== null && userId == user.userId }}">
       <view class="page__bd page__bd_spacing" hidden="{{ hasReceived !== 0 }}">
         <view class="button-sp-area">
           <button class="weui-btn" type="primary" bindtap="accept">接受任务</button>
@@ -142,7 +142,7 @@
         </view>
       </view>
     </view>
-    <view wx:if="{{ isPublisher }}">
+    <view wx:if="{{ userId !== null && userId == user.userId }}">
       <view class="page__bd page__bd_spacing">
         <view class="button-sp-area">
           <button class="weui-btn" type="primary" bindtap="viewAcc">查看接收者</button>
@@ -220,8 +220,9 @@
       userId: null,
       taskId: null,
       user: {
+        userId: null,
         head: '../../assets/background.jpg',
-        title: '获取失败',
+        nickName: '获取失败',
         tel: '获取失败'
       },
       content: {
@@ -233,7 +234,8 @@
         money: 1.7,
         conditions: [
           '软工8班班员',
-          '男生'
+          '男生',
+          '80'
         ],
         detail: '按照要求完成问卷即可完成任务。',
         steps: [
@@ -242,8 +244,7 @@
         ]
       },
       hasReceived: 0,
-      authState: '未认证',
-      isPublisher: false,
+      proveState: 'N',
 
       cert: {
         files: [],
@@ -252,6 +253,7 @@
       extraInfo: '',
   
       animationData: {},
+      conditions: ['组织', '性别', '信誉积分'],
       hidden: true
     };
 
@@ -400,8 +402,8 @@
       if (this.$parent.globalData.userId) {
         this.userId = this.$parent.globalData.userId
       }
-      if (this.$parent.globalData.authState) {
-        this.authState = this.$parent.globalData.authState
+      if (this.$parent.globalData.proveState) {
+        this.proveState = this.$parent.globalData.proveState
       }
       var json = JSON.parse(res.json)
       console.log(json)
@@ -427,7 +429,6 @@
         self.user = res.data.user
         self.content = res.data.content
         self.hasReceived = res.data.hasReceived
-        self.isPublisher = res.data.isPublisher
         self.$apply()
       }).catch(err => {
         console.log(err)
@@ -465,7 +466,7 @@
           mask: true, // 显示透明蒙层，防止触摸穿透,
           success: res => {}
         })
-      } else if (this.authState !== '已认证') {
+      } else if (this.proveState !== 'P') {
         console.log('您的身份认证还没有成功')
         wepy.showToast({
           title: '您的身份认证还没有成功', // 提示的内容,

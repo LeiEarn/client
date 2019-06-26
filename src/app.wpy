@@ -41,8 +41,8 @@ export default class extends wepy.app {
       'pages/task/published',
       'pages/task/accepted',
       'pages/task/accepter',
-      'pages/task/detail',
       'pages/task/job',
+      'pages/task/detail',
       'pages/publish/publish',
       'pages/publish/normaltask',
       'pages/publish/wjx'

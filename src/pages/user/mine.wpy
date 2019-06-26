@@ -5,7 +5,7 @@
     .info {
       background-color: antiquewhite;
       text-align: center;
-      height: 500rpx;
+      height: 480rpx;
       margin-top: 0rpx;
       .head {
         height: 150rpx;
@@ -38,9 +38,6 @@
       width: 20px;
       height: 20px;
     }
-    .balance {
-      margin-top: 80rpx;
-    }
   }
 </style>
 <template>
@@ -69,8 +66,8 @@
         <view class="weui-cell__hd iconfont icon">&#xe7ae;</view>
         <view class="weui-cell__bd">我的组织</view>
         <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-      </view>  
-    </view> 
+      </view>
+    </view>
     <view class="weui-cells">
       <view bindtap="received" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd iconfont icon">&#xe601;</view>
@@ -79,7 +76,10 @@
       </view>
       <view bindtap="issued" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd iconfont icon">&#xe6a4;</view>
-        <view class="weui-cell__bd">已发布任务</view>
+        <view class="weui-cell__bd">
+          <view style="display: inline-block; vertical-align: middle">已发布任务</view>
+          <view class="weui-badge" style="margin-left: 5px;">8</view>
+        </view>
         <view class="weui-cell__ft weui-cell__ft_in-access"></view>
       </view>
     </view>
@@ -109,7 +109,7 @@
     data = {
       userInfo: {
         avatarUrl: '',
-        nickName: ''
+        nickName: '登录/注册'
       },
       hasUserInfo: false,
       proveState: 'N',

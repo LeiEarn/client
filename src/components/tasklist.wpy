@@ -64,8 +64,7 @@ export default class TaskList extends wepy.component {
 
   methods = {
     tap(e) {
-      // this.num = this.num + 1
-      this.$parent.$navigate({ url: '../task/detail?json=' + JSON.stringify(this.list[e.currentTarget.dataset.index]) })
+      this.$emit('TapTask', {task: this.list[e.currentTarget.dataset.index]})
     },
     add() {
       let len = this.list.length

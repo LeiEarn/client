@@ -50,9 +50,6 @@
 </style>
 <template>
   <view class="page">
-    <view class="page__hd">
-      <view class="page__title">任务</view>
-    </view>
     <view class="page_bd">
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell weui-cell_input">
@@ -95,13 +92,15 @@
           <view class="weui-cell__hd">
             <view class="weui-label">发布对象</view>
           </view>
-          <view class="weui-cell__bd">
+          <view class="weui-cell__bd" style="font-size: 11pt; padding-top: 10rpx">
             <span>组织：</span>
-            <groupspicker class="target" :groups="groups" @change.user="bindGroupChange"></groupspicker>
+            <groupspicker class="target" :groups="groups"></groupspicker>
             <span>性别：</span><view
               class="target"
               bindtap="bindSexChange"
             >{{task.condition.sex}}</view>
+            <span>最低信誉积分：</span>
+            <input class="weui-input" placeholder="请输入最低信誉积分" bindinput="bindCreditScoreInput" />
           </view>
         </view>
         <view class="weui-cell weui-cell_input">
@@ -109,7 +108,7 @@
             <view class="weui-label">时间</view>
           </view>
           <view class="weui-cell__bd">
-            <datetimepicker class="time" minuteStep="5" timeFormat="HH:mm" @change.user="bindTimeChange"></datetimepicker>
+            <datetimepicker class="time" minuteStep="5" timeFormat="HH:mm"></datetimepicker>
           </view>
         </view>
         <view class="weui-cell weui-cell_input">
@@ -219,14 +218,14 @@ import GroupsPicker from '../../components/groupspicker'
         console.log(e.currentTarget.dataset.index)
         this.steps[e.currentTarget.dataset.index] = e.detail.value
       },
-      bindTimeChange: function(e) {
-        this.task.time = e.value
-      },
       bindMoneyInput: function(e) {
         this.task.money = e.detail.value
       },
       bindNumInput: function(e) {
         this.task.num = e.detail.value
+      },
+      bindCreditScoreInput: function(e) {
+        this.task.condition.creditScore = e.detail.value
       },
       bindSexChange() {
         let self = this
@@ -242,16 +241,19 @@ import GroupsPicker from '../../components/groupspicker'
             }
           }
         })
+      }
+    };
+    events = {
+      timechange(e) {
+        this.task.time = e.value
       },
-      bindGroupChange(e) {
+      groupschange(e) {
         this.task.condition.groups = []
         for (var i = 0; i < e.tempGroupsIndex.length; i++) {
           var temp = e.tempGroupsIndex[i]
           this.task.condition.groups.push(this.groups[temp].name)
         }
       }
-    };
-    events = {
     }
     onLoad() {
       if (this.$parent.globalData.user.userId) {
