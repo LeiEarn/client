@@ -1,5 +1,5 @@
 <style lang="less" scoped>
-::-webkit-scrollbar{
+::-webkit-scrollbar {
   width: 0;
   height: 0;
   color: transparent;
@@ -31,7 +31,10 @@
 }
 </style>
 <template>
-  <view class="page" bindtap="openPicker">
+  <view
+    class="page"
+    bindtap="openPicker"
+  >
     <span>{{tempSelectedGroups || '全部'}}</span>
     <!-- 弹起浮层 -->
     <view
@@ -41,10 +44,14 @@
     >
       <view
         class="weui-cells weui-cells_after-title pop"
-        hidden="{{hidden}}" animation="{{animationData}}"
+        hidden="{{hidden}}"
+        animation="{{animationData}}"
         catchtap="stopEvent"
       >
-        <checkbox-group class="groups" bindchange="checkboxChange">
+        <checkbox-group
+          class="groups"
+          bindchange="checkboxChange"
+        >
           <label
             class="weui-cell weui-check__label"
             wx:for="{{groups}}"
@@ -72,7 +79,11 @@
             <view class="weui-cell__bd">{{item.name}}</view>
           </label>
         </checkbox-group>
-        <button class="confirm" type="primary" bindtap="confirm">确认</button>
+        <button
+          class="confirm"
+          type="primary"
+          bindtap="confirm"
+        >确认</button>
       </view>
     </view>
   </view>
@@ -141,7 +152,7 @@ export default class GroupsPicker extends wepy.component {
     animation.translateY(300).step()
     this.animationData = animation.export()
     this.hidden = false
-    setTimeout(function() {
+    setTimeout(function () {
       animation.translateY(0).step()
       self.animationData = animation.export()
       self.$apply()
@@ -156,7 +167,7 @@ export default class GroupsPicker extends wepy.component {
     })
     animation.translateY(300).step()
     this.animationData = animation.export()
-    setTimeout(function() {
+    setTimeout(function () {
       animation.translateY(0).step()
       self.animationData = animation.export()
       self.hidden = true

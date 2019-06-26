@@ -31,7 +31,8 @@
           >
             <view class="smallpage">
               <view class="team">
-                <list :list.sync="list" />
+                <created :list.sync="created" />
+                <joined :list.sync="joined" />
               </view>
             </view>
           </view>
@@ -83,28 +84,33 @@ export default class Team extends wepy.page {
   }
 
   components = {
-    list: TeamList
+    created: TeamList,
+    joined: TeamList
   }
 
   data = {
     tabs: ['我加入的组织', '加入组织', '创建组织'],
-    list: [
+    joined: [
       {
+        groupId: '0',
         icon: '../../assets/background.jpg',
-        title: '这是组织名称',
+        name: '这是组织名称',
         desc: '这里是组织介绍'
       },
       {
+        groupId: '0',
         icon: '../../assets/background.jpg',
-        title: '这是组织名称1',
+        name: '这是组织名称1',
         desc: '这里是组织介绍1'
       },
       {
+        groupId: '0',
         icon: '../../assets/background.jpg',
-        title: '这是组织名称2',
+        name: '这是组织名称2',
         desc: '这里是组织介绍2'
       }
     ],
+    created: [],
     activeIndex: 0,
     sliderOffset: 0,
     sliderLeft: 0,
@@ -114,37 +120,51 @@ export default class Team extends wepy.page {
     joinGroupName: ''
   }
 
+  events = {
+    delete(e) {
+      console.log(e.index)
+      const rq = require('../../lib/request.js')
+      var object = {
+        url: '/group/' + this.userId + '?groupName=' + this.joined[e.index].groupName,
+        data: {
+        },
+        method: 'DELETE'
+      }
+      rq.request(object).then(res => {
+        console.log(res.data)
+      }).catch(err => {
+        console.log(err.data)
+      })
+    }
+  }
+
   methods = {
     createGroup() {
       const rq = require('../../lib/request.js')
       var object = {
-        url: '/createGroup',
+        url: '/group/' + this.userId + '?groupName=' + this.groupName,
         data: {
-          userId: this.userId,
-          groupName: this.groupName
         },
         method: 'POST'
       }
       rq.request(object).then(res => {
-        console.log(res)
+        console.log(res.data)
       }).catch(err => {
-        console.log(err)
+        console.log(err.data)
       })
     },
     joinGroup() {
       const rq = require('../../lib/request.js')
       var object = {
-        url: '/joinGroup',
+        url: '/group/' + this.userId + '?groupName=' + this.groupName,
         data: {
-          userId: this.userId,
-          groupName: this.groupName
         },
-        method: 'POST'
+        method: 'PUT'
       }
       rq.request(object).then(res => {
-        console.log(res)
+        console.log(res.data)
       }).catch(err => {
-        console.log(err)
+        console.log(err.data)
       })
     }
   }
@@ -160,47 +180,27 @@ export default class Team extends wepy.page {
         self.$apply()
       }
     })
-    await this.getCreatedGroup()
-    await this.getJoinedGroup()
+    await this.getGroup()
   }
   async tabClick(e) {
     if (e.currentTarget.id === '0') {
-      await this.getCreatedGroup()
-      await this.getJoinedGroup()
+      await this.getGroup()
     }
     this.sliderOffset = e.currentTarget.offsetLeft
     this.activeIndex = e.currentTarget.id
   }
-  getCreatedGroup() {
+  getGroup() {
     const rq = require('../../lib/request.js')
-    let self = this
     var object = {
-      url: '/getCreatedGroup',
+      url: '/group/' + this.userId,
       data: {
-        userId: this.userId
       },
-      method: 'POST'
+      method: 'GET'
     }
     rq.request(object).then(res => {
       console.log(res)
-      self.list = res.list
-      self.$apply()
-    }).catch(err => {
-      console.log(err)
-    })
-  }
-  getJoinedGroup() {
-    const rq = require('../../lib/request.js')
-    var object = {
-      url: '/getJoinedGroup',
-      data: {
-        userId: this.userId
-      },
-      method: 'POST'
-    }
-    rq.request(object).then(res => {
-      console.log(res)
-      self.list = res.list
+      self.created = res.data.created
+      self.joined = res.data.joined
       self.$apply()
     }).catch(err => {
       console.log(err)

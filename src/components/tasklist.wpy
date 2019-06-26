@@ -1,27 +1,36 @@
 <style lang="less">
-  .weui-media-box {
-    background-color: white;
-  }
-  
-  .weui-media-box__ft {
-    text-align: right;
-    font-size: 10pt;
-  }
+.weui-media-box {
+  background-color: white;
+}
 
-  .money {
-    color: red;
-  }
+.weui-media-box__ft {
+  text-align: right;
+  font-size: 10pt;
+}
+
+.money {
+  color: red;
+}
 </style>
 <template>
   <view class="list">
-    <!-- <view class="weui-panel__hd">
-      <button @tap="add" size="mini">添加列表</button>
-    </view> -->
-    <block class="weui-panel__bd" wx:for-items="{{list}}" wx:for-index="index" wx:for-item="item" wx:key="id">
-      <view bindtap="tap" data-index="{{index}}" class="weui-media-box weui-media-box_appmsg">
-        <!-- <text>\{{item.id}}</text>: \{{item.title}} -->
+    <block
+      class="weui-panel__bd"
+      wx:for-items="{{list}}"
+      wx:for-index="index"
+      wx:for-item="item"
+      wx:key="id"
+    >
+      <view
+        bindtap="tap"
+        data-index="{{index}}"
+        class="weui-media-box weui-media-box_appmsg"
+      >
         <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
-          <image class="weui-media-box__thumb" src="{{item.icon}}" />
+          <image
+            class="weui-media-box__thumb"
+            src="{{item.icon}}"
+          />
         </view>
         <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
           <view class="weui-media-box__title">{{item.title}}</view>
@@ -33,44 +42,38 @@
         </view>
       </view>
     </block>
-    <!-- <view class="weui-panel__ft">
-      <view class="weui-cell weui-cell_access weui-cell_link">
-        <view class="weui-cell__bd">查看更多</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-      </view>
-    </view> -->
   </view>
 </template>
 <script>
-  import wepy from 'wepy'
+import wepy from 'wepy'
 
-  export default class TaskList extends wepy.component {
-    props = {
-      list: Array
-    }
+export default class TaskList extends wepy.component {
+  props = {
+    list: Array
+  }
 
-    data = {
-    }
+  data = {
+  }
 
-    events = {
-      'index-broadcast': (...args) => {
-        let $event = args[args.length - 1]
-        console.log(`${this.$name} receive ${$event.name} from ${$event.source.name}`)
-      }
-    }
-
-    methods = {
-      tap (e) {
-        // this.num = this.num + 1
-        this.$parent.$navigate({url: '../task/detail?json=' + JSON.stringify(this.list[e.currentTarget.dataset.index])})
-      },
-      add () {
-        let len = this.list.length
-        this.list.push({id: len + 1, title: 'title_' + len})
-      }
-    }
-
-    onLoad () {
+  events = {
+    'index-broadcast': (...args) => {
+      let $event = args[args.length - 1]
+      console.log(`${this.$name} receive ${$event.name} from ${$event.source.name}`)
     }
   }
+
+  methods = {
+    tap(e) {
+      // this.num = this.num + 1
+      this.$parent.$navigate({ url: '../task/detail?json=' + JSON.stringify(this.list[e.currentTarget.dataset.index]) })
+    },
+    add() {
+      let len = this.list.length
+      this.list.push({ id: len + 1, title: 'title_' + len })
+    }
+  }
+
+  onLoad() {
+  }
+}
 </script>

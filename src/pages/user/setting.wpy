@@ -1,5 +1,4 @@
 <style type="less">
-@import '../../style/iconfont.wxss';
 .button-sp-area {
   margin: 0 auto;
   padding-top: 30px;

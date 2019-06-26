@@ -1,5 +1,4 @@
 <style lang="less">
-@import '../style/iconfont.wxss';
 .index {
   background-color: rgb(245, 245, 245);
 }

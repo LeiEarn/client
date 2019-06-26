@@ -197,6 +197,7 @@ import GroupsPicker from '../../components/groupspicker'
           },
           method: 'POST'
         }
+        console.log(object)
         const rq = require('../../lib/request.js')
         rq.request(object).then(res => {
           console.log(res)

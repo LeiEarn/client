@@ -1,5 +1,4 @@
 <style lang="less">
-@import '../style/iconfont.wxss';
 .item {
   background-color: white;
   width: 92%;

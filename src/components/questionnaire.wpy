@@ -1,83 +1,83 @@
 <style lang="less">
-  .question {
-    overflow: scroll;
-    max-height: 1000rpx;
-  }
-  .at-card {
-    border: 1rpx #c5d9e8 solid;
-    margin: 0 auto;
-    margin-top: 10rpx;
-    border-radius: 12rpx;
-    background-color: #fff;
-    width: 94%;
-    /* elements */
-    &__header {
-      display: flex;
-      align-items: center;
-      border-bottom: 1rpx #c5d9e8 solid;
-      padding: 18rpx 24rpx;
-      position: relative;
-      &-title {
-        line-height: 1.5;
-        display: block;
-        color: #2c405a;
-        font-size: 32rpx;
-        width: 100%;
-      }
-    }
-    &__content {
-      padding: 18rpx 24rpx;
-      &-info {
-        color: #333;
-        font-size: 24rpx;
-      }
-      &-note {
-        margin-top: 18rpx;
-        color: #999;
-        font-size: 24rpx;
-      }
-    }
-    /* modifiers */
-    &--full {
-      margin: 0;
-      border-radius: 0;
-      border-left: none;
-      border-right: none;
-    }
-  }
-  .at-card-bottom {
-    width: 94%;
-    margin: 0 auto;
-    text-align: center;
+.question {
+  overflow: scroll;
+  max-height: 1000rpx;
+}
+.at-card {
+  border: 1rpx #c5d9e8 solid;
+  margin: 0 auto;
+  margin-top: 10rpx;
+  border-radius: 12rpx;
+  background-color: #fff;
+  width: 94%;
+  /* elements */
+  &__header {
+    display: flex;
+    align-items: center;
     border-bottom: 1rpx #c5d9e8 solid;
-    border-left: 1rpx #c5d9e8 solid;
-  }
-  .weui-flex__item {
-    border-right: 1rpx #c5d9e8 solid;
-  }
-  .placeholder {
-    font-size: 15pt;
-    &-red {
-      color: red;
-      font-size: 15pt;
+    padding: 18rpx 24rpx;
+    position: relative;
+    &-title {
+      line-height: 1.5;
+      display: block;
+      color: #2c405a;
+      font-size: 32rpx;
+      width: 100%;
     }
   }
-  .add {
-    width: 500rpx;
-    margin: 0 auto;
-    margin-top: 500rpx;
+  &__content {
+    padding: 18rpx 24rpx;
+    &-info {
+      color: #333;
+      font-size: 24rpx;
+    }
+    &-note {
+      margin-top: 18rpx;
+      color: #999;
+      font-size: 24rpx;
+    }
   }
-  .add-choice {
-    background-color: white;
+  /* modifiers */
+  &--full {
+    margin: 0;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
   }
-  .add-question {
-    position: fixed;
-    bottom: 10rpx;
-    width: 94%;
-    left: 3%;
-    background-color: white;
-    color: greenyellow;
+}
+.at-card-bottom {
+  width: 94%;
+  margin: 0 auto;
+  text-align: center;
+  border-bottom: 1rpx #c5d9e8 solid;
+  border-left: 1rpx #c5d9e8 solid;
+}
+.weui-flex__item {
+  border-right: 1rpx #c5d9e8 solid;
+}
+.placeholder {
+  font-size: 15pt;
+  &-red {
+    color: red;
+    font-size: 15pt;
   }
+}
+.add {
+  width: 500rpx;
+  margin: 0 auto;
+  margin-top: 500rpx;
+}
+.add-choice {
+  background-color: white;
+}
+.add-question {
+  position: fixed;
+  bottom: 10rpx;
+  width: 94%;
+  left: 3%;
+  background-color: white;
+  color: greenyellow;
+}
 </style>
 <template>
   <view class="question">
@@ -107,48 +107,53 @@
     <picker value="{{index}}" range="{{question}}" bindchange="addQuestion">
       <button class="add-question" type="primary">+</button>
     </picker> -->
-    <picker class="add" value="{{index}}" range="{{type}}" bindchange="useType">
+    <picker
+      class="add"
+      value="{{index}}"
+      range="{{type}}"
+      bindchange="useType"
+    >
       <button type="primary">添加问卷</button>
     </picker>
   </view>
 </template>
 <script>
-  import wepy from 'wepy'
-  export default class Questionnaire extends wepy.component {
-    components = {
-    }
-    data = {
-      list: [{
-        type: '单选题',
-        title: '的说法伽大师傅士大',
-        contents: ['cell standard1', 'cell standard2'],
-        tips: 'sdaf'
-      }],
-      question: ['单选题', '多选题', '简答题'],
-      type: ['使用问卷星', '使用自制模板']
-    }
-    events = {}
-    methods = {
-      useType(e) {
-        console.log(e.detail.value)
-        if (e.detail.value === '0') {
-          console.log('good')
-          wepy.navigateTo({ url: './question/wjx' })
-        }
-      },
-      addChoice(e) {
-        console.log(e.currentTarget.dataset.index)
-        this.list[e.currentTarget.dataset.index].contents.push('werwewqr')
-      },
-      addQuestion(e) {
-        this.list.push({
-          type: this.question[e.detail.value],
-          title: '请输入题目',
-          contents: [],
-          tips: '请输入提示'
-        })
-      }
-    }
-    onLoad() {}
+import wepy from 'wepy'
+export default class Questionnaire extends wepy.component {
+  components = {
   }
+  data = {
+    list: [{
+      type: '单选题',
+      title: '的说法伽大师傅士大',
+      contents: ['cell standard1', 'cell standard2'],
+      tips: 'sdaf'
+    }],
+    question: ['单选题', '多选题', '简答题'],
+    type: ['使用问卷星', '使用自制模板']
+  }
+  events = {}
+  methods = {
+    useType(e) {
+      console.log(e.detail.value)
+      if (e.detail.value === '0') {
+        console.log('good')
+        wepy.navigateTo({ url: './question/wjx' })
+      }
+    },
+    addChoice(e) {
+      console.log(e.currentTarget.dataset.index)
+      this.list[e.currentTarget.dataset.index].contents.push('werwewqr')
+    },
+    addQuestion(e) {
+      this.list.push({
+        type: this.question[e.detail.value],
+        title: '请输入题目',
+        contents: [],
+        tips: '请输入提示'
+      })
+    }
+  }
+  onLoad() { }
+}
 </script>

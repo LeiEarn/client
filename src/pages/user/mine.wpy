@@ -1,5 +1,5 @@
 <style type="less">
-  @import '../../style/iconfont.wxss';
+  @import '../../style/iconfont.less';
   .mine {
     width: 100%;
     .info {

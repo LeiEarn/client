@@ -7,33 +7,63 @@
 .weui-media-box__thumb {
   border-radius: 50%;
 }
+
+.group {
+}
+
+.remove {
+  width: 160rpx;
+  height: 100%;
+  background-color: red;
+  color: white;
+  position: absolute;
+  top: 0;
+  right: -160rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>
 <template>
   <view class="list">
-    <block
-      class="weui-panel__bd"
-      wx:for-items="{{list}}"
-      wx:for-index="index"
-      wx:for-item="item"
-      wx:key="id"
+    <scroll-view
+      scroll-y="{{isScroll}}"
+      style='height:{{windowHeight}}px'
     >
-      <view
-        bindtap="tap"
-        data-index="{{index}}"
-        class="weui-media-box weui-media-box_appmsg"
+      <block
+        class="weui-panel__bd"
+        wx:for-items="{{list}}"
+        wx:for-index="index"
+        wx:for-item="item"
+        wx:key="id"
       >
-        <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
-          <image
-            class="weui-media-box__thumb"
-            src="{{item.icon}}"
-          />
+        <view
+          data-index="{{index}}"
+          class="weui-media-box weui-media-box_appmsg group"
+          bindtap="tap"
+          bindtouchstart="touchS"
+          bindtouchmove="touchM"
+          bindtouchend="touchE"
+          style="right:{{item.right}}rpx"
+        >
+          <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+            <image
+              class="weui-media-box__thumb"
+              src="{{item.icon}}"
+            />
+          </view>
+          <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+            <view class="weui-media-box__title">{{item.title}}</view>
+            <view class="weui-media-box__desc">{{item.desc}}</view>
+          </view>
+          <view
+            class="remove"
+            catchtap="quitGroup"
+            data-index="{{index}}"
+          >退出</view>
         </view>
-        <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-          <view class="weui-media-box__title">{{item.title}}</view>
-          <view class="weui-media-box__desc">{{item.desc}}</view>
-        </view>
-      </view>
-    </block>
+      </block>
+    </scroll-view>
   </view>
 </template>
 <script>
@@ -44,6 +74,13 @@ export default class UserList extends wepy.component {
     list: Array
   }
 
+  data = {
+    delBtnWidth: 160,
+    isScroll: true,
+    windowHeight: 0,
+    delIndex: -1
+  }
+
   events = {
     'index-broadcast': (...args) => {
       let $event = args[args.length - 1]
@@ -52,12 +89,60 @@ export default class UserList extends wepy.component {
   }
 
   methods = {
-    tap (e) {
-      this.$parent.$navigate({url: './teamdetail?json=' + JSON.stringify(this.list[e.currentTarget.dataset.index])})
+    tap(e) {
+      this.$parent.$navigate({ url: './teamdetail?json=' + JSON.stringify(this.list[e.currentTarget.dataset.index]) })
+    },
+    quitGroup(e) {
+      this.delIndex = e.currentTarget.dataset.index
+      this.notifyEvent('delete')
+    },
+    touchS(e) {
+      var touch = e.touches[0]
+
+      for (var index in this.list) {
+        this.list[index].right = 0
+      }
+
+      this.startX = touch.clientX
+    },
+    touchM(e) {
+      var touch = e.touches[0]
+      var item = this.list[e.currentTarget.dataset.index]
+      var disX = this.startX - touch.clientX
+      if (disX >= 20) {
+        if (disX > this.delBtnWidth) {
+          disX = this.delBtnWidth
+        }
+        item.right = disX
+        this.isScroll = false
+      } else {
+        item.right = 0
+        this.isScroll = true
+      }
+    },
+    touchE(e) {
+      var item = this.list[e.currentTarget.dataset.index]
+      if (item.right >= this.delBtnWidth / 2) {
+        item.right = this.data.delBtnWidth
+        this.isScroll = true
+      } else {
+        item.right = 0
+        this.isScroll = true
+      }
     }
   }
 
   onLoad() {
+    let self = this
+    wepy.getSystemInfo({ success: res => {
+      self.windowHeight = res.windowHeight
+      self.$apply()
+    } })
+  }
+
+  notifyEvent(event) {
+    this.$emit(event, { index: this.delIndex })
+    this.$apply()
   }
 }
 </script>
