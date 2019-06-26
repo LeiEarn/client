@@ -51,6 +51,10 @@
 │           ├── publish.wpy             # 发布 页面
 │           ├── normaltask.wpy             # 普通任务发布 页面
 │           └── wjx.wpy             # 问卷星发布 页面
+|       └── about                   # 关于
+|           ├── behaviorItem.wpy        # 用户行为规范
+|           ├── privacyItem.wpy        # 隐私权条款
+|           └── publishItem.wpy        # 用户发布条例
 └── wepy.config.js                  # wepy 构建配置
 ```
 
