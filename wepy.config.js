@@ -44,7 +44,7 @@ module.exports = {
   },
   appConfig: {
     noPromiseAPI: ['createSelectorQuery'],
-    baseUrl: 'http://172.26.91.210'
+    baseUrl: 'http://172.26.47.246:8080'
   }
 }
 

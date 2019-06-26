@@ -184,7 +184,7 @@ import GroupsPicker from '../../components/groupspicker'
       publish() {
         this.task.detail = this.task.detail + '&&' + JSON.stringify(this.steps)
         var object = {
-          url: '/publishTask',
+          url: '/task/',
           data: {
             userId: this.userId,
             content: this.task

@@ -107,8 +107,14 @@ export default class Info extends wepy.page {
   components = {}
   data = {
     userId: null,
-    userInfo: null,
-    temp: null,
+    userInfo: {
+      avatarUrl: '../../assets/background.jpg',
+      nickName: '何枷瑜'
+    },
+    temp: {
+      avatarUrl: '',
+      nickName: ''
+    },
     modify: 0
   }
   methods = {
@@ -148,29 +154,52 @@ export default class Info extends wepy.page {
     confirm() {
       if (this.modify === 1) {
         if (this.userInfo.avatarUrl !== this.temp.avatarUrl) {
-          const self = this
+          let self = this
           wepy.uploadFile({
-            url: '/modify', // 开发者服务器 url
+            url: wepy.$appConfig.baseUrl + '/images', // 开发者服务器 url
             filePath: self.temp.avatarUrl, // 要上传文件资源的路径
-            name: 'img', // 文件对应的 key , 开发者在服务器端通过这个 key 可以获取到文件二进制内容
-            formData: {
-              'userId': self.userId,
-              'userInfo': JSON.parse(self.userInfo)
-            },
+            name: 'photo', // 文件对应的 key , 开发者在服务器端通过这个 key 可以获取到文件二进制内容
             success: res => {
-              self.temp.avatarUrl = res.data
-              self.userInfo.avatarUrl = res.data
-              self.$apply()
+              res.data = JSON.parse(res.data)
+              const rq = require('../../lib/request.js')
+              var obj = {
+                url: '/user/info',
+                data: {
+                  avatarUrl: res.data.msg,
+                  nickName: self.userInfo.nickName
+                },
+                method: 'PUT'
+              }
+              console.log(obj)
+              rq.request(obj).then(res => {
+                console.log(res)
+                self.userInfo.avatarUrl = res.data.avatarUrl
+                self.temp.avatarUrl = ''
+                self.$apply()
+              })
             },
-            fail: () => {
-              console.log('上传失败')
-              this.$parent.reLogin()
+            fail: err => {
+              console.log(err.data)
             },
-            complete: () => { }
+            complete: () => {}
           })
         }
-      } else if (this.modify === 2) {
-
+      } else {
+        const rq = require('../../lib/request.js')
+        var obj = {
+          url: '/user/info',
+          data: {
+            avatarUrl: this.userInfo.avatarUrl,
+            nickName: this.temp.nickName
+          },
+          method: 'PUT'
+        }
+        console.log(obj)
+        rq.request(obj).then(res => {
+          console.log(res)
+          this.userInfo.nickName = res.data.nickName
+          this.temp.nickName = ''
+        })
       }
       this.modify = 0
     }
@@ -183,14 +212,12 @@ export default class Info extends wepy.page {
   }
   onLoad() {
     let self = this
-    if (this.$parent.globalData.userInfo) {
-      this.userInfo = this.$parent.globalData.userInfo
-      this.temp = this.$parent.globalData.userInfo
+    if (this.$parent.globalData.user.userInfo) {
+      this.userInfo = this.$parent.globalData.user.userInfo
     } else {
-      this.$parent.getUserInfo(function (userInfo) {
-        if (userInfo) {
-          self.userInfo = userInfo
-          self.temp = userInfo
+      this.$parent.login(function (user) {
+        if (user) {
+          self.userInfo = user.userInfo
           self.$apply()
         }
       })

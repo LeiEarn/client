@@ -6,10 +6,9 @@ const request = (object) => {
   let promise = new Promise((resolve, reject) => {
     wepy.request({
       url: urlResolve(wepy.$appConfig.baseUrl, object.url),
-      data: object.data,
+      data: JSON.stringify(object.data),
       method: object.method,
       header: {
-        'content-type': 'applicction/x-www-form-urlencoded',
         cookie: cookieJar.take()
       },
       success: res => {

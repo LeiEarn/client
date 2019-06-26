@@ -32,7 +32,7 @@ export default class extends wepy.app {
       'pages/about/publishItem',
       'pages/user/mine',
       'pages/user/info',
-      'pages/user/auth',
+      'pages/user/prove',
       'pages/user/balance',
       'pages/user/setting',
       'pages/user/team',
@@ -88,9 +88,12 @@ export default class extends wepy.app {
   }
   globalData = {
     user: {
-      userInfo: null,
+      userInfo: {
+        nickName: '',
+        avatarUrl: ''
+      },
       userId: null,
-      authState: ''
+      proveState: ''
     }
   }
   constructor() {
@@ -105,7 +108,6 @@ export default class extends wepy.app {
       return this.globalData.user
     }
     const rq = require('./lib/request.js')
-    let self = this
     const APP_ID = 'wx2e515a1b9f28a15e'
     const APP_SECRET = 'ded301bbd914c7a4083d15326be60073'
     wepy.login({
@@ -114,22 +116,24 @@ export default class extends wepy.app {
           var jsCode = res.code
           wepy.getUserInfo({
             success(res) {
+              console.log(res.userInfo)
               var object = {
-                url: '/login',
+                url: '/user/session',
                 data: {
-                  appid: APP_ID,
-                  secret: APP_SECRET,
                   js_code: jsCode,
+                  app_id: APP_ID,
+                  app_secret: APP_SECRET,
                   encryptedData: res.encryptedData
                 },
                 method: 'POST'
               }
               rq.request(object).then(res => {
-                self.globalData.user.userId = res.data.userId
-                self.globalData.user.userInfo = res.data.userInfo
-                self.globalData.uesr.authState = res.data.authState
-                self.$apply()
-                cb && cb(res.data)
+                console.log(res.data)
+                this.globalData.user.userId = res.data.userId
+                this.globalData.user.userInfo.nickName = res.data.nickName
+                this.globalData.user.userInfo.avatarUrl = res.data.avatarUrl
+                this.globalData.user.proveState = res.data.proveState
+                cb && cb(this.globalData.user)
               }).catch(res => {
                 console.log(res)
               })
@@ -144,8 +148,8 @@ export default class extends wepy.app {
   }
   getAuthState(cb) {
     if (this.globalData.userId) {
-      if (this.globalData.authState) {
-        return this.globalData.authState
+      if (this.globalData.proveState) {
+        return this.globalData.proveState
       }
       let self = this
       const rq = require('./lib/request.js')
@@ -157,9 +161,9 @@ export default class extends wepy.app {
         method: 'GET'
       }
       rq.request(object).then(res => {
-        self.globalData.authState = res.data.authState
+        self.globalData.proveState = res.data.proveState
         self.$apply()
-        cb && cb(res.data.authState)
+        cb && cb(res.data.proveState)
       }).catch(() => {
         console.log('获取认证状态失败')
       })
@@ -175,6 +179,8 @@ export default class extends wepy.app {
       if (user) {
         self.userId = user.userId
         self.$apply()
+        wepy.hideLoading()
+      } else {
         wepy.hideLoading()
       }
     })
