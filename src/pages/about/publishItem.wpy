@@ -1,5 +1,5 @@
 <style lang="less">
-@import '../../style/iconfont.wxss';
+@import '../../style/iconfont.less';
 .page {
   border: 5px, dashed, grey;
   background: rgba(255, 234, 167,0.5);
