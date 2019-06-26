@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang = "less">
 @import '../style/iconfont.less';
 .index {
   background-color: rgb(245, 245, 245);
@@ -36,6 +36,11 @@
 .recommend {
   margin-top: 20rpx;
 }
+.image {
+  margin-top: 20rpx;
+  width: 60rpx;
+  height: 60rpx;
+}
 </style>
 <template>
   <view class="container">
@@ -50,8 +55,14 @@
       <swiperview :SwiperImg.sync="swiperImg" />
       <view class="page__bd page__bd_spacing">
         <view class="weui-flex">
-            <view class="weui-flex__item area"><view class="placeholder">简单任务</view></view>
-            <view class="weui-flex__item area"><view class="placeholder">调查问卷</view></view>
+            <view class="weui-flex__item area">
+              <image class="image" src="../assets/simpleTask.png"/>
+              <view class="placeholder">简单任务</view>
+            </view>
+            <view class="weui-flex__item area">
+              <image class="image" src="../assets/askForm.png"/>
+              <view class="placeholder">调查问卷</view>
+            </view>
         </view>
       </view>
       <view class="page__bd page__bd_spacing">
@@ -90,7 +101,53 @@
       ],
       list: [
         {
+<<<<<<< HEAD
           id: 'sadf',
+=======
+          id: '',
+          icon: '../assets/background.jpg',
+          title: '帮我交作业',
+          desc: '帮我把作业交到超算中心502，谢谢您！！！',
+          money: 5.0,
+          left: 1
+        },
+        {
+          icon: '../assets/2.png',
+          title: '关于夜跑活动的调查问卷',
+          desc: '最近有很多夜跑活动，我们想对此做一个简单的调查来了解大家的意见和想法',
+          money: 1.5,
+          left: 20
+        },
+        {
+          icon: '../assets/3.png',
+          title: '关于二饭自选窗口菜品的调查问卷',
+          desc: '新的二饭已经开了有一段时间了，为更好的服务师生，现收集师生的一些意见',
+          money: 0.5,
+          left: 33
+        },
+        {
+          icon: '../assets/background.jpg',
+          title: '标题二',
+          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
+          money: 0.5,
+          left: 20
+        },
+        {
+          icon: '../assets/background.jpg',
+          title: '标题一',
+          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
+          money: 0.5,
+          left: 33
+        },
+        {
+          icon: '../assets/background.jpg',
+          title: '标题二',
+          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
+          money: 0.5,
+          left: 20
+        },
+        {
+>>>>>>> 2c3b939cbd042aec938f9d1e88b8c1516d32c55b
           icon: '../assets/background.jpg',
           title: '标题一',
           desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
