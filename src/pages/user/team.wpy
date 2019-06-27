@@ -43,13 +43,20 @@
             <view class="weui-cells weui-cells_after-title">
               <view class="weui-cell weui-cell_input">
                 <view class="weui-cell__bd">
-                  <input class="weui-input" placeholder="请输入组织" />
+                  <input
+                    class="weui-input"
+                    placeholder="请输入组织"
+                  />
                 </view>
               </view>
             </view>
             <view class="weui-btn-area">
-              <button class="weui-btn" type="primary" bindtap="joinGroup">申请加入</button>
-            </view> 
+              <button
+                class="weui-btn"
+                type="primary"
+                bindtap="joinGroup"
+              >申请加入</button>
+            </view>
           </view>
           <view
             class="weui-tab__content"
@@ -58,12 +65,19 @@
             <view class="weui-cells weui-cells_after-title">
               <view class="weui-cell weui-cell_input">
                 <view class="weui-cell__bd">
-                  <input class="weui-input" placeholder="请输入组织" />
+                  <input
+                    class="weui-input"
+                    placeholder="请输入组织"
+                  />
                 </view>
               </view>
             </view>
             <view class="weui-btn-area">
-              <button class="weui-btn" type="primary" bindtap="createGroup">创建</button>
+              <button
+                class="weui-btn"
+                type="primary"
+                bindtap="createGroup"
+              >创建</button>
             </view>
           </view>
         </view>

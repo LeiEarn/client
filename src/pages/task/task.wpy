@@ -7,97 +7,101 @@
 <template>
   <view class="page">
     <view class="page__bd">
-      <picker bindchange="bindTypeChange" value="{{typeindex}}" range="{{typelist}}">
-          <button class="type">{{ typelist[typeindex] }}</button>
+      <picker
+        bindchange="bindTypeChange"
+        value="{{typeindex}}"
+        range="{{typelist}}"
+      >
+        <button class="type">{{ typelist[typeindex] }}</button>
       </picker>
     </view>
-    <list :list.sync="list"/>
+    <list :list.sync="list" />
   </view>
 </template>
 <script>
-  import wepy from 'wepy';
-  import TaskList from '../../components/tasklist';
+import wepy from 'wepy';
+import TaskList from '../../components/tasklist';
 
-  export default class Task extends wepy.page {
-    config = {
-      navigationBarTitleText: '任务大厅',
-      navigationBarTextStyle: 'black',
-      navigationBarBackgroundColor: '#E7E8E3',
-      enablePullDownRefresh: true,
-      backgroundTextStyle: 'dark'
-    }
+export default class Task extends wepy.page {
+  config = {
+    navigationBarTitleText: '任务大厅',
+    navigationBarTextStyle: 'black',
+    navigationBarBackgroundColor: '#E7E8E3',
+    enablePullDownRefresh: true,
+    backgroundTextStyle: 'dark'
+  }
 
-    components = {
-      list: TaskList
-    }
+  components = {
+    list: TaskList
+  }
 
-    data = {
-      pageId: 0,
-      list: [
-      ],
-      type: 'default',
-      typeindex: 0,
-      typelist: ['默认', '简单任务', '调查问卷'],
-      up_typelist: ['default', 'simple', 'askForm']
-    }
+  data = {
+    pageId: 0,
+    list: [
+    ],
+    type: 'default',
+    typeindex: 0,
+    typelist: ['默认', '简单任务', '调查问卷'],
+    up_typelist: ['default', 'simple', 'askForm']
+  }
 
-    events = {
-      TapTask(e) {
-        console.log(e);
-        wepy.navigateTo({ url: './detail?json=' + JSON.stringify(this.list[e.index]) });
-      }
-    }
-
-    methods = {
-      bindTypeChange(e) {
-        this.typeindex = e.detail.value;
-        this.getTask();
-      }
-    }
-
-    onLoad () {
-      this.typeindex = this.$parent.globalData.taskTypeIndex;
-    }
-
-    onShow() {
-      this.getTask();
-    }
-
-    load(list) {
-      this.list = list;
-      this.$apply();
-    }
-
-    onPullDownRefresh() {
-      console.log('下拉刷新列表');
-      let self = this;
-      setTimeout(function () {
-        self.getTask();
-        wepy.stopPullDownRefresh();
-      }, 2000);
-    }
-  
-    getTask() {
-      const rq = require('../../lib/request.js');
-      let self = this;
-      var object = {
-        url: '/tasks?pageId=' + this.pageId + '&type=' + this.up_typelist[this.typeindex],
-        data: {
-        },
-        method: 'GET'
-      };
-      rq.request(object).then(res => {
-        if (res.errMsg == 'request:ok') {
-          self.list = res.data;
-          self.$apply();
-        }
-      }).catch(err => {
-        console.log(err);
-        if (err.data.message == 'login') {
-          console.log('relogin');
-          self.$parent.reLogin();
-        }
-      });
+  events = {
+    TapTask(e) {
+      console.log(e);
+      wepy.navigateTo({ url: './detail?json=' + JSON.stringify(this.list[e.index]) });
     }
   }
+
+  methods = {
+    bindTypeChange(e) {
+      this.typeindex = e.detail.value;
+      this.getTask();
+    }
+  }
+
+  onLoad() {
+    this.typeindex = this.$parent.globalData.taskTypeIndex;
+  }
+
+  onShow() {
+    this.getTask();
+  }
+
+  load(list) {
+    this.list = list;
+    this.$apply();
+  }
+
+  onPullDownRefresh() {
+    console.log('下拉刷新列表');
+    let self = this;
+    setTimeout(function () {
+      self.getTask();
+      wepy.stopPullDownRefresh();
+    }, 2000);
+  }
+
+  getTask() {
+    const rq = require('../../lib/request.js');
+    let self = this;
+    var object = {
+      url: '/tasks?pageId=' + this.pageId + '&type=' + this.up_typelist[this.typeindex],
+      data: {
+      },
+      method: 'GET'
+    };
+    rq.request(object).then(res => {
+      if (res.errMsg == 'request:ok') {
+        self.list = res.data;
+        self.$apply();
+      }
+    }).catch(err => {
+      console.log(err);
+      if (err.data.message == 'login') {
+        console.log('relogin');
+        self.$parent.reLogin();
+      }
+    });
+  }
+}
 </script>

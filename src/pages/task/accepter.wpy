@@ -1,8 +1,8 @@
 <style lang="less">
-  .weui-panel__hd {
-    font-size: 12pt;
-    color: black;
-  }
+.weui-panel__hd {
+  font-size: 12pt;
+  color: black;
+}
 </style>
 <template>
   <view class="weui-panel weui-panel_access">
@@ -17,100 +17,100 @@
   </view>
 </template>
 <script>
-  import wepy from 'wepy';
-  import UserList from '../../components/userlist';
-  export default class Accepter extends wepy.page {
-    config = {
-      navigationBarTitleText: '任务接受者',
-      navigationBarTextStyle: 'black',
-      navigationBarBackgroundColor: '#E7E8E3',
-      enablePullDownRefresh: true,
-      backgroundTextStyle: 'dark',
-      onReachBottomDistance: -300
-    }
-    components = {
-      accepted: UserList,
-      completed: UserList
-    }
-    data = {
-      taskId: null,
-      accepted: [
-        {
-          userId: '',
-          avatarUrl: '../../assets/background.jpg',
-          nickName: '大脸猫(蒋侑伸)',
-          tel: '电话号码：13169766417'
-        },
-        {
-          userId: '',
-          avatarUrl: '../../assets/background.jpg',
-          nickName: '大脸猫(蒋侑伸)',
-          tel: '电话号码：13169766417'
-        },
-        {
-          userId: '',
-          avatarUrl: '../../assets/background.jpg',
-          nickName: '大脸猫(蒋侑伸)',
-          tel: '电话号码：13169766417'
-        },
-        {
-          userId: '',
-          avatarUrl: '../../assets/background.jpg',
-          nickName: '大脸猫(蒋侑伸)',
-          tel: '电话号码：13169766417'
-        }
-      ],
-      completed: [
-        {
-          userId: '',
-          avatarUrl: '../../assets/background.jpg',
-          nickName: '大脸猫(蒋侑伸)',
-          tel: '电话号码：13169766417'
-        }
-      ]
-    }
-    events = {
-      TapUser(e) {
-        console.log(e.index);
+import wepy from 'wepy';
+import UserList from '../../components/userlist';
+export default class Accepter extends wepy.page {
+  config = {
+    navigationBarTitleText: '任务接受者',
+    navigationBarTextStyle: 'black',
+    navigationBarBackgroundColor: '#E7E8E3',
+    enablePullDownRefresh: true,
+    backgroundTextStyle: 'dark',
+    onReachBottomDistance: -300
+  }
+  components = {
+    accepted: UserList,
+    completed: UserList
+  }
+  data = {
+    taskId: null,
+    accepted: [
+      {
+        userId: '',
+        avatarUrl: '../../assets/background.jpg',
+        nickName: '大脸猫(蒋侑伸)',
+        tel: '电话号码：13169766417'
+      },
+      {
+        userId: '',
+        avatarUrl: '../../assets/background.jpg',
+        nickName: '大脸猫(蒋侑伸)',
+        tel: '电话号码：13169766417'
+      },
+      {
+        userId: '',
+        avatarUrl: '../../assets/background.jpg',
+        nickName: '大脸猫(蒋侑伸)',
+        tel: '电话号码：13169766417'
+      },
+      {
+        userId: '',
+        avatarUrl: '../../assets/background.jpg',
+        nickName: '大脸猫(蒋侑伸)',
+        tel: '电话号码：13169766417'
       }
-    }
-    methods = {
-    }
-    onLoad(res) {
-      this.taskId = res.taskId;
-      if (this.$parent.globalData.user.userId) {
-        this.getAccepter(res.taskId, this.$parent.globalData.user.userId);
+    ],
+    completed: [
+      {
+        userId: '',
+        avatarUrl: '../../assets/background.jpg',
+        nickName: '大脸猫(蒋侑伸)',
+        tel: '电话号码：13169766417'
       }
-    }
-    onPullDownRefresh() {
-      console.log('下拉刷新列表');
-      setTimeout(function() {
-        this.getAccepter();
-        wepy.stopPullDownRefresh();
-      }, 5000);
-    }
-    getAccepter(taskId, userId) {
-      const rq = require('../../lib/request.js');
-      let self = this;
-      this.userId = userId;
-      var object = {
-        url: '/task/' + taskId + '/accepter?userId=' + userId,
-        data: {
-        },
-        method: 'GET'
-      };
-      console.log(object);
-      rq.request(object).then(res => {
-        console.log(res);
-        self.accepted = res.data.accepted;
-        self.completed = res.data.completed;
-        self.$apply();
-      }).catch(err => {
-        console.log(err);
-        if (err.data.message == 'login') {
-          this.$parent.reLogin();
-        }
-      });
+    ]
+  }
+  events = {
+    TapUser(e) {
+      console.log(e.index);
     }
   }
+  methods = {
+  }
+  onLoad(res) {
+    this.taskId = res.taskId;
+    if (this.$parent.globalData.user.userId) {
+      this.getAccepter(res.taskId, this.$parent.globalData.user.userId);
+    }
+  }
+  onPullDownRefresh() {
+    console.log('下拉刷新列表');
+    setTimeout(function () {
+      this.getAccepter();
+      wepy.stopPullDownRefresh();
+    }, 5000);
+  }
+  getAccepter(taskId, userId) {
+    const rq = require('../../lib/request.js');
+    let self = this;
+    this.userId = userId;
+    var object = {
+      url: '/task/' + taskId + '/accepter?userId=' + userId,
+      data: {
+      },
+      method: 'GET'
+    };
+    console.log(object);
+    rq.request(object).then(res => {
+      console.log(res);
+      self.accepted = res.data.accepted;
+      self.completed = res.data.completed;
+      self.$apply();
+    }).catch(err => {
+      console.log(err);
+      if (err.data.message == 'login') {
+        this.$parent.reLogin();
+      }
+    });
+  }
+}
 </script>

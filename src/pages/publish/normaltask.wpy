@@ -1,52 +1,52 @@
 <style lang="less" scoped>
-  page {
-    height: 100%;
-    width: 100%;
-  }
-  .page__hd {
-    margin-bottom: 20rpx;
-    padding-left: 10rpx;
-    font-size: 18pt;
-  }
-  .weui-cells__title {
-    color: black;
-  }
-  .weui-textarea-counter {
-    font-size: 10pt;
-  }
-  .detail {
-    display: block;
-  }
-  .step {
-    display: block;
-    max-height: 200rpx;
-    overflow: scroll;
-  }
-  .step-title {
-    font-size: 11pt;
-    color: rgb(120, 120, 120);
-  }
-  .step-detail {
-    display: block;
-    padding-left: 20rpx;
-    font-size: 11pt;
-  }
-  .weui-cell__ft {
-    margin-right: 5rpx;
-    margin-bottom: 5rpx;
-  }
-  .publish {
-    color: white;
-    background-color: #00c000;
-    width: 300rpx;
-  }
-  .target {
-    color: #444;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-bottom: 20rpx;
-    border-radius: 5rpx;
-  }
+page {
+  height: 100%;
+  width: 100%;
+}
+.page__hd {
+  margin-bottom: 20rpx;
+  padding-left: 10rpx;
+  font-size: 18pt;
+}
+.weui-cells__title {
+  color: black;
+}
+.weui-textarea-counter {
+  font-size: 10pt;
+}
+.detail {
+  display: block;
+}
+.step {
+  display: block;
+  max-height: 200rpx;
+  overflow: scroll;
+}
+.step-title {
+  font-size: 11pt;
+  color: rgb(120, 120, 120);
+}
+.step-detail {
+  display: block;
+  padding-left: 20rpx;
+  font-size: 11pt;
+}
+.weui-cell__ft {
+  margin-right: 5rpx;
+  margin-bottom: 5rpx;
+}
+.publish {
+  color: white;
+  background-color: #00c000;
+  width: 300rpx;
+}
+.target {
+  color: #444;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 20rpx;
+  border-radius: 5rpx;
+}
 </style>
 <template>
   <view class="page">
@@ -57,7 +57,11 @@
             <view class="weui-label">标题</view>
           </view>
           <view class="weui-cell__bd">
-            <input class="weui-input" placeholder="请输入标题" bindinput="bindTitleInput" />
+            <input
+              class="weui-input"
+              placeholder="请输入标题"
+              bindinput="bindTitleInput"
+            />
           </view>
         </view>
         <view class="weui-cell weui-cell_input weui-cell_vcode detail">
@@ -68,7 +72,14 @@
           <view class="weui-cells weui-cells_after-title">
             <view class="weui-cell">
               <view class="weui-cell__bd">
-                <textarea class="weui-textarea" placeholder="请介绍任务内容" style="height: 3.3em" bindinput="bindDetailInput" minlength="0" maxlength="40" />
+                <textarea
+                  class="weui-textarea"
+                  placeholder="请介绍任务内容"
+                  style="height: 3.3em"
+                  bindinput="bindDetailInput"
+                  minlength="0"
+                  maxlength="40"
+                />
                 <view class="weui-textarea-counter">{{ currentLen }}/40</view>
               </view>
             </view>
@@ -136,150 +147,150 @@
 </template>
 
 <script>
-  import wepy from 'wepy';
-  import Datetimepicker from '../../components/datetimepicker';
+import wepy from 'wepy';
+import Datetimepicker from '../../components/datetimepicker';
 import GroupsPicker from '../../components/groupspicker';
-  export default class NormalTask extends wepy.page {
-    config = {
-      navigationBarTitleText: '发布任务',
-      navigationBarTextStyle: 'black',
-      navigationBarBackgroundColor: '#E7E8E3'
-    }
-    data = {
-      groups: [
-        { name: '中山大学', value: '0' },
-        { name: '校学生会', value: '1' },
-        { name: '明德园2号', value: '2' },
-        { name: '软工3班', value: '3' },
-        { name: '校学生会', value: '4' },
-        { name: '校学生会', value: '5' },
-        { name: '校学生会', value: '6' }
-      ],
-      sexs: ['全部', '男', '女'],
-      steps: [],
-  
-      userId: null,
-      task: {
-        title: '',
-        detail: '',
-        condition: {
-          groups: [],
-          sex: '全部',
-          creditScore: 0
+export default class NormalTask extends wepy.page {
+  config = {
+    navigationBarTitleText: '发布任务',
+    navigationBarTextStyle: 'black',
+    navigationBarBackgroundColor: '#E7E8E3'
+  }
+  data = {
+    groups: [
+      { name: '中山大学', value: '0' },
+      { name: '校学生会', value: '1' },
+      { name: '明德园2号', value: '2' },
+      { name: '软工3班', value: '3' },
+      { name: '校学生会', value: '4' },
+      { name: '校学生会', value: '5' },
+      { name: '校学生会', value: '6' }
+    ],
+    sexs: ['全部', '男', '女'],
+    steps: [],
+
+    userId: null,
+    task: {
+      title: '',
+      detail: '',
+      condition: {
+        groups: [],
+        sex: '全部',
+        creditScore: 0
+      },
+      time: '',
+      money: 0,
+      num: 0
+    },
+    currentLen: 0
+  };
+  components = {
+    datetimepicker: Datetimepicker,
+    groupspicker: GroupsPicker
+  }
+  methods = {
+    add() {
+      this.steps.push('');
+    },
+    publish() {
+      this.task.detail = this.task.detail + '\n' + JSON.stringify(this.steps);
+      this.task.condition.creditScore = parseInt(this.task.condition.creditScore);
+      var object = {
+        url: '/task/' + this.userId,
+        data: {
+          type: 'O',
+          wjxId: '',
+          title: this.task.title,
+          desc: this.task.detail,
+          time: this.task.time,
+          money: parseFloat(this.task.money),
+          maxNum: parseInt(this.task.num),
+          partNum: 0,
+          condition: this.task.condition
         },
-        time: '',
-        money: 0,
-        num: 0
-      },
-      currentLen: 0
-    };
-    components ={
-      datetimepicker: Datetimepicker,
-      groupspicker: GroupsPicker
-    }
-    methods = {
-      add() {
-        this.steps.push('');
-      },
-      publish() {
-        this.task.detail = this.task.detail + '\n' + JSON.stringify(this.steps);
-        this.task.condition.creditScore = parseInt(this.task.condition.creditScore);
-        var object = {
-          url: '/task/' + this.userId,
-          data: {
-            type: 'O',
-            wjxId: '',
-            title: this.task.title,
-            desc: this.task.detail,
-            time: this.task.time,
-            money: parseFloat(this.task.money),
-            maxNum: parseInt(this.task.num),
-            partNum: 0,
-            condition: this.task.condition
-          },
-          method: 'POST'
-        };
-        console.log(object);
-        let self = this;
-        const rq = require('../../lib/request.js');
-        rq.request(object).then(res => {
-          console.log(res);
-          if (res.data == 'success') {
-            wepy.showToast({
-              title: '发布成功', // 提示的内容,
-              icon: 'success', // 图标,
-              duration: 2000, // 延迟时间,
-              mask: true, // 显示透明蒙层，防止触摸穿透,
-              success: res => {}
-            });
-            wepy.navigateBack({
-              delta: 1 // 返回的页面数，如果 delta 大于现有页面数，则返回到首页,
-            });
-          }
-        }).catch(err => {
-          console.log(err);
-          if (err.data.message == 'login') {
-            self.$parent.reLogin();
+        method: 'POST'
+      };
+      console.log(object);
+      let self = this;
+      const rq = require('../../lib/request.js');
+      rq.request(object).then(res => {
+        console.log(res);
+        if (res.data == 'success') {
+          wepy.showToast({
+            title: '发布成功', // 提示的内容,
+            icon: 'success', // 图标,
+            duration: 2000, // 延迟时间,
+            mask: true, // 显示透明蒙层，防止触摸穿透,
+            success: res => { }
+          });
+          wepy.navigateBack({
+            delta: 1 // 返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+          });
+        }
+      }).catch(err => {
+        console.log(err);
+        if (err.data.message == 'login') {
+          self.$parent.reLogin();
+          self.$apply();
+        }
+      });
+    },
+    bindTitleInput: function (e) {
+      this.task.title = e.detail.value;
+    },
+    bindDetailInput: function (e) {
+      var value = e.detail.value;
+      var len = parseInt(value.length);
+      this.currentLen = len;
+      this.task.detail = e.detail.value;
+    },
+    bindStepInput: function (e) {
+      console.log(e.currentTarget.dataset.index);
+      this.steps[e.currentTarget.dataset.index] = e.detail.value;
+    },
+    bindMoneyInput: function (e) {
+      this.task.money = e.detail.value;
+    },
+    bindNumInput: function (e) {
+      this.task.num = e.detail.value;
+    },
+    bindCreditScoreInput: function (e) {
+      this.task.condition.creditScore = e.detail.value;
+    },
+    bindSexChange() {
+      let self = this;
+      wepy.showActionSheet({
+        itemList: ['全部', '男', '女'], // 按钮的文字数组，数组长度最大为6个,
+        itemColor: '#000000', // 按钮的文字颜色,
+        showCancel: false,
+        success: res => {
+          if (!res.cancel) {
+            console.log(res.tapIndex);
+            self.task.condition.sex = self.sexs[res.tapIndex];
             self.$apply();
           }
-        });
-      },
-      bindTitleInput: function(e) {
-        this.task.title = e.detail.value;
-      },
-      bindDetailInput: function(e) {
-        var value = e.detail.value;
-        var len = parseInt(value.length);
-        this.currentLen = len;
-        this.task.detail = e.detail.value;
-      },
-      bindStepInput: function(e) {
-        console.log(e.currentTarget.dataset.index);
-        this.steps[e.currentTarget.dataset.index] = e.detail.value;
-      },
-      bindMoneyInput: function(e) {
-        this.task.money = e.detail.value;
-      },
-      bindNumInput: function(e) {
-        this.task.num = e.detail.value;
-      },
-      bindCreditScoreInput: function(e) {
-        this.task.condition.creditScore = e.detail.value;
-      },
-      bindSexChange() {
-        let self = this;
-        wepy.showActionSheet({
-          itemList: ['全部', '男', '女'], // 按钮的文字数组，数组长度最大为6个,
-          itemColor: '#000000', // 按钮的文字颜色,
-          showCancel: false,
-          success: res => {
-            if (!res.cancel) {
-              console.log(res.tapIndex);
-              self.task.condition.sex = self.sexs[res.tapIndex];
-              self.$apply();
-            }
-          }
-        });
-      }
-    };
-    events = {
-      TimeChange(e) {
-        console.log(e);
-        this.task.time = e.value;
-      },
-      GroupsChange(e) {
-        this.task.condition.groups = [];
-        for (var i = 0; i < e.tempGroupsIndex.length; i++) {
-          var temp = e.tempGroupsIndex[i];
-          this.task.condition.groups.push(this.groups[temp].name);
         }
-      }
+      });
     }
-    onLoad() {
-      if (this.$parent.globalData.user.userId) {
-        console.log(this.$parent.globalData.user.userId);
-        this.userId = this.$parent.globalData.user.userId;
+  };
+  events = {
+    TimeChange(e) {
+      console.log(e);
+      this.task.time = e.value;
+    },
+    GroupsChange(e) {
+      this.task.condition.groups = [];
+      for (var i = 0; i < e.tempGroupsIndex.length; i++) {
+        var temp = e.tempGroupsIndex[i];
+        this.task.condition.groups.push(this.groups[temp].name);
       }
     }
   }
+  onLoad() {
+    if (this.$parent.globalData.user.userId) {
+      console.log(this.$parent.globalData.user.userId);
+      this.userId = this.$parent.globalData.user.userId;
+    }
+  }
+}
 </script>

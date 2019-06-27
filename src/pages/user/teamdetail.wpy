@@ -22,11 +22,14 @@ page {
   <view class="page">
     <view class="weui-media-box_appmsg group">
       <view class="icon">
-          <image class="weui-media-box__thumb" src="{{group.icon}}" />
+        <image
+          class="weui-media-box__thumb"
+          src="{{group.icon}}"
+        />
       </view>
       <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-          <view class="weui-media-box__title">{{ group.title }}</view>
-          <view class="weui-media-box__desc">{{ group.desc }}</view>
+        <view class="weui-media-box__title">{{ group.title }}</view>
+        <view class="weui-media-box__desc">{{ group.desc }}</view>
       </view>
     </view>
     <view style="padding: 10rpx">组织成员：</view>
@@ -35,45 +38,45 @@ page {
 </template>
 
 <script>
-  import wepy from 'wepy';
+import wepy from 'wepy';
 import UserList from '../../components/userlist';
 
-  export default class TeamDetail extends wepy.page {
-    config = {
-      navigationBarTitleText: '组织详情',
-      navigationBarTextStyle: 'black',
-      navigationBarBackgroundColor: '#f0f0f0'
-    };
+export default class TeamDetail extends wepy.page {
+  config = {
+    navigationBarTitleText: '组织详情',
+    navigationBarTextStyle: 'black',
+    navigationBarBackgroundColor: '#f0f0f0'
+  };
 
-    components = {
-      userlist: UserList
-    };
+  components = {
+    userlist: UserList
+  };
 
-    data = {
-      group: {
-        icon: '',
-        title: '',
-        desc: ''
-      },
+  data = {
+    group: {
+      icon: '',
+      title: '',
+      desc: ''
+    },
 
-      list: [
-        {
-          icon: '../../assets/background.jpg',
-          nickName: '123123',
-          tel: '12312321',
-          credit: 100
-        }
-      ]
-    };
+    list: [
+      {
+        icon: '../../assets/background.jpg',
+        nickName: '123123',
+        tel: '12312321',
+        credit: 100
+      }
+    ]
+  };
 
-    methods = {
-    };
+  methods = {
+  };
 
-    events = {
-    };
+  events = {
+  };
 
-    onLoad(res) {
-      this.group = JSON.parse(res.json);
-    };
-  }
+  onLoad(res) {
+    this.group = JSON.parse(res.json);
+  };
+}
 </script>

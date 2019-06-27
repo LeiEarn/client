@@ -10,32 +10,32 @@
 </style>
 
 <template>
-	<view class="item">
-		<view
-		 bindtap="privacy"
-		 class="weui-cell weui-cell_access"
-		 hover-class="weui-cell_active"
-		>
-			<view class="weui-cell__bd">隐私权条款</view>
-			<view class="weui-cell__ft weui-cell__ft_in-access"></view>
-		</view>
-		<view
-		 bindtap="behavior"
-		 class="weui-cell weui-cell_access"
-		 hover-class="weui-cell_active"
-		>
-			<view class="weui-cell__bd">用户行为规范</view>
-			<view class="weui-cell__ft weui-cell__ft_in-access"></view>
-		</view>
-		<view
-		 bindtap="publish"
-		 class="weui-cell weui-cell_access"
-		 hover-class="weui-cell_active"
-		>
-			<view class="weui-cell__bd">任务发布条例</view>
-			<view class="weui-cell__ft weui-cell__ft_in-access"></view>
-		</view>
-	</view>
+  <view class="item">
+    <view
+      bindtap="privacy"
+      class="weui-cell weui-cell_access"
+      hover-class="weui-cell_active"
+    >
+      <view class="weui-cell__bd">隐私权条款</view>
+      <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+    </view>
+    <view
+      bindtap="behavior"
+      class="weui-cell weui-cell_access"
+      hover-class="weui-cell_active"
+    >
+      <view class="weui-cell__bd">用户行为规范</view>
+      <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+    </view>
+    <view
+      bindtap="publish"
+      class="weui-cell weui-cell_access"
+      hover-class="weui-cell_active"
+    >
+      <view class="weui-cell__bd">任务发布条例</view>
+      <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+    </view>
+  </view>
 </template>
 
 <script>

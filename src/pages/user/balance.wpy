@@ -16,9 +16,13 @@
           <view class="weui-cell__ft">0</view>
         </view>
       </view>
-      
+
     </view>
-    <button class="weui-btn" type="primary" bindtap="recharge">充值</button>
+    <button
+      class="weui-btn"
+      type="primary"
+      bindtap="recharge"
+    >充值</button>
   </view>
 </template>
 

@@ -46,166 +46,186 @@
   <view class="container">
     <view class="index">
       <view class="weui-search-bar">
-          <view class="weui-search-bar__form">
-              <view class="weui-search-bar__label" bindtap="search">
-                  <view class="iconfont weui-search-bar__text">&#xe601; 搜索</view>
-              </view>
+        <view class="weui-search-bar__form">
+          <view
+            class="weui-search-bar__label"
+            bindtap="search"
+          >
+            <view class="iconfont weui-search-bar__text">&#xe601; 搜索</view>
           </view>
+        </view>
       </view>
       <swiperview :SwiperImg.sync="swiperImg" />
       <view class="page__bd page__bd_spacing">
         <view class="weui-flex">
-            <view class="weui-flex__item area" bindtap="simple">
-              <image class="image" src="../assets/simpleTask.png"/>
-              <view class="placeholder">简单任务</view>
-            </view>
-            <view class="weui-flex__item area" bindtap="askForm">
-              <image class="image" src="../assets/askForm.png"/>
-              <view class="placeholder">调查问卷</view>
-            </view>
+          <view
+            class="weui-flex__item area"
+            bindtap="simple"
+          >
+            <image
+              class="image"
+              src="../assets/simpleTask.png"
+            />
+            <view class="placeholder">简单任务</view>
+          </view>
+          <view
+            class="weui-flex__item area"
+            bindtap="askForm"
+          >
+            <image
+              class="image"
+              src="../assets/askForm.png"
+            />
+            <view class="placeholder">调查问卷</view>
+          </view>
         </view>
       </view>
       <view class="page__bd page__bd_spacing">
         <view class="weui-flex">
-            <view class="weui-flex__item"><view class="placeholder">推荐任务</view></view>
+          <view class="weui-flex__item">
+            <view class="placeholder">推荐任务</view>
+          </view>
         </view>
       </view>
-      <list class="recommend" :list.sync="list" />
+      <list
+        class="recommend"
+        :list.sync="list"
+      />
     </view>
   </view>
 </template>
 
 <script>
-  import wepy from 'wepy';
-  import SwiperView from '../components/swiper';
-  import TaskList from '../components/tasklist';
+import wepy from 'wepy';
+import SwiperView from '../components/swiper';
+import TaskList from '../components/tasklist';
 
-  export default class Index extends wepy.page {
-    config = {
-      navigationBarTitleText: '主页',
-      navigationBarTextStyle: 'black',
-      navigationBarBackgroundColor: '#E7E8E3'
-    }
-    components = {
-      swiperview: SwiperView,
-      list: TaskList
-    }
+export default class Index extends wepy.page {
+  config = {
+    navigationBarTitleText: '主页',
+    navigationBarTextStyle: 'black',
+    navigationBarBackgroundColor: '#E7E8E3'
+  }
+  components = {
+    swiperview: SwiperView,
+    list: TaskList
+  }
 
-    data = {
-      currentTab: 0,
-      swiperImg: [
-        '../assets/1.png',
-        '../assets/2.png',
-        '../assets/3.png'
-      ],
-      list: [
-        {
-          id: '',
-          icon: '../assets/background.jpg',
-          title: '帮我交作业',
-          desc: '帮我把作业交到超算中心502，谢谢您！！！',
-          money: 5.0,
-          left: 1
-        },
-        {
-          icon: '../assets/2.png',
-          title: '关于夜跑活动的调查问卷',
-          desc: '最近有很多夜跑活动，我们想对此做一个简单的调查来了解大家的意见和想法',
-          money: 1.5,
-          left: 20
-        },
-        {
-          icon: '../assets/3.png',
-          title: '关于二饭自选窗口菜品的调查问卷',
-          desc: '新的二饭已经开了有一段时间了，为更好的服务师生，现收集师生的一些意见',
-          money: 0.5,
-          left: 33
-        }
-      ],
-
-      pageId: 0
-    }
-
-    methods = {
-      search() {
-        wepy.navigateTo({ url: './search' });
+  data = {
+    currentTab: 0,
+    swiperImg: [
+      '../assets/1.png',
+      '../assets/2.png',
+      '../assets/3.png'
+    ],
+    list: [
+      {
+        id: '',
+        icon: '../assets/background.jpg',
+        title: '帮我交作业',
+        desc: '帮我把作业交到超算中心502，谢谢您！！！',
+        money: 5.0,
+        left: 1
       },
-      simple() {
-        this.$parent.globalData.taskTypeIndex = 1;
-        wepy.switchTab({ url: './task/task' });
+      {
+        icon: '../assets/2.png',
+        title: '关于夜跑活动的调查问卷',
+        desc: '最近有很多夜跑活动，我们想对此做一个简单的调查来了解大家的意见和想法',
+        money: 1.5,
+        left: 20
       },
-      askForm() {
-        this.$parent.globalData.taskTypeIndex = 2;
-        wepy.switchTab({ url: './task/task' });
+      {
+        icon: '../assets/3.png',
+        title: '关于二饭自选窗口菜品的调查问卷',
+        desc: '新的二饭已经开了有一段时间了，为更好的服务师生，现收集师生的一些意见',
+        money: 0.5,
+        left: 33
       }
-    }
+    ],
 
-    events = {
-      TapTask(e) {
-        wepy.navigateTo({ url: './task/detail?json=' + JSON.stringify(e.task) });
+    pageId: 0
+  }
+
+  methods = {
+    search() {
+      wepy.navigateTo({ url: './search' });
+    },
+    simple() {
+      this.$parent.globalData.taskTypeIndex = 1;
+      wepy.switchTab({ url: './task/task' });
+    },
+    askForm() {
+      this.$parent.globalData.taskTypeIndex = 2;
+      wepy.switchTab({ url: './task/task' });
+    }
+  }
+
+  events = {
+    TapTask(e) {
+      wepy.navigateTo({ url: './task/detail?json=' + JSON.stringify(e.task) });
+    }
+  }
+
+  async onLoad() {
+    await this.login();
+    this.getRecommendTask();
+  }
+
+  onShow() {
+    wepy.getSetting({ success: res => {
+      if (!res.authSetting['scope.userInfo']) {
+        wepy.navigateTo({ url: './authorize' });
       }
-    }
+    } });
+  }
 
-    async onLoad() {
-      await this.login();
-      this.getRecommendTask();
-    }
+  onReachBottom() {
+    console.log('加载更多');
+    this.pageId = this.pageId + 1;
+    this.getRecommendTask();
+  }
 
-    onShow() {
-      wepy.getSetting({ success: res => {
-        if (!res.authSetting['scope.userInfo']) {
-          wepy.navigateTo({ url: './authorize' });
+  login() {
+    let self = this;
+    if (this.$parent.globalData.user.userId) {
+      this.userId = this.$parent.globalData.user.userId;
+    } else {
+      this.$parent.login(function (user) {
+        if (user) {
+          self.userId = user.userId;
+          self.$apply();
         }
-      } });
-    }
-
-    onReachBottom() {
-      console.log('加载更多');
-      this.pageId = this.pageId + 1;
-      this.getRecommendTask();
-    }
-
-    login() {
-      let self = this;
-      if (this.$parent.globalData.user.userId) {
-        this.userId = this.$parent.globalData.user.userId;
-      } else {
-        this.$parent.login(function(user) {
-          if (user) {
-            self.userId = user.userId;
-            self.$apply();
-          }
-        });
-      }
-    }
-
-    getRecommendTask() {
-      const rq = require('../lib/request.js');
-      let self = this;
-      var object = {
-        url: '/tasks?pageId=' + this.pageId + '&type=recommend',
-        data: {
-        },
-        method: 'GET'
-      };
-      rq.request(object).then(res => {
-        console.log(res);
-        if (res.errMsg == 'request:ok') {
-          if (res.data.length == 0) {
-            wepy.showToast({
-              title: '没有更多了', // 提示的内容,
-              icon: 'none', // 图标,
-              duration: 2000, // 延迟时间,
-              mask: true, // 显示透明蒙层，防止触摸穿透,
-              success: res => {}
-            });
-          }
-          self.list = self.list.concat(res.data);
-        }
-        self.$apply();
-      }).catch(err => {
-        console.log(err);
       });
     }
   }
+
+  getRecommendTask() {
+    const rq = require('../lib/request.js');
+    let self = this;
+    var object = {
+      url: '/tasks?pageId=' + this.pageId + '&type=recommend',
+      data: {
+      },
+      method: 'GET'
+    };
+    rq.request(object).then(res => {
+      console.log(res);
+      if (res.errMsg == 'request:ok') {
+        if (res.data.length == 0) {
+          wepy.showToast({
+            title: '没有更多了', // 提示的内容,
+            icon: 'none', // 图标,
+            duration: 2000, // 延迟时间,
+            mask: true, // 显示透明蒙层，防止触摸穿透,
+            success: res => { }
+          });
+        }
+        self.list = self.list.concat(res.data);
+      }
+      self.$apply();
+    }).catch(err => {
+      console.log(err);
+    });
+  }
+}
 </script>

@@ -64,7 +64,7 @@ export default class TaskList extends wepy.component {
 
   methods = {
     tap(e) {
-      this.$emit('TapTask', {index: e.currentTarget.dataset.index});
+      this.$emit('TapTask', { index: e.currentTarget.dataset.index });
     },
     add() {
       let len = this.list.length;

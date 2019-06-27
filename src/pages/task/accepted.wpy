@@ -1,8 +1,8 @@
 <style lang="less">
-  .weui-panel__hd {
-    font-size: 12pt;
-    color: black;
-  }
+.weui-panel__hd {
+  font-size: 12pt;
+  color: black;
+}
 </style>
 <template>
   <view class="weui-panel weui-panel_access">
@@ -17,74 +17,74 @@
   </view>
 </template>
 <script>
-  import wepy from 'wepy';
-  import TaskList from '../../components/tasklist';
-  export default class AcceptedTask extends wepy.page {
-    config = {
-      navigationBarTitleText: '已接受任务',
-      navigationBarTextStyle: 'black',
-      navigationBarBackgroundColor: '#E7E8E3',
-      enablePullDownRefresh: true,
-      backgroundTextStyle: 'dark'
+import wepy from 'wepy';
+import TaskList from '../../components/tasklist';
+export default class AcceptedTask extends wepy.page {
+  config = {
+    navigationBarTitleText: '已接受任务',
+    navigationBarTextStyle: 'black',
+    navigationBarBackgroundColor: '#E7E8E3',
+    enablePullDownRefresh: true,
+    backgroundTextStyle: 'dark'
+  }
+  components = {
+    ongoing: TaskList,
+    accepted: TaskList
+  }
+  data = {
+    userId: null,
+    accepted: []
+  }
+  events = {
+    TapTask(e) {
+      wepy.navigateTo({ url: './detail?json=' + JSON.stringify(e.task) });
     }
-    components = {
-      ongoing: TaskList,
-      accepted: TaskList
-    }
-    data = {
-      userId: null,
-      accepted: []
-    }
-    events = {
-      TapTask(e) {
-        wepy.navigateTo({ url: './detail?json=' + JSON.stringify(e.task) });
-      }
-    }
-    methods = {
-      tap() {
-        // this.num = this.num + 1
-        console.log('65465448');
-      },
-      add() {
-        let len = this.list.length;
-        this.list.push({
-          id: len + 1,
-          title: 'title_' + len
-        });
-      }
-    }
-    onLoad() {
-      if (this.$parent.globalData.user.userId) {
-        this.userId = this.$parent.globalData.user.userId;
-        this.getAcceptedTask();
-      }
-    }
-    onPullDownRefresh() {
-      console.log('下拉刷新列表');
-      setTimeout(function() {
-        this.getAcceptedTask();
-        wepy.stopPullDownRefresh();
-      }, 5000);
-    }
-    getAcceptedTask() {
-      const rq = require('../../lib/request.js');
-      let self = this;
-      var object = {
-        url: '/task/' + this.$parent.globalData.user.userId + '?type=acceptment',
-        data: {
-        },
-        method: 'GET'
-      };
-      rq.request(object).then(res => {
-        console.log(res);
-        self.accepted = res.data;
-        self.$apply();
-      }).catch(err => {
-        console.log(err);
-        if (err.data.message == 'login') {
-          this.$parent.reLogin();
-        }
+  }
+  methods = {
+    tap() {
+      // this.num = this.num + 1
+      console.log('65465448');
+    },
+    add() {
+      let len = this.list.length;
+      this.list.push({
+        id: len + 1,
+        title: 'title_' + len
       });
     }
   }
+  onLoad() {
+    if (this.$parent.globalData.user.userId) {
+      this.userId = this.$parent.globalData.user.userId;
+      this.getAcceptedTask();
+    }
+  }
+  onPullDownRefresh() {
+    console.log('下拉刷新列表');
+    setTimeout(function () {
+      this.getAcceptedTask();
+      wepy.stopPullDownRefresh();
+    }, 5000);
+  }
+  getAcceptedTask() {
+    const rq = require('../../lib/request.js');
+    let self = this;
+    var object = {
+      url: '/task/' + this.$parent.globalData.user.userId + '?type=acceptment',
+      data: {
+      },
+      method: 'GET'
+    };
+    rq.request(object).then(res => {
+      console.log(res);
+      self.accepted = res.data;
+      self.$apply();
+    }).catch(err => {
+      console.log(err);
+      if (err.data.message == 'login') {
+        this.$parent.reLogin();
+      }
+    });
+  }
+}
 </script>

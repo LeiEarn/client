@@ -188,7 +188,7 @@ export default class Info extends wepy.page {
             fail: err => {
               console.log(err.data);
             },
-            complete: () => {}
+            complete: () => { }
           });
         }
       } else {

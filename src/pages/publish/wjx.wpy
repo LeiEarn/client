@@ -1,5 +1,5 @@
 <style lang="less">
-::-webkit-scrollbar{
+::-webkit-scrollbar {
   width: 0;
   height: 0;
   color: transparent;
@@ -61,21 +61,29 @@
         </view>
         <view class="weui-cell__bd">
           <span>组织：</span>
-          <groupspicker class="target" :groups="groups"></groupspicker>
-          <span>性别：</span><view
+          <groupspicker
+            class="target"
+            :groups="groups"
+          ></groupspicker>
+          <span>性别：</span>
+          <view
             class="target"
             bindtap="bindSexChange"
           >{{wjx.condition.sex}}</view>
         </view>
       </view>
-        <view class="weui-cell weui-cell_input">
-          <view class="weui-cell__hd">
-            <view class="weui-label">时间</view>
-          </view>
-          <view class="weui-cell__bd">
-            <datetimepicker class="time" minuteStep="5" timeFormat="HH:mm"></datetimepicker>
-          </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">时间</view>
         </view>
+        <view class="weui-cell__bd">
+          <datetimepicker
+            class="time"
+            minuteStep="5"
+            timeFormat="HH:mm"
+          ></datetimepicker>
+        </view>
+      </view>
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
           <view class="weui-label">赏金</view>
@@ -221,7 +229,7 @@ export default class Wjx extends wepy.page {
             icon: 'success', // 图标,
             duration: 2000, // 延迟时间,
             mask: true, // 显示透明蒙层，防止触摸穿透,
-            success: res => {}
+            success: res => { }
           });
           wepy.navigateBack({
             delta: 1 // 返回的页面数，如果 delta 大于现有页面数，则返回到首页,

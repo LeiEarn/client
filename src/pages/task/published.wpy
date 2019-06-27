@@ -5,12 +5,12 @@
 }
 </style>
 <template>
-	<view class="weui-panel weui-panel_access">
-		<view class="weui-panel__hd">已发布的任务</view>
-		<view class="published">
-			<list :list.sync="published" />
-		</view>
-	</view>
+  <view class="weui-panel weui-panel_access">
+    <view class="weui-panel__hd">已发布的任务</view>
+    <view class="published">
+      <list :list.sync="published" />
+    </view>
+  </view>
 </template>
 <script>
 import wepy from 'wepy';

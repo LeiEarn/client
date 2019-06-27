@@ -1,18 +1,18 @@
 <style lang="less" scoped>
-  .uploader {
-    width: 100%;
-    height: 400rpx;
-    padding: 10rpx;
-    padding-left: 0rpx;
-  }
+.uploader {
+  width: 100%;
+  height: 400rpx;
+  padding: 10rpx;
+  padding-left: 0rpx;
+}
 
-  .weui-btn-area {
-    margin-top: 100rpx;
-  }
+.weui-btn-area {
+  margin-top: 100rpx;
+}
 
-  .weui-uploader__input-box {
-    margin: 20rpx auto;
-  }
+.weui-uploader__input-box {
+  margin: 20rpx auto;
+}
 </style>
 <template>
   <view class="page">
@@ -22,35 +22,57 @@
           <view class="weui-label">姓名</view>
         </view>
         <view class="weui-cell__bd">
-          <input class="weui-input" placeholder="请输入姓名" value="{{user.name}}" bindinput="name" disabled="{{proveState !== 'N'}}" />
+          <input
+            class="weui-input"
+            placeholder="请输入姓名"
+            value="{{user.name}}"
+            bindinput="name"
+            disabled="{{proveState !== 'N'}}"
+          />
         </view>
       </view>
       <view class="weui-cell weui-cell_select">
-          <view class="weui-cell__hd weui-cell__hd_in-select-after">
-              <view class="weui-label">性别</view>
-          </view>
-          <view class="weui-cell__bd">
-              <picker bindchange="bindSexChange" value="{{sexs_index}}" range="{{sexs}}" disabled="{{proveState !== 'N'}}">
-                  <view class="weui-select weui-select_in-select-after">{{sexs[sexs_index]}}</view>
-              </picker>
-          </view>
+        <view class="weui-cell__hd weui-cell__hd_in-select-after">
+          <view class="weui-label">性别</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker
+            bindchange="bindSexChange"
+            value="{{sexs_index}}"
+            range="{{sexs}}"
+            disabled="{{proveState !== 'N'}}"
+          >
+            <view class="weui-select weui-select_in-select-after">{{sexs[sexs_index]}}</view>
+          </picker>
+        </view>
       </view>
       <view class="weui-cell weui-cell_input weui-cell_vcode">
         <view class="weui-cell__hd">
           <view class="weui-label">手机号</view>
         </view>
         <view class="weui-cell__bd">
-          <input class="weui-input" placeholder="请输入手机号" value="{{user.tel}}" bindinput="tel" disabled="{{proveState !== 'N'}}" />
+          <input
+            class="weui-input"
+            placeholder="请输入手机号"
+            value="{{user.tel}}"
+            bindinput="tel"
+            disabled="{{proveState !== 'N'}}"
+          />
         </view>
       </view>
       <view class="weui-cell weui-cell_select">
         <view class="weui-cell__hd weui-cell__hd_in-select-after">
-            <view class="weui-label">身份</view>
+          <view class="weui-label">身份</view>
         </view>
         <view class="weui-cell__bd">
-            <picker bindchange="bindIdentityChange" value="{{idens_index}}" range="{{idens}}" disabled="{{proveState !== 'N'}}">
-                <view class="weui-select weui-select_in-select-after">{{idens[idens_index]}}</view>
-            </picker>
+          <picker
+            bindchange="bindIdentityChange"
+            value="{{idens_index}}"
+            range="{{idens}}"
+            disabled="{{proveState !== 'N'}}"
+          >
+            <view class="weui-select weui-select_in-select-after">{{idens[idens_index]}}</view>
+          </picker>
         </view>
       </view>
       <view class="weui-cell weui-cell_input weui-cell_vcode">
@@ -58,7 +80,13 @@
           <view class="weui-label">学校/公司</view>
         </view>
         <view class="weui-cell__bd">
-          <input class="weui-input" placeholder="请输入学校/公司" value="{{user.department}}" bindinput="department" disabled="{{proveState !== 'N'}}" />
+          <input
+            class="weui-input"
+            placeholder="请输入学校/公司"
+            value="{{user.department}}"
+            bindinput="department"
+            disabled="{{proveState !== 'N'}}"
+          />
         </view>
       </view>
       <view class="weui-cell weui-cell_input">
@@ -66,7 +94,13 @@
           <view class="weui-label">{{id_name}}</view>
         </view>
         <view class="weui-cell__bd">
-          <input class="weui-input" placeholder="请输入{{id_name}}" value="{{user.id}}" bindinput="id" disabled="{{proveState !== 'N'}}" />
+          <input
+            class="weui-input"
+            placeholder="请输入{{id_name}}"
+            value="{{user.id}}"
+            bindinput="id"
+            disabled="{{proveState !== 'N'}}"
+          />
         </view>
       </view>
       <view class="weui-cell weui-cell_input">
@@ -74,197 +108,213 @@
           <view class="weui-label">证明</view>
         </view>
         <view class="weui-cell__bd">
-          <view class="weui-uploader__input-box" hidden="{{ user.cert !== '' }}">
-              <view class="weui-uploader__input" bindtap="chooseImage"></view>
+          <view
+            class="weui-uploader__input-box"
+            hidden="{{ user.cert !== '' }}"
+          >
+            <view
+              class="weui-uploader__input"
+              bindtap="chooseImage"
+            ></view>
           </view>
-          <image class="uploader" bindtap="chooseImage" src="{{ user.cert }}" wx:if="{{ user.cert !== '' }}" />
+          <image
+            class="uploader"
+            bindtap="chooseImage"
+            src="{{ user.cert }}"
+            wx:if="{{ user.cert !== '' }}"
+          />
         </view>
       </view>
     </view>
     <view class="weui-btn-area">
-      <button class="weui-btn" type="primary" bindtap="submit" disabled="{{proveState !== 'N'}}">提交</button>
+      <button
+        class="weui-btn"
+        type="primary"
+        bindtap="submit"
+        disabled="{{proveState !== 'N'}}"
+      >提交</button>
     </view>
   </view>
 </template>
 
 <script>
-  import wepy from 'wepy';
-  export default class Prove extends wepy.page {
-    config = {
-      navigationBarTitleText: '身份认证'
-    }
-    components = {}
-    data = {
-      sexs: ['男', '女'],
-      sexs_index: 0,
-      idens: ['学生', '企业人员'],
-      idens_index: 0,
-      id_name: '学号',
-      user: {
-        name: '何枷瑜',
-        sex: '男',
-        idenType: '学生',
-        tel: '13169766417',
-        department: '中山大学',
-        cert: '',
-        id: '16341007'
-      },
-      userId: '',
-      proveState: 'N'
-    }
-    methods = {
-      name: function(e) {
-        this.user.name = e.detail.value;
-      },
-      tel: function(e) {
-        this.user.tel = e.detail.value;
-      },
-      department: function(e) {
-        this.user.department = e.detail.value;
-      },
-      id: function(e) {
-        this.user.id = e.detail.value;
-      },
-      bindSexChange: function(e) {
-        this.user.sex = this.sexs[e.detail.value];
-      },
-      bindIdentityChange: function(e) {
-        this.user.idenType = this.idens[e.detail.value];
-        if (e.detail.value === '0') {
-          this.id_name = '学号';
-        } else {
-          this.id_name = '工号';
-        }
-      },
-      chooseImage: function(e) {
-        if (this.proveState !== 'N') {
-          return;
-        }
-        var self = this;
-        wepy.chooseImage({
-          count: 1,
-          sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-          sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-          success: function(res) {
-            // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-            self.user.cert = res.tempFilePaths[0];
-            self.$apply();
-            console.log(self.user.cert);
-          }
-        });
-      },
-      submit() {
-        console.log(this.user);
-        if (this.user.name === '') {
-          console.log('姓名不可以为空');
-          this.showToast('姓名不可以为空');
-        } else if (!(/^1[3456789]\d{9}$/.test(this.user.tel))) {
-          console.log('手机号码有误');
-          this.showToast('手机号码有误');
-        } else if (this.user.department === '') {
-          console.log('学校(公司)不能为空');
-          this.showToast('学校(公司)不能为空');
-        } else if (!(/\d+$/.test(this.user.id))) {
-          console.log('学工号有误');
-          this.showToast('学工号有误');
-        } else {
-          let self = this;
-          console.log(self.user.cert);
-          wepy.uploadFile({
-            url: wepy.$appConfig.baseUrl + '/images', // 开发者服务器 url
-            filePath: self.user.cert, // 要上传文件资源的路径
-            name: 'photo', // 文件对应的 key , 开发者在服务器端通过这个 key 可以获取到文件二进制内容
-            success: res => {
-              console.log(res.data);
-              res.data = JSON.parse(res.data);
-              const rq = require('../../lib/request.js');
-              var obj = {
-                url: '/user/proof',
-                data: {
-                  name: self.user.name,
-                  sex: self.user.sex === '男' ? 'M' : 'F',
-                  idenType: self.user.idenType === '学生' ? 'S' : 'C',
-                  tel: self.user.tel,
-                  school: self.user.department,
-                  company: self.user.department,
-                  id: self.user.id,
-                  cert: res.data.msg
-                },
-                method: 'POST'
-              };
-              console.log(obj);
-              rq.request(obj).then(res => {
-                console.log(res);
-                if (res.errMsg == 'request:ok') {
-                  wepy.reLaunch({ url: './mine' });
-                } else if (res.data.data.message == 'login') {
-                  self.$parent.reLogin();
-                }
-                self.$apply();
-              });
-            },
-            fail: () => {
-            },
-            complete: () => {}
-          });
-        }
+import wepy from 'wepy';
+export default class Prove extends wepy.page {
+  config = {
+    navigationBarTitleText: '身份认证'
+  }
+  components = {}
+  data = {
+    sexs: ['男', '女'],
+    sexs_index: 0,
+    idens: ['学生', '企业人员'],
+    idens_index: 0,
+    id_name: '学号',
+    user: {
+      name: '何枷瑜',
+      sex: '男',
+      idenType: '学生',
+      tel: '13169766417',
+      department: '中山大学',
+      cert: '',
+      id: '16341007'
+    },
+    userId: '',
+    proveState: 'N'
+  }
+  methods = {
+    name: function (e) {
+      this.user.name = e.detail.value;
+    },
+    tel: function (e) {
+      this.user.tel = e.detail.value;
+    },
+    department: function (e) {
+      this.user.department = e.detail.value;
+    },
+    id: function (e) {
+      this.user.id = e.detail.value;
+    },
+    bindSexChange: function (e) {
+      this.user.sex = this.sexs[e.detail.value];
+    },
+    bindIdentityChange: function (e) {
+      this.user.idenType = this.idens[e.detail.value];
+      if (e.detail.value === '0') {
+        this.id_name = '学号';
+      } else {
+        this.id_name = '工号';
       }
-    }
-    events = {
-    }
-    onLoad() {
-      if (this.$parent.globalData.user.userId) {
-        if (this.$parent.globalData.user.proveState !== 'N') {
-          console.log('getproof');
-          this.userId = this.$parent.globalData.user.userId;
-          this.proveState = this.$parent.globalData.user.proveState;
-          const rq = require('../../lib/request.js');
-          let self = this;
-          var object = {
-            url: '/user/proof?userId=' + this.$parent.globalData.user.userId,
-            data: {
-            },
-            method: 'GET'
-          };
-          rq.request(object).then(res => {
-            console.log(res);
-            if (res.errMsg == 'request:ok') {
-              self.user = res.data.idenInfo;
-              self.user.cert = res.data.idenInfo.cert;
-              if (self.user.idenType == 'S') {
-                self.idens_index = 0;
-                self.user.department = self.user.school;
-                delete self.user.school;
-              } else {
-                self.idens_index = 1;
-                self.user.department = self.user.company;
-                delete self.user.company;
-              }
-              if (self.user.sex == 'M') {
-                self.sexs_index = 0;
-              } else {
-                self.sexs_index = 1;
+    },
+    chooseImage: function (e) {
+      if (this.proveState !== 'N') {
+        return;
+      }
+      var self = this;
+      wepy.chooseImage({
+        count: 1,
+        sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+        sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+        success: function (res) {
+          // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+          self.user.cert = res.tempFilePaths[0];
+          self.$apply();
+          console.log(self.user.cert);
+        }
+      });
+    },
+    submit() {
+      console.log(this.user);
+      if (this.user.name === '') {
+        console.log('姓名不可以为空');
+        this.showToast('姓名不可以为空');
+      } else if (!(/^1[3456789]\d{9}$/.test(this.user.tel))) {
+        console.log('手机号码有误');
+        this.showToast('手机号码有误');
+      } else if (this.user.department === '') {
+        console.log('学校(公司)不能为空');
+        this.showToast('学校(公司)不能为空');
+      } else if (!(/\d+$/.test(this.user.id))) {
+        console.log('学工号有误');
+        this.showToast('学工号有误');
+      } else {
+        let self = this;
+        console.log(self.user.cert);
+        wepy.uploadFile({
+          url: wepy.$appConfig.baseUrl + '/images', // 开发者服务器 url
+          filePath: self.user.cert, // 要上传文件资源的路径
+          name: 'photo', // 文件对应的 key , 开发者在服务器端通过这个 key 可以获取到文件二进制内容
+          success: res => {
+            console.log(res.data);
+            res.data = JSON.parse(res.data);
+            const rq = require('../../lib/request.js');
+            var obj = {
+              url: '/user/proof',
+              data: {
+                name: self.user.name,
+                sex: self.user.sex === '男' ? 'M' : 'F',
+                idenType: self.user.idenType === '学生' ? 'S' : 'C',
+                tel: self.user.tel,
+                school: self.user.department,
+                company: self.user.department,
+                id: self.user.id,
+                cert: res.data.msg
+              },
+              method: 'POST'
+            };
+            console.log(obj);
+            rq.request(obj).then(res => {
+              console.log(res);
+              if (res.errMsg == 'request:ok') {
+                wepy.reLaunch({ url: './mine' });
+              } else if (res.data.data.message == 'login') {
+                self.$parent.reLogin();
               }
               self.$apply();
-            } else if (res.data.message == 'login') {
-              self.$parent.reLogin();
-            }
-            self.$apply();
-          }).catch(err => {
-            console.log(err);
-          });
-        }
+            });
+          },
+          fail: () => {
+          },
+          complete: () => { }
+        });
       }
     }
-
-    showToast(content) {
-      wepy.showToast({
-        title: content, // 提示的内容,
-        image: '../../assets/warn.png', // 图标,
-        duration: 2000, // 延迟时间,
-        mask: true, // 显示透明蒙层，防止触摸穿透,
-        success: res => {}
-      });
+  }
+  events = {
+  }
+  onLoad() {
+    if (this.$parent.globalData.user.userId) {
+      if (this.$parent.globalData.user.proveState !== 'N') {
+        console.log('getproof');
+        this.userId = this.$parent.globalData.user.userId;
+        this.proveState = this.$parent.globalData.user.proveState;
+        const rq = require('../../lib/request.js');
+        let self = this;
+        var object = {
+          url: '/user/proof?userId=' + this.$parent.globalData.user.userId,
+          data: {
+          },
+          method: 'GET'
+        };
+        rq.request(object).then(res => {
+          console.log(res);
+          if (res.errMsg == 'request:ok') {
+            self.user = res.data.idenInfo;
+            self.user.cert = res.data.idenInfo.cert;
+            if (self.user.idenType == 'S') {
+              self.idens_index = 0;
+              self.user.department = self.user.school;
+              delete self.user.school;
+            } else {
+              self.idens_index = 1;
+              self.user.department = self.user.company;
+              delete self.user.company;
+            }
+            if (self.user.sex == 'M') {
+              self.sexs_index = 0;
+            } else {
+              self.sexs_index = 1;
+            }
+            self.$apply();
+          } else if (res.data.message == 'login') {
+            self.$parent.reLogin();
+          }
+          self.$apply();
+        }).catch(err => {
+          console.log(err);
+        });
+      }
     }
   }
+
+  showToast(content) {
+    wepy.showToast({
+      title: content, // 提示的内容,
+      image: '../../assets/warn.png', // 图标,
+      duration: 2000, // 延迟时间,
+      mask: true, // 显示透明蒙层，防止触摸穿透,
+      success: res => { }
+    });
+  }
+}
 </script>

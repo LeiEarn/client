@@ -174,10 +174,10 @@ export default class extends wepy.app {
     wepy.showLoading({
       title: '重新登录中', // 提示的内容,
       mask: true, // 显示透明蒙层，防止触摸穿透,
-      success: res => {}
+      success: res => { }
     });
     let self = this;
-    this.login(function(user) {
+    this.login(function (user) {
       if (user) {
         self.globalData.user.userId = user.userId;
         wepy.hideLoading();

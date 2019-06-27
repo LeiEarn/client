@@ -1,63 +1,73 @@
 <style lang="less">
-  .question, .normal {
-    width: 500rpx;
-    margin: 0 auto;
-    margin-top: 500rpx;
-  }
-  .normal {
-    margin-top: 50rpx;
-  }
+.question,
+.normal {
+  width: 500rpx;
+  margin: 0 auto;
+  margin-top: 500rpx;
+}
+.normal {
+  margin-top: 50rpx;
+}
 </style>
 <template>
   <view class="page">
-    <picker class="question" value="{{index}}" range="{{type}}" bindchange="useType">
+    <picker
+      class="question"
+      value="{{index}}"
+      range="{{type}}"
+      bindchange="useType"
+    >
       <button type="primary">发布问卷</button>
     </picker>
-    <button class="normal" type="primary" bindtap="publishNormal">发布普通任务</button>
+    <button
+      class="normal"
+      type="primary"
+      bindtap="publishNormal"
+    >发布普通任务</button>
   </view>
 </template>
 <script>
-  import wepy from 'wepy';
-  export default class Publish extends wepy.page {
-    config = {
-      navigationBarTitleText: '发布任务',
-      navigationBarTextStyle: 'black',
-      navigationBarBackgroundColor: '#E7E8E3',
-      enablePullDownRefresh: true,
-      backgroundTextStyle: 'dark'
-    }
-    components = {
-    }
-    data = {
-      list: [{
-        type: '单选题',
-        title: '的说法伽大师傅士大',
-        contents: ['cell standard1', 'cell standard2'],
-        tips: 'sdaf'
-      }],
-      question: ['单选题', '多选题', '简答题'],
-      type: ['使用问卷星', '使用自制模板']
-    }
-    events = {}
-    methods = {
-      useType(e) {
-        console.log(e.detail.value);
-        if (e.detail.value === '0') {
-          wepy.navigateTo({ url: './wjx' });
-        }
-      },
-      publishNormal() {
-        wepy.navigateTo({ url: './normaltask' });
+import wepy from 'wepy';
+export default class Publish extends wepy.page {
+  config = {
+    navigationBarTitleText: '发布任务',
+    navigationBarTextStyle: 'black',
+    navigationBarBackgroundColor: '#E7E8E3',
+    enablePullDownRefresh: true,
+    backgroundTextStyle: 'dark'
+  }
+  components = {
+  }
+  data = {
+    list: [{
+      type: '单选题',
+      title: '的说法伽大师傅士大',
+      contents: ['cell standard1', 'cell standard2'],
+      tips: 'sdaf'
+    }],
+    question: ['单选题', '多选题', '简答题'],
+    type: ['使用问卷星', '使用自制模板']
+  }
+  events = {}
+  methods = {
+    useType(e) {
+      console.log(e.detail.value);
+      if (e.detail.value === '0') {
+        wepy.navigateTo({ url: './wjx' });
       }
-    }
-    onLoad() {}
-
-    onShow() {
-      wepy.getSetting({ success: res => {
-        if (!res.authSetting['scope.userInfo']) {
-          wepy.navigateTo({ url: '../authorize' });
-        }
-      } });
+    },
+    publishNormal() {
+      wepy.navigateTo({ url: './normaltask' });
     }
   }
+  onLoad() { }
+
+  onShow() {
+    wepy.getSetting({ success: res => {
+      if (!res.authSetting['scope.userInfo']) {
+        wepy.navigateTo({ url: '../authorize' });
+      }
+    } });
+  }
+}
 </script>

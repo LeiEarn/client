@@ -1,8 +1,8 @@
 <style lang="less">
-  .weui-panel__hd {
-    font-size: 12pt;
-    color: black;
-  }
+.weui-panel__hd {
+  font-size: 12pt;
+  color: black;
+}
 </style>
 <template>
   <view class="weui-panel weui-panel_access">
@@ -13,51 +13,51 @@
   </view>
 </template>
 <script>
-  import wepy from 'wepy';
-  import UserList from '../../components/userlist';
-  export default class Job extends wepy.page {
-    config = {
-      navigationBarTitleText: '工作列表',
-      navigationBarTextStyle: 'black',
-      navigationBarBackgroundColor: '#E7E8E3',
-      enablePullDownRefresh: true,
-      backgroundTextStyle: 'dark',
-      onReachBottomDistance: -300
-    }
-    components = {
-      user: UserList
-    }
-    data = {
-      taskId: null,
-      user: [
-        {
-          userId: '1',
-          avatarUrl: '../../assets/background.jpg',
-          nickName: '用户1',
-          cert: [],
-          desc: '这是个备注'
-        }
-      ]
-    }
-    events = {
-      TapUser(e) {
-        console.log(e.index);
-        wepy.navigateTo({ url: './jobdetail?job=' + JSON.stringify(this.user[e.index]) + '&taskId=' + this.taskId });
+import wepy from 'wepy';
+import UserList from '../../components/userlist';
+export default class Job extends wepy.page {
+  config = {
+    navigationBarTitleText: '工作列表',
+    navigationBarTextStyle: 'black',
+    navigationBarBackgroundColor: '#E7E8E3',
+    enablePullDownRefresh: true,
+    backgroundTextStyle: 'dark',
+    onReachBottomDistance: -300
+  }
+  components = {
+    user: UserList
+  }
+  data = {
+    taskId: null,
+    user: [
+      {
+        userId: '1',
+        avatarUrl: '../../assets/background.jpg',
+        nickName: '用户1',
+        cert: [],
+        desc: '这是个备注'
       }
-    }
-    methods = {
-    }
-    onLoad(res) {
-      var jobs = JSON.parse(res.job);
-      console.log(jobs);
-      this.user = jobs;
-      this.taskId = res.taskId;
-    }
-    onPullDownRefresh() {
-      console.log('下拉刷新列表');
-      setTimeout(function() {
-        wepy.stopPullDownRefresh();
-      }, 5000);
+    ]
+  }
+  events = {
+    TapUser(e) {
+      console.log(e.index);
+      wepy.navigateTo({ url: './jobdetail?job=' + JSON.stringify(this.user[e.index]) + '&taskId=' + this.taskId });
     }
   }
+  methods = {
+  }
+  onLoad(res) {
+    var jobs = JSON.parse(res.job);
+    console.log(jobs);
+    this.user = jobs;
+    this.taskId = res.taskId;
+  }
+  onPullDownRefresh() {
+    console.log('下拉刷新列表');
+    setTimeout(function () {
+      wepy.stopPullDownRefresh();
+    }, 5000);
+  }
+}
 </script>
