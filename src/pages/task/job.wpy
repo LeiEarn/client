@@ -1,88 +1,62 @@
 <style lang="less">
-.weui-btn {
-  width: 90%;
-  margin-bottom: 40rpx;
-}
+  .weui-panel__hd {
+    font-size: 12pt;
+    color: black;
+  }
 </style>
 <template>
-  <view class="page_bd page__bd_spacing">
-    <view class="weui-article">
-      <view class="weui-article__section">
-          <view class="weui-article__p">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-          </view>
-          <block class="weui-article__p" wx:for-items="{{list}}" wx:for-index="index" wx:for-item="item" wx:key="id">
-              <image class="weui-article__img" src="{{item}}" mode="aspectFit" style="height: 180px" />
-          </block>
-      </view>
+  <view class="weui-panel weui-panel_access">
+    <view class="weui-panel__hd">未审核的工作</view>
+    <view class="user">
+      <user :list.sync="user" />
     </view>
-    <button class="weui-btn" type="primary" bindtap="confirm">确认</button>
   </view>
 </template>
 <script>
   import wepy from 'wepy'
+  import UserList from '../../components/userlist'
   export default class Job extends wepy.page {
     config = {
-      navigationBarTitleText: '工作',
+      navigationBarTitleText: '工作列表',
       navigationBarTextStyle: 'black',
-      navigationBarBackgroundColor: '#E7E8E3'
+      navigationBarBackgroundColor: '#E7E8E3',
+      enablePullDownRefresh: true,
+      backgroundTextStyle: 'dark',
+      onReachBottomDistance: -300
     }
     components = {
+      user: UserList
     }
     data = {
-      list: [
-        'http://iph.href.lu/750x390',
-        'http://iph.href.lu/750x390',
-        'http://iph.href.lu/750x390',
-        'http://iph.href.lu/750x390'
+      taskId: null,
+      user: [
+        {
+          userId: '1',
+          avatarUrl: '../../assets/background.jpg',
+          nickName: '用户1',
+          cert: [],
+          desc: '这是个备注'
+        }
       ]
     }
-    events = {}
-    methods = {
-      confirm() {
-        const rq = require('../../lib/request.js')
-        var obj = {
-          url: '/task/' + this.taskId + '/job?userId=' + this.userId,
-          data: {},
-          method: 'PUT'
-        }
-        rq.request(obj).then(res => {
-          console.log(res)
-        }).catch(err => {
-          console.log(err)
-        })
+    events = {
+      TapUser(e) {
+        console.log(e.index)
+        wepy.navigateTo({ url: './jobdetail?json=' + JSON.stringify(this.user[e.index]) })
       }
     }
-    onLoad() {
-      if (this.$parent.globalData.userId) {
-        this.userId = this.$parent.globalData.userId
-        this.getReceivedTask()
-      }
+    methods = {
+    }
+    onLoad(res) {
+      var jobs = JSON.parse(res.job)
+      console.log(jobs)
+      this.user = jobs
     }
     onPullDownRefresh() {
       console.log('下拉刷新列表')
       setTimeout(function() {
-        this.getReceivedTask()
         wepy.stopPullDownRefresh()
       }, 5000)
-    }
-    getReceivedTask() {
-      const rq = require('../../lib/request.js')
-      let self = this
-      var object = {
-        url: '/task/' + this.$parent.globalData.userId + '?type=acceptment',
-        data: {
-        },
-        method: 'GET'
-      }
-      rq.request(object).then(res => {
-        self.ongoing = res.data.ongoing
-        self.complete = res.data.complete
-        self.$apply()
-      }).catch(err => {
-        console.log(err)
-        this.$parent.reLogin()
-      })
     }
   }
 </script>

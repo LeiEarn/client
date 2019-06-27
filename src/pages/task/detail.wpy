@@ -1,17 +1,9 @@
 <style lang="less">
-  .page {
-    position: fixed;
-    height: 100%;
-    width: 100%;
-    background-color: #f0f0f0;
-  }
-
-  .background {
-    background-size: cover;
+  page {
     position: absolute;
-    z-index: -1;
-    width: 100%;
     height: 100%;
+    width: 100%;
+    background-color: #f8f8f8;
   }
 
   .weui-media-box__hd {
@@ -21,11 +13,12 @@
 
   .item {
     background-color: white;
-    width: 92%;
     margin: 0 auto;
     margin-top: 3%;
-    border-radius: 10rpx;
-    padding: 10rpx 20rpx;
+    padding: 10rpx 2%;
+    width: 96%;
+    border-top: 1rpx #f0f0f0 solid;
+    border-bottom: 1rpx #f0f0f0 solid;
   }
 
   .pop {
@@ -62,7 +55,7 @@
   .button-sp-area{
     margin: 0 auto;
     padding-top: 20px;
-    width: 80%;
+    width: 90%;
   }
 
   .weui-btn{
@@ -90,7 +83,6 @@
 </style>
 <template>
   <view class="page">
-    <!-- <image class="background" src="{{ backgroundUrl }}"/> -->
     <view class="weui-media-box_appmsg item">
       <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
           <image class="weui-media-box__thumb" src="{{user.head}}" />
@@ -98,6 +90,21 @@
       <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
           <view class="weui-media-box__title">昵称：{{ user.nickName }}</view>
           <view class="weui-media-box__desc">联系电话：{{ user.tel }}</view>
+      </view>
+    </view>
+    <view class="weui-cells weui-cells_after-title item" style="padding: 0;width: 100%" wx:if="{{ userId !== null && userId == user.userId}}">
+      <view class="weui-cell weui-cell_access" bindtap="viewAcc">
+        <view class="weui-cell__bd">
+            <view style="display: inline-block; vertical-align: middle">查看接收者</view>
+        </view>
+        <view class="weui-cell__ft weui-cell__ft_in-access">详细信息</view>
+      </view>
+      <view class="weui-cell weui-cell_access" bindtap="viewJob">
+        <view class="weui-cell__bd">
+            <view style="display: inline-block; vertical-align: middle">查看工作</view>
+            <view class="weui-badge" style="margin-left: 5px;">{{jobs.length}}</view>
+        </view>
+        <view class="weui-cell__ft weui-cell__ft_in-access">详细信息</view>
       </view>
     </view>
     <view class="content item">
@@ -144,12 +151,9 @@
     </view>
     <view wx:if="{{ userId !== null && userId == user.userId }}">
       <view class="page__bd page__bd_spacing">
-        <view class="button-sp-area">
-          <button class="weui-btn" type="primary" bindtap="viewAcc">查看接收者</button>
-        </view>
         <view class="button-sp-area weui-flex">
-          <view class="weui-flex__item"><button class="weui-btn placeholder" plain="true" type="primary" bindtap="addTaskInfo">添加额外信息</button></view>
           <view class="weui-flex__item"><button class="weui-btn placeholder" type="warn" bindtap="abort">中止任务</button></view>
+          <view class="weui-flex__item"><button class="weui-btn placeholder" type="primary" bindtap="addTaskInfo">添加额外信息</button></view>
         </view>
       </view>
     </view>
@@ -221,9 +225,9 @@
       taskId: null,
       user: {
         userId: null,
-        head: '../../assets/2.png',
-        nickName: '好难啊',
-        tel: '123456789'
+        avatarUrl: '../../assets/background.jpg',
+        nickName: '获取失败',
+        tel: '获取失败'
       },
       content: {
         type: '问卷星',
@@ -243,8 +247,16 @@
           '添加填写完成证明'
         ]
       },
-      hasReceived: 0,
+      hasReceived: 1,
       proveState: 'N',
+
+      jobs: [
+        {
+          userId: '123',
+          files: ['', '123'],
+          remarks: 'asdf1231654'
+        }
+      ],
 
       cert: {
         files: [],
@@ -305,7 +317,10 @@
       },
 
       viewAcc() {
-        this.$navigate({url: './accepter?taskId=' + this.taskId})
+        wepy.navigateTo({url: './accepter?taskId=' + this.taskId})
+      },
+      viewJob() {
+        wepy.navigateTo({url: './job?job=' + JSON.stringify(this.jobs)})
       },
       addTaskInfo() {
         this.showPop()
@@ -406,17 +421,19 @@
         this.proveState = this.$parent.globalData.proveState
       }
       var json = JSON.parse(res.json)
-      console.log(json)
-      this.data.content.title = json.title
-      this.data.content.money = json.money
-      this.data.content.left = json.left
-      this.taskId = json.taskId
-      if (this.taskId) {
+      this.taskId = json.id
+      this.user.avatarUrl = json.icon
+      this.content.title = json.title
+      this.content.detail = json.desc
+      this.content.money = json.money
+      this.content.left = json.left
+      if (this.userId && this.taskId) {
         await this.getTaskDetail()
+        this.getJobs()
       }
     };
 
-    async getTaskDetail() {
+    getTaskDetail() {
       let self = this
       var object = {
         url: '/task/' + this.taskId + '/info',
@@ -429,6 +446,24 @@
         self.user = res.data.user
         self.content = res.data.content
         self.hasReceived = res.data.hasReceived
+        self.$apply()
+      }).catch(err => {
+        console.log(err)
+        this.$parent.reLogin()
+      })
+    }
+
+    getJobs() {
+      let self = this
+      var object = {
+        url: '/task/' + this.taskId + '/job?userId=' + this.userId,
+        data: {
+        },
+        method: 'GET'
+      }
+      rq.request(object).then(res => {
+        console.log(res.data)
+        self.jobs = res.data
         self.$apply()
       }).catch(err => {
         console.log(err)

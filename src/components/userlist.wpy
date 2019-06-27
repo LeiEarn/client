@@ -29,14 +29,14 @@
         <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
           <image
             class="weui-media-box__thumb"
-            src="{{item.icon}}"
+            src="{{item.avatarUrl || default_avatarUrl}}"
           />
         </view>
         <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-          <view class="weui-media-box__title">{{item.nickName}}</view>
-          <view class="weui-media-box__desc">{{item.tel}}</view>
+          <view class="weui-media-box__title">{{item.nickName || '用户' + item.userId}}</view>
+          <view class="weui-media-box__desc">{{item.remarks || item.tel}}</view>
         </view>
-        <view class="weui-media-box__ft">
+        <view class="weui-media-box__ft" hidden="{{ item.credit == undefined }}">
           <view
             class="credit"
             style="color:{{item.creditColor}}"
@@ -54,6 +54,10 @@ export default class UserList extends wepy.component {
     list: Array
   }
 
+  data = {
+    default_avatarUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1561579900248&di=ad5ae22b8ded8fe6439a4249c927e5f3&imgtype=0&src=http%3A%2F%2Fimg.qqzhi.com%2Fuploads%2F2019-03-09%2F125503164.jpg'
+  }
+
   events = {
     'index-broadcast': (...args) => {
       let $event = args[args.length - 1]
@@ -62,23 +66,14 @@ export default class UserList extends wepy.component {
   }
 
   methods = {
+    tap(e) {
+      console.log(this.list)
+      var index = e.currentTarget.dataset.index
+      this.$emit('TapUser', {index: index})
+    }
   }
 
   onLoad() {
-    this.list = this.load(this.list)
-  }
-
-  load(list) {
-    for (var i = 0; i < list.length; i++) {
-      if (list[i].credit >= 90) {
-        list[i].creditColor = '#44BB00'
-      } else if (list[i].credit >= 60) {
-        list[i].creditColor = '#F68855'
-      } else {
-        list[i].creditColor = '#F44444'
-      }
-    }
-    return list
   }
 }
 </script>
