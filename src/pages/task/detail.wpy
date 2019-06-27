@@ -221,9 +221,9 @@
       taskId: null,
       user: {
         userId: null,
-        head: '../../assets/background.jpg',
-        nickName: '获取失败',
-        tel: '获取失败'
+        head: '../../assets/2.png',
+        nickName: '好难啊',
+        tel: '123456789'
       },
       content: {
         type: '问卷星',
