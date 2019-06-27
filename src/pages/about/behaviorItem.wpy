@@ -74,7 +74,7 @@
 
 </template>
 <script>
-import wepy from 'wepy'
+import wepy from 'wepy';
 export default class BehaviorItem extends wepy.page {
   config = {
     navigationBarTitleText: '用户行为规范',

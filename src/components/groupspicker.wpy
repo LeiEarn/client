@@ -89,7 +89,7 @@
   </view>
 </template>
 <script>
-import wepy from 'wepy'
+import wepy from 'wepy';
 export default class GroupsPicker extends wepy.component {
   props = {
     groups: {
@@ -107,34 +107,35 @@ export default class GroupsPicker extends wepy.component {
   events = {}
   methods = {
     checkboxChange: function (e) {
-      console.log('checkbox发生change事件，携带value值为：', e.detail.value)
-      this.tempGroupsIndex = e.detail.value
-      var checkboxItems = this.groups
-      var values = e.detail.value
-      var lenI = checkboxItems.length
-      var lenJ = values.length
-      this.tempSelectedGroups = ''
+      console.log('checkbox发生change事件，携带value值为：', e.detail.value);
+      this.tempGroupsIndex = e.detail.value;
+      var checkboxItems = this.groups;
+      var values = e.detail.value;
+      var lenI = checkboxItems.length;
+      var lenJ = values.length;
+      this.tempSelectedGroups = '';
       for (var i = 0; i < lenI; ++i) {
-        checkboxItems[i].checked = false
+        checkboxItems[i].checked = false;
         for (var j = 0; j < lenJ; ++j) {
           if (checkboxItems[i].value === values[j]) {
-            checkboxItems[i].checked = true
-            this.tempSelectedGroups = this.tempSelectedGroups + checkboxItems[i].name + ' '
-            break
+            checkboxItems[i].checked = true;
+            this.tempSelectedGroups = this.tempSelectedGroups + checkboxItems[i].name + ' ';
+            break;
           }
         }
       }
-      this.groups = checkboxItems
+      this.groups = checkboxItems;
     },
     confirm() {
-      this.notifyEvent('groupschange')
-      this.hiddenPop()
+      console.log('emit');
+      this.notifyEvent('GroupsChange');
+      this.hiddenPop();
     },
     cancel() {
-      this.hiddenPop()
+      this.hiddenPop();
     },
     openPicker() {
-      this.showPop()
+      this.showPop();
     },
     stopEvent() {
 
@@ -143,40 +144,40 @@ export default class GroupsPicker extends wepy.component {
   onLoad() { }
 
   showPop() {
-    let self = this
+    let self = this;
     var animation = wepy.createAnimation({
       duration: 500,
       timingFunction: 'ease',
       delay: 0
-    })
-    animation.translateY(300).step()
-    this.animationData = animation.export()
-    this.hidden = false
+    });
+    animation.translateY(300).step();
+    this.animationData = animation.export();
+    this.hidden = false;
     setTimeout(function () {
-      animation.translateY(0).step()
-      self.animationData = animation.export()
-      self.$apply()
-    }, 50)
+      animation.translateY(0).step();
+      self.animationData = animation.export();
+      self.$apply();
+    }, 50);
   }
   hiddenPop() {
-    let self = this
+    let self = this;
     var animation = wepy.createAnimation({
       duration: 500,
       timingFunction: 'ease',
       delay: 0
-    })
-    animation.translateY(300).step()
-    this.animationData = animation.export()
+    });
+    animation.translateY(300).step();
+    this.animationData = animation.export();
     setTimeout(function () {
-      animation.translateY(0).step()
-      self.animationData = animation.export()
-      self.hidden = true
-      self.$apply()
-    }, 200)
+      animation.translateY(0).step();
+      self.animationData = animation.export();
+      self.hidden = true;
+      self.$apply();
+    }, 200);
   }
   notifyEvent(event) {
-    this.$emit(event, { tempGroupsIndex: this.tempGroupsIndex })
-    this.$apply()
+    this.$emit(event, { tempGroupsIndex: this.tempGroupsIndex });
+    this.$apply();
   }
 }
 </script>

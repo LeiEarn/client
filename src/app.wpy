@@ -11,15 +11,15 @@
 </style>
 
 <script>
-import wepy from 'wepy'
-import 'wepy-async-function'
+import wepy from 'wepy';
+import 'wepy-async-function';
 import {
   setStore
-} from 'wepy-redux'
-import configStore from './store'
-import cookieJar from './lib/cookieJar'
-const store = configStore()
-setStore(store)
+} from 'wepy-redux';
+import configStore from './store';
+import cookieJar from './lib/cookieJar';
+const store = configStore();
+setStore(store);
 export default class extends wepy.app {
   config = {
     pages: [
@@ -96,29 +96,28 @@ export default class extends wepy.app {
       },
       userId: null,
       proveState: ''
-    }
+    },
+
+    taskType: 0
   }
   constructor() {
-    super()
-    this.use('requestfix')
+    super();
+    this.use('requestfix');
   }
   onLaunch() {
-    cookieJar.init()
+    cookieJar.init();
   }
   login(cb) {
-    if (this.globalData.user.userId) {
-      return this.globalData.user
-    }
-    const rq = require('./lib/request.js')
-    const APP_ID = 'wx2e515a1b9f28a15e'
-    const APP_SECRET = 'ded301bbd914c7a4083d15326be60073'
+    const rq = require('./lib/request.js');
+    const APP_ID = 'wx72ce1b28ca748994';
+    const APP_SECRET = '733540bdf3bf7aef48fa1e1ccd157db9';
+    let self = this;
     wepy.login({
       success(res) {
         if (res.code) {
-          var jsCode = res.code
+          var jsCode = res.code;
           wepy.getUserInfo({
             success(res) {
-              console.log(res.userInfo)
               var object = {
                 url: '/user/session',
                 data: {
@@ -128,48 +127,47 @@ export default class extends wepy.app {
                   encryptedData: res.encryptedData
                 },
                 method: 'POST'
-              }
+              };
               rq.request(object).then(res => {
-                console.log(res.data)
-                this.globalData.user.userId = res.data.userId
-                this.globalData.user.userInfo.nickName = res.data.nickName
-                this.globalData.user.userInfo.avatarUrl = res.data.avatarUrl
-                this.globalData.user.proveState = res.data.proveState
-                cb && cb(this.globalData.user)
+                console.log(res);
+                self.globalData.user.userId = res.data.userId;
+                self.globalData.user.userInfo.nickName = res.data.nickName;
+                self.globalData.user.userInfo.avatarUrl = res.data.avatarUrl;
+                self.globalData.user.proveState = res.data.proveState;
+                cb && cb(self.globalData.user);
               }).catch(res => {
-                console.log(res)
-                cb && cb(null)
-              })
+                console.log(res);
+                cb && cb(null);
+              });
             },
             fail: () => {
-              console.log('你还没有授权')
+              console.log('你还没有授权');
             }
-          })
+          });
         }
       }
-    })
+    });
   }
-  getAuthState(cb) {
-    if (this.globalData.userId) {
-      if (this.globalData.proveState) {
-        return this.globalData.proveState
+  getProofState(cb) {
+    if (this.globalData.user.userId) {
+      if (this.globalData.user.proveState) {
+        return this.globalData.user.proveState;
       }
-      let self = this
-      const rq = require('./lib/request.js')
+      let self = this;
+      const rq = require('./lib/request.js');
       var object = {
-        url: '/getAuthState',
+        url: '/user/' + this.globalData.user.userId + 'proof/state',
         data: {
-          userId: this.user.userId
         },
         method: 'GET'
-      }
+      };
       rq.request(object).then(res => {
-        self.globalData.proveState = res.data.proveState
-        self.$apply()
-        cb && cb(res.data.proveState)
+        self.globalData.proveState = res.data.proveState;
+        self.$apply();
+        cb && cb(res.data.proveState);
       }).catch(() => {
-        console.log('获取认证状态失败')
-      })
+        console.log('获取认证状态失败');
+      });
     }
   }
   reLogin() {
@@ -177,16 +175,16 @@ export default class extends wepy.app {
       title: '重新登录中', // 提示的内容,
       mask: true, // 显示透明蒙层，防止触摸穿透,
       success: res => {}
-    })
+    });
+    let self = this;
     this.login(function(user) {
       if (user) {
-        self.userId = user.userId
-        self.$apply()
-        wepy.hideLoading()
+        self.globalData.user.userId = user.userId;
+        wepy.hideLoading();
       } else {
-        wepy.hideLoading()
+        wepy.hideLoading();
       }
-    })
+    });
   }
 }
 </script>

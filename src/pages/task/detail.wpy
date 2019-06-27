@@ -85,7 +85,7 @@
   <view class="page">
     <view class="weui-media-box_appmsg item">
       <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
-          <image class="weui-media-box__thumb" src="{{user.head}}" />
+          <image class="weui-media-box__thumb" src="{{user.avatarUrl}}" />
       </view>
       <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
           <view class="weui-media-box__title">昵称：{{ user.nickName }}</view>
@@ -102,7 +102,7 @@
       <view class="weui-cell weui-cell_access" bindtap="viewJob">
         <view class="weui-cell__bd">
             <view style="display: inline-block; vertical-align: middle">查看工作</view>
-            <view class="weui-badge" style="margin-left: 5px;">{{jobs.length}}</view>
+            <view class="weui-badge" style="margin-left: 5px;" hidden="{{ jobs.length === 0 }}">{{jobs.length}}</view>
         </view>
         <view class="weui-cell__ft weui-cell__ft_in-access">详细信息</view>
       </view>
@@ -110,22 +110,24 @@
     <view class="content item">
       <view class="money">赏{{ content.money }}元</view>
       <view class="title">{{ content.title }}</view>
-      <view class="num">{{ content.num }}人已赚到赏金</view>
-      <view class="left">剩余名额：{{ content.left }}个</view>
+      <view class="num">{{ content.partNum }}人已赚到赏金</view>
+      <view class="left">剩余名额：{{ content.maxNum - content.partNum }}个</view>
     </view>
     <view class="condition item">
       <view class="title">条件限制</view>
-      <block wx:for-items="{{ content.conditions }}" wx:for-index="index" wx:for-item="item" wx:key="id">
+      <view class="tab" wx:if="{{ content.condition == undefined }}">无</view>
+      <block wx:for-items="{{ content.condition }}" wx:for-index="index" wx:for-item="item" wx:key="id">
         <view class="tab">
-          <text>{{ index + 1 }}{{ conditions[index] }}:</text>
+          <text>{{ index + 1 }}{{ condition[index] }}:</text>
           <text class="step">{{ item }}</text>
         </view>
       </block>
     </view>
     <view class="detail item">
       <view class="title">任务详情</view>
-      <view class="tab">{{ content.detail }}</view>
+      <view class="tab">{{ content.desc }}</view>
       <view class="title">步骤</view>
+      <view class="tab" wx:if="{{ content.steps == undefined }}">无</view>
       <block wx:for-items="{{ content.steps }}" wx:for-index="index" wx:for-item="item" wx:key="id">
         <view class="tab">
           <text>{{ index + 1 }}</text>
@@ -140,12 +142,16 @@
         </view>
       </view>
       <view class="page__bd page__bd_spacing" hidden="{{ hasReceived === 0 }}">
-        <view class="button-sp-area" wx:if="{{ hasReceived === 1 && content.type === '问卷星' }}">
+        <view class="button-sp-area" wx:if="{{ hasReceived === 1 && content.type === 'W' }}">
           <button class="weui-btn" plain="true" type="primary" bindtap="toComplete">去完成</button>
         </view>
         <view class="button-sp-area weui-flex">
-          <view class="weui-flex__item" wx:if="{{ hasReceived === 1 }}"><button class="weui-btn placeholder" type="warn" bindtap="abandon">放弃</button></view>
-          <view class="weui-flex__item" hidden="{{ hasReceived === 0 }}"><button class="weui-btn placeholder" type="primary" bindtap="complete" disabled="{{ hasReceived === 2 }}">{{ hasReceived === 2 ? "已" : "" }}完成</button></view>
+          <view class="weui-flex__item" wx:if="{{ hasReceived === 1 || hasReceived === 3 }}">
+            <button class="weui-btn placeholder" type="warn" bindtap="abandon" disabled="{{ hasReceived === 3 }}">{{ hasReceived === 1 ? "放弃" : "被拒绝" }}</button>
+          </view>
+          <view class="weui-flex__item" hidden="{{ hasReceived === 0 || hasReceived === 3 }}">
+            <button class="weui-btn placeholder" type="primary" bindtap="complete" disabled="{{ hasReceived >= 2 }}">{{ hasReceived === 1 ? "完成" : hasReceived === 2 ? "待确认" : "已完成" }}</button>
+          </view>
         </view>
       </view>
     </view>
@@ -207,8 +213,8 @@
 </template>
 
 <script>
-  import wepy from 'wepy'
-  import rq from '../../lib/request.js'
+  import wepy from 'wepy';
+  import rq from '../../lib/request.js';
 
   export default class TaskDetail extends wepy.page {
     config = {
@@ -236,12 +242,12 @@
         num: 0,
         left: 5,
         money: 1.7,
-        conditions: [
+        condition: [
           '软工8班班员',
           '男生',
           '80'
         ],
-        detail: '按照要求完成问卷即可完成任务。',
+        desc: '按照要求完成问卷即可完成任务。',
         steps: [
           '打开问卷，如实填写问卷',
           '添加填写完成证明'
@@ -265,65 +271,84 @@
       extraInfo: '',
   
       animationData: {},
-      conditions: ['组织', '性别', '信誉积分'],
+      condition: ['组织', '性别', '信誉积分'],
       hidden: true
     };
 
     methods = {
       accept() {
         if (this.checkState()) {
-          let self = this
+          let self = this;
           var object = {
-            url: '/task' + this.taskId + '/accepter?userId=' + this.userId,
+            url: '/task/' + this.taskId + '/accepter?userId=' + this.userId,
             data: {
             },
             method: 'POST'
-          }
+          };
           rq.request(object).then(res => {
-            console.log(res.data)
-            self.hasReceived = 1
-            self.$apply()
+            console.log(res.data);
+            if (res.data == 'success') {
+              self.hasReceived = 1;
+              self.$apply();
+            }
           }).catch(err => {
-            console.log(err)
-            this.$parent.reLogin()
-          })
+            console.log(err);
+            if (err.data.message == 'login') {
+              self.$parent.reLogin();
+              self.$apply();
+            }
+          });
         }
       },
 
       toComplete() {
-        let self = this
+        let self = this;
         wepy.navigateToMiniProgram({
           appId: 'wxd947200f82267e58', // 要打开的小程序 appId,
           path: 'pages/wjxqList/wjxqList?activityId=' + self.content.id, // 打开的页面路径，如果为空则打开首页,
           success: res => {}
-        })
+        });
       },
       complete() {
-        this.showPop()
+        this.showPop();
       },
       abandon() {
         var object = {
-          url: '/task' + this.taskId + '/accepter?userId=' + this.userId,
+          url: '/task/' + this.taskId + '/accepter?userId=' + this.userId,
           data: {
           },
           method: 'DELETE'
-        }
+        };
         rq.request(object).then(res => {
-          console.log(res.data)
+          console.log(res.data);
+          if (res.data == 'success') {
+            self.hasReceived = 5;
+            self.$apply();
+            wepy.showToast({
+              title: '放弃成功', // 提示的内容,
+              icon: 'success', // 图标,
+              duration: 2000, // 延迟时间,
+              mask: true, // 显示透明蒙层，防止触摸穿透,
+              success: res => {}
+            });
+          }
         }).catch(err => {
-          console.log(err)
-          this.$parent.reLogin()
-        })
+          console.log(err);
+          if (err.data.message == 'login') {
+            self.$parent.reLogin();
+            self.$apply();
+          }
+        });
       },
 
       viewAcc() {
-        wepy.navigateTo({url: './accepter?taskId=' + this.taskId})
+        wepy.navigateTo({url: './accepter?taskId=' + this.taskId});
       },
       viewJob() {
-        wepy.navigateTo({url: './job?job=' + JSON.stringify(this.jobs)})
+        wepy.navigateTo({url: './job?job=' + JSON.stringify(this.jobs) + '&taskId=' + this.taskId});
       },
       addTaskInfo() {
-        this.showPop()
+        this.showPop();
       },
       abort() {
         var object = {
@@ -331,82 +356,124 @@
           data: {
           },
           method: 'DELETE'
-        }
+        };
+        let self = this;
         rq.request(object).then(res => {
-          console.log(res.data)
+          console.log(res.data);
+          if (res.data == 'success') {
+            wepy.showToast({
+              title: '中止成功', // 提示的内容,
+              icon: 'success', // 图标,
+              duration: 2000, // 延迟时间,
+              mask: true, // 显示透明蒙层，防止触摸穿透,
+              success: res => {}
+            });
+            wepy.navigateBack({
+              delta: 1 // 返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+            });
+          }
         }).catch(err => {
-          console.log(err)
-          this.$parent.reLogin()
-        })
+          console.log(err);
+          if (err.data.message == 'login') {
+            self.$parent.reLogin();
+            self.$apply();
+          }
+        });
       },
 
       cancel() {
-        this.hiddenPop()
+        this.hiddenPop();
       },
       bindRemarksInput(e) {
-        this.cert.remarks = e.detail.value
+        this.cert.remarks = e.detail.value;
       },
       chooseImage: function (e) {
-        var that = this
+        var that = this;
         wepy.chooseImage({
           count: 7 - that.cert.files.length,
           sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
           sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
           success: function (res) {
                 // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-            that.cert.files = that.cert.files.concat(res.tempFilePaths)
-            that.$apply()
+            that.cert.files = that.cert.files.concat(res.tempFilePaths);
+            that.$apply();
           }
-        })
+        });
       },
       previewImage: function(e) {
         wepy.previewImage({
           current: e.currentTarget.id, // 当前显示图片的http链接
           urls: this.data.cert.files // 需要预览的图片http链接列表
-        })
+        });
       },
       async submit() {
-        await this.uploadImgs(this.cert.files)
-        let self = this
+        await this.uploadImgs(this.cert.files);
+        let self = this;
         var object = {
-          url: '/task' + this.taskId + '/job',
+          url: '/task/' + this.taskId + '/job',
           data: {
-            userId: this.userId,
+            userId: this.userId.toString(),
             files: this.cert.files,
             remarks: this.cert.remarks
           },
           method: 'POST'
-        }
+        };
         rq.request(object).then(res => {
-          console.log(res.data)
-          self.hasReceived = 1
-          self.$apply()
+          console.log(res.data);
+          if (res.data == 'success') {
+            self.hasReceived = 2;
+            self.hiddenPop();
+            self.$apply();
+            wepy.showToast({
+              title: '提交成功', // 提示的内容,
+              icon: 'success', // 图标,
+              duration: 2000, // 延迟时间,
+              mask: true, // 显示透明蒙层，防止触摸穿透,
+              success: res => {}
+            });
+          }
         }).catch(err => {
-          console.log(err)
-          this.$parent.reLogin()
-        })
+          console.log(err);
+          if (err.data.message == 'login') {
+            self.$parent.reLogin();
+            self.$apply();
+          }
+        });
       },
   
       bindExtraInfoInput(e) {
-        this.extraInfo = e.detail.value
+        this.extraInfo = e.detail.value;
       },
       submit2() {
-        let self = this
+        let self = this;
         var object = {
           url: '/task/' + this.taskId + '/info',
           data: {
-            userId: this.userId,
+            userId: this.userId.toString(),
             content: this.extraInfo
           },
           method: 'PUT'
-        }
+        };
         rq.request(object).then(res => {
-          console.log(res.data)
-          self.$apply()
+          console.log(res.data);
+          if (res.data == 'success') {
+            wepy.showToast({
+              title: '成功添加', // 提示的内容,
+              icon: 'success', // 图标,
+              duration: 2000, // 延迟时间,
+              mask: true, // 显示透明蒙层，防止触摸穿透,
+              success: res => {}
+            });
+            self.hiddenPop();
+          }
+          self.$apply();
         }).catch(err => {
-          console.log(err)
-          this.$parent.reLogin()
-        })
+          console.log(err);
+          if (err.data.message == 'login') {
+            self.$parent.reLogin();
+            self.$apply();
+          }
+        });
       }
     };
 
@@ -414,140 +481,144 @@
     };
 
     async onLoad(res) {
-      if (this.$parent.globalData.userId) {
-        this.userId = this.$parent.globalData.userId
+      if (this.$parent.globalData.user.userId) {
+        this.userId = this.$parent.globalData.user.userId;
       }
-      if (this.$parent.globalData.proveState) {
-        this.proveState = this.$parent.globalData.proveState
+      if (this.$parent.globalData.user.proveState) {
+        this.proveState = this.$parent.globalData.user.proveState;
       }
-      var json = JSON.parse(res.json)
-      this.taskId = json.id
-      this.user.avatarUrl = json.icon
-      this.content.title = json.title
-      this.content.detail = json.desc
-      this.content.money = json.money
-      this.content.left = json.left
+      console.log(res.json);
+      var json = JSON.parse(res.json);
+      this.taskId = json.id;
+      this.user.avatarUrl = json.icon;
+      this.content.title = json.title;
+      this.content.detail = json.desc;
+      this.content.money = json.money;
+      this.content.left = json.left;
       if (this.userId && this.taskId) {
-        await this.getTaskDetail()
-        this.getJobs()
+        await this.getTaskDetail();
+        this.getJobs();
       }
     };
 
     getTaskDetail() {
-      let self = this
+      console.log('getdetail');
+      let self = this;
       var object = {
         url: '/task/' + this.taskId + '/info',
         data: {
         },
         method: 'GET'
-      }
+      };
       rq.request(object).then(res => {
-        console.log(res.data)
-        self.user = res.data.user
-        self.content = res.data.content
-        self.hasReceived = res.data.hasReceived
-        self.$apply()
+        console.log(res);
+        self.user = res.data.user;
+        self.content = res.data.content;
+        self.hasReceived = res.data.hasReceived;
+        self.$apply();
       }).catch(err => {
-        console.log(err)
-        this.$parent.reLogin()
-      })
+        console.log(err);
+        this.$parent.reLogin();
+      });
     }
 
     getJobs() {
-      let self = this
+      let self = this;
       var object = {
         url: '/task/' + this.taskId + '/job?userId=' + this.userId,
         data: {
         },
         method: 'GET'
-      }
+      };
       rq.request(object).then(res => {
-        console.log(res.data)
-        self.jobs = res.data
-        self.$apply()
+        console.log('getjob');
+        self.jobs = res.data;
+        self.$apply();
       }).catch(err => {
-        console.log(err)
-        this.$parent.reLogin()
-      })
+        console.log(err);
+        if (err.data.message == 'login') {
+          this.$parent.reLogin();
+        }
+      });
     }
 
     uploadImgs(data) {
-      let self = this
+      let self = this;
       for (var i = 0; i < data.length; i++) {
         wepy.uploadFile({
           url: wepy.$appConfig.baseUrl + '/images', // 开发者服务器 url
           filePath: data[i], // 要上传文件资源的路径
           name: 'photo', // 文件对应的 key , 开发者在服务器端通过这个 key 可以获取到文件二进制内容
           success: res => {
-            console.log(res.data)
-            res.data = JSON.parse(res.data)
-            self.cert.files[i] = res.data.img
+            console.log(res.data);
+            res.data = JSON.parse(res.data);
+            self.cert.files[i] = res.data.img;
           },
           fail: () => {
           },
           complete: () => {}
-        })
-        self.$apply()
+        });
+        self.$apply();
       }
     }
 
     checkState() {
       if (this.userId === null) {
-        console.log('您还没有登录')
+        console.log('您还没有登录');
         wepy.showToast({
           title: '您还没有登录', // 提示的内容,
           image: '../../assets/warn.png',
           duration: 2000, // 延迟时间,
           mask: true, // 显示透明蒙层，防止触摸穿透,
           success: res => {}
-        })
+        });
       } else if (this.proveState !== 'P') {
-        console.log('您的身份认证还没有成功')
+        console.log('您的身份认证还没有成功');
         wepy.showToast({
           title: '您的身份认证还没有成功', // 提示的内容,
           image: '../../assets/warn.png',
           duration: 2000, // 延迟时间,
           mask: true, // 显示透明蒙层，防止触摸穿透,
           success: res => {}
-        })
+        });
       } else {
-        return true
+        return true;
       }
-      return false
+      return false;
     }
 
     showPop() {
-      let self = this
+      let self = this;
       var animation = wepy.createAnimation({
         duration: 500,
         timingFunction: 'ease',
         delay: 0
-      })
-      animation.translateY(300).step()
-      this.animationData = animation.export()
-      this.hidden = false
+      });
+      animation.translateY(300).step();
+      this.animationData = animation.export();
+      this.hidden = false;
       setTimeout(function() {
-        animation.translateY(0).step()
-        self.animationData = animation.export()
-        self.$apply()
-      }, 50)
+        animation.translateY(0).step();
+        self.animationData = animation.export();
+        self.$apply();
+      }, 50);
     }
 
     hiddenPop() {
-      let self = this
+      let self = this;
       var animation = wepy.createAnimation({
         duration: 500,
         timingFunction: 'ease',
         delay: 0
-      })
-      animation.translateY(300).step()
-      this.animationData = animation.export()
+      });
+      animation.translateY(300).step();
+      this.animationData = animation.export();
       setTimeout(function() {
-        animation.translateY(0).step()
-        self.animationData = animation.export()
-        self.hidden = true
-        self.$apply()
-      }, 200)
+        animation.translateY(0).step();
+        self.animationData = animation.export();
+        self.hidden = true;
+        self.$apply();
+      }, 200);
     }
   }
 </script>

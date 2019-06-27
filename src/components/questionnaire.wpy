@@ -118,7 +118,7 @@
   </view>
 </template>
 <script>
-import wepy from 'wepy'
+import wepy from 'wepy';
 export default class Questionnaire extends wepy.component {
   components = {
   }
@@ -135,15 +135,15 @@ export default class Questionnaire extends wepy.component {
   events = {}
   methods = {
     useType(e) {
-      console.log(e.detail.value)
+      console.log(e.detail.value);
       if (e.detail.value === '0') {
-        console.log('good')
-        wepy.navigateTo({ url: './question/wjx' })
+        console.log('good');
+        wepy.navigateTo({ url: './question/wjx' });
       }
     },
     addChoice(e) {
-      console.log(e.currentTarget.dataset.index)
-      this.list[e.currentTarget.dataset.index].contents.push('werwewqr')
+      console.log(e.currentTarget.dataset.index);
+      this.list[e.currentTarget.dataset.index].contents.push('werwewqr');
     },
     addQuestion(e) {
       this.list.push({
@@ -151,7 +151,7 @@ export default class Questionnaire extends wepy.component {
         title: '请输入题目',
         contents: [],
         tips: '请输入提示'
-      })
+      });
     }
   }
   onLoad() { }

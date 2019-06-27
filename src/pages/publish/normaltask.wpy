@@ -136,9 +136,9 @@
 </template>
 
 <script>
-  import wepy from 'wepy'
-  import Datetimepicker from '../../components/datetimepicker'
-import GroupsPicker from '../../components/groupspicker'
+  import wepy from 'wepy';
+  import Datetimepicker from '../../components/datetimepicker';
+import GroupsPicker from '../../components/groupspicker';
   export default class NormalTask extends wepy.page {
     config = {
       navigationBarTitleText: '发布任务',
@@ -179,85 +179,106 @@ import GroupsPicker from '../../components/groupspicker'
     }
     methods = {
       add() {
-        this.steps.push('')
+        this.steps.push('');
       },
       publish() {
-        this.task.detail = this.task.detail + '&&' + JSON.stringify(this.steps)
+        this.task.detail = this.task.detail + '\n' + JSON.stringify(this.steps);
+        this.task.condition.creditScore = parseInt(this.task.condition.creditScore);
         var object = {
           url: '/task/' + this.userId,
           data: {
-            type: 'normal',
+            type: 'O',
+            wjxId: '',
             title: this.task.title,
-            desc: this.task.desc,
+            desc: this.task.detail,
             time: this.task.time,
-            money: this.task.money,
-            maxNum: this.task.num,
+            money: parseFloat(this.task.money),
+            maxNum: parseInt(this.task.num),
+            partNum: 0,
             condition: this.task.condition
           },
           method: 'POST'
-        }
-        console.log(object)
-        const rq = require('../../lib/request.js')
+        };
+        console.log(object);
+        let self = this;
+        const rq = require('../../lib/request.js');
         rq.request(object).then(res => {
-          console.log(res)
-        }).catch(res => {
-          console.log(res)
-          this.$parent.reLogin()
-        })
+          console.log(res);
+          if (res.data == 'success') {
+            wepy.showToast({
+              title: '发布成功', // 提示的内容,
+              icon: 'success', // 图标,
+              duration: 2000, // 延迟时间,
+              mask: true, // 显示透明蒙层，防止触摸穿透,
+              success: res => {}
+            });
+            wepy.navigateBack({
+              delta: 1 // 返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+            });
+          }
+        }).catch(err => {
+          console.log(err);
+          if (err.data.message == 'login') {
+            self.$parent.reLogin();
+            self.$apply();
+          }
+        });
       },
       bindTitleInput: function(e) {
-        this.task.title = e.detail.value
+        this.task.title = e.detail.value;
       },
       bindDetailInput: function(e) {
-        var value = e.detail.value
-        var len = parseInt(value.length)
-        this.currentLen = len
-        this.task.detail = e.detail.value
+        var value = e.detail.value;
+        var len = parseInt(value.length);
+        this.currentLen = len;
+        this.task.detail = e.detail.value;
       },
       bindStepInput: function(e) {
-        console.log(e.currentTarget.dataset.index)
-        this.steps[e.currentTarget.dataset.index] = e.detail.value
+        console.log(e.currentTarget.dataset.index);
+        this.steps[e.currentTarget.dataset.index] = e.detail.value;
       },
       bindMoneyInput: function(e) {
-        this.task.money = e.detail.value
+        this.task.money = e.detail.value;
       },
       bindNumInput: function(e) {
-        this.task.num = e.detail.value
+        this.task.num = e.detail.value;
       },
       bindCreditScoreInput: function(e) {
-        this.task.condition.creditScore = e.detail.value
+        this.task.condition.creditScore = e.detail.value;
       },
       bindSexChange() {
-        let self = this
+        let self = this;
         wepy.showActionSheet({
           itemList: ['全部', '男', '女'], // 按钮的文字数组，数组长度最大为6个,
           itemColor: '#000000', // 按钮的文字颜色,
           showCancel: false,
           success: res => {
             if (!res.cancel) {
-              console.log(res.tapIndex)
-              self.task.condition.sex = self.sexs[res.tapIndex]
-              self.$apply()
+              console.log(res.tapIndex);
+              self.task.condition.sex = self.sexs[res.tapIndex];
+              self.$apply();
             }
           }
-        })
+        });
       }
     };
     events = {
-      timechange(e) {
-        this.task.time = e.value
+      TimeChange(e) {
+        console.log(e);
+        this.task.time = e.value;
       },
-      groupschange(e) {
-        this.task.condition.groups = []
+      GroupsChange(e) {
+        this.task.condition.groups = [];
         for (var i = 0; i < e.tempGroupsIndex.length; i++) {
-          var temp = e.tempGroupsIndex[i]
-          this.task.condition.groups.push(this.groups[temp].name)
+          var temp = e.tempGroupsIndex[i];
+          this.task.condition.groups.push(this.groups[temp].name);
         }
       }
     }
     onLoad() {
       if (this.$parent.globalData.user.userId) {
-        this.userId = this.$parent.globalData.user.userId
+        console.log(this.$parent.globalData.user.userId);
+        this.userId = this.$parent.globalData.user.userId;
       }
     }
   }

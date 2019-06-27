@@ -58,7 +58,7 @@
       <view bindtap="auth" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd iconfont icon">&#xe681;</view>
         <view class="weui-cell__bd">身份认证</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access"><icon type="success" size="18" hidden="{{proveState !== 'P'}}"></icon>{{proveState_str[proveState]}}</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access"><icon type="success" size="18" hidden="{{proveState !== 'P'}}"></icon> {{proveState_str[proveState]}}</view>
       </view>
     </view>
     <view class="weui-cells">
@@ -98,10 +98,10 @@
   </view>
 </template>
 <script>
-  import wepy from 'wepy'
+  import wepy from 'wepy';
   export default class Mine extends wepy.page {
     config = {
-      navigationBarTitleText: 'Mine',
+      navigationBarTitleText: '我的',
       navigationBarTextStyle: 'black',
       navigationBarBackgroundColor: '#E7E8E3'
     }
@@ -126,74 +126,75 @@
         if (this.hasUserInfo) {
           this.$navigate({
             url: './info'
-          })
+          });
         }
       },
       balance() {
         if (this.checkState()) {
-          wepy.navigateTo({ url: './balance' })
+          wepy.navigateTo({ url: './balance' });
         }
       },
       team() {
         if (this.checkState()) {
-          wepy.navigateTo({ url: './team' })
+          wepy.navigateTo({ url: './team' });
         }
       },
       auth() {
         if (this.checkState()) {
-          wepy.navigateTo({ url: './prove' })
+          wepy.navigateTo({ url: './prove' });
         }
       },
       received() {
         if (this.checkProveState()) {
-          wepy.navigateTo({ url: '../task/received' })
+          wepy.navigateTo({ url: '../task/received' });
         }
       },
       issued() {
         if (this.checkProveState()) {
-          wepy.navigateTo({ url: '../task/published' })
+          wepy.navigateTo({ url: '../task/published' });
         }
       },
       setting() {
         if (this.checkState()) {
-          wepy.navigateTo({ url: './setting' })
+          wepy.navigateTo({ url: './setting' });
         }
       },
       about() {
-        wepy.navigateTo({ url: '../about' })
+        wepy.navigateTo({ url: '../about' });
       }
     }
   
-    async onLoad() {
-      await this.getUser()
+    onLoad() {
+      this.getUser();
     }
 
     onShow() {
       wepy.getSetting({ success: res => {
         if (!res.authSetting['scope.userInfo']) {
-          wepy.navigateTo({ url: '../authorize' })
+          wepy.navigateTo({ url: '../authorize' });
         }
-      } })
+      } });
     }
 
     getUser() {
-      let self = this
+      let self = this;
       if (this.$parent.globalData.user.userId) {
-        console.log(this.$parent.globalData.user.userId)
-        this.userInfo = this.$parent.globalData.user.userInfo
-        this.userId = this.$parent.globalData.user.userId
-        this.proveState = this.$parent.globalData.user.proveState
-        this.hasUserInfo = true
+        console.log(this.$parent.globalData.user.userId);
+        this.userInfo = this.$parent.globalData.user.userInfo;
+        this.userId = this.$parent.globalData.user.userId;
+        this.proveState = this.$parent.globalData.user.proveState;
+        this.hasUserInfo = true;
       } else {
+        console.log('false');
         this.$parent.login(function(user) {
           if (user) {
-            self.userInfo = user.userInfo
-            self.userId = user.userId
-            self.proveState = user.proveState
-            self.hasUserInfo = true
-            self.$apply()
+            self.userInfo = user.userInfo;
+            self.userId = user.userId;
+            self.proveState = user.proveState;
+            self.hasUserInfo = true;
+            self.$apply();
           }
-        })
+        });
       }
     }
 
@@ -205,10 +206,10 @@
           duration: 1000, // 延迟时间,
           mask: true, // 显示透明蒙层，防止触摸穿透,
           success: res => {}
-        })
-        return false
+        });
+        return false;
       } else {
-        return true
+        return true;
       }
     }
   
@@ -220,10 +221,10 @@
           duration: 1000, // 延迟时间,
           mask: true, // 显示透明蒙层，防止触摸穿透,
           success: res => {}
-        })
-        return false
+        });
+        return false;
       } else {
-        return true
+        return true;
       }
     }
   }

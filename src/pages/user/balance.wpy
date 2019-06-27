@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import wepy from 'wepy'
+import wepy from 'wepy';
 export default class Balance extends wepy.page {
   config = {
     navigationBarTitleText: '余额',
@@ -36,22 +36,22 @@ export default class Balance extends wepy.page {
   };
   methods = {
     recharge() {
-      let self = this
-      const rq = require('../../lib/request.js')
+      let self = this;
+      const rq = require('../../lib/request.js');
       var object = {
         url: '/recharge',
         data: {
           userId: this.userId
         },
         method: 'POST'
-      }
+      };
       rq.request(object).then(res => {
-        self.balance = res.data.balance
-        self.$apply()
+        self.balance = res.data.balance;
+        self.$apply();
       }).catch(err => {
-        console.log(err)
-        this.$parent.reLogin()
-      })
+        console.log(err);
+        this.$parent.reLogin();
+      });
     }
   }
   onload() {

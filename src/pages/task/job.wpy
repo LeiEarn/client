@@ -13,8 +13,8 @@
   </view>
 </template>
 <script>
-  import wepy from 'wepy'
-  import UserList from '../../components/userlist'
+  import wepy from 'wepy';
+  import UserList from '../../components/userlist';
   export default class Job extends wepy.page {
     config = {
       navigationBarTitleText: '工作列表',
@@ -41,22 +41,23 @@
     }
     events = {
       TapUser(e) {
-        console.log(e.index)
-        wepy.navigateTo({ url: './jobdetail?json=' + JSON.stringify(this.user[e.index]) })
+        console.log(e.index);
+        wepy.navigateTo({ url: './jobdetail?job=' + JSON.stringify(this.user[e.index]) + '&taskId=' + this.taskId });
       }
     }
     methods = {
     }
     onLoad(res) {
-      var jobs = JSON.parse(res.job)
-      console.log(jobs)
-      this.user = jobs
+      var jobs = JSON.parse(res.job);
+      console.log(jobs);
+      this.user = jobs;
+      this.taskId = res.taskId;
     }
     onPullDownRefresh() {
-      console.log('下拉刷新列表')
+      console.log('下拉刷新列表');
       setTimeout(function() {
-        wepy.stopPullDownRefresh()
-      }, 5000)
+        wepy.stopPullDownRefresh();
+      }, 5000);
     }
   }
 </script>

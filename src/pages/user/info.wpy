@@ -99,7 +99,7 @@ page,
 </template>
 
 <script>
-import wepy from 'wepy'
+import wepy from 'wepy';
 export default class Info extends wepy.page {
   config = {
     navigationBarTitleText: '修改用户信息'
@@ -119,49 +119,49 @@ export default class Info extends wepy.page {
   }
   methods = {
     head() {
-      this.temp.avatarUrl = this.userInfo.avatarUrl
-      this.modify = 1
+      this.temp.avatarUrl = this.userInfo.avatarUrl;
+      this.modify = 1;
     },
     name() {
-      this.temp.nickName = this.userInfo.nickName
-      this.modify = 2
+      this.temp.nickName = this.userInfo.nickName;
+      this.modify = 2;
     },
     address() {
-      this.modify = 3
+      this.modify = 3;
     },
     getTempAvatarUrl(e) {
-      var self = this
+      var self = this;
       wepy.chooseImage({
         count: 1,
         sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
         sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
         success: function (res) {
           // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-          self.temp.avatarUrl = res.tempFilePaths[0]
-          self.$apply()
+          self.temp.avatarUrl = res.tempFilePaths[0];
+          self.$apply();
         }
-      })
+      });
     },
     getTempNickName(e) {
-      this.temp.nickName = e.detail.value
+      this.temp.nickName = e.detail.value;
     },
     getTempAddress(e) {
-      this.temp.address = e.detail.value
+      this.temp.address = e.detail.value;
     },
     cancel() {
-      this.modify = 0
+      this.modify = 0;
     },
     confirm() {
       if (this.modify === 1) {
         if (this.userInfo.avatarUrl !== this.temp.avatarUrl) {
-          let self = this
+          let self = this;
           wepy.uploadFile({
             url: wepy.$appConfig.baseUrl + '/images', // 开发者服务器 url
             filePath: self.temp.avatarUrl, // 要上传文件资源的路径
             name: 'photo', // 文件对应的 key , 开发者在服务器端通过这个 key 可以获取到文件二进制内容
             success: res => {
-              res.data = JSON.parse(res.data)
-              const rq = require('../../lib/request.js')
+              res.data = JSON.parse(res.data);
+              const rq = require('../../lib/request.js');
               var obj = {
                 url: '/user/info',
                 data: {
@@ -169,23 +169,31 @@ export default class Info extends wepy.page {
                   nickName: self.userInfo.nickName
                 },
                 method: 'PUT'
-              }
-              console.log(obj)
+              };
+              console.log(obj);
               rq.request(obj).then(res => {
-                console.log(res)
-                self.userInfo.avatarUrl = res.data.avatarUrl
-                self.temp.avatarUrl = ''
-                self.$apply()
-              })
+                console.log(res);
+                if (res.errMsg == 'request:ok') {
+                  self.userInfo.avatarUrl = res.data.avatarUrl;
+                  self.temp.avatarUrl = '';
+                }
+                self.$apply();
+              }).catch(err => {
+                if (err.data.message == 'login') {
+                  self.$parent.reLogin();
+                  self.$apply();
+                }
+              });
             },
             fail: err => {
-              console.log(err.data)
+              console.log(err.data);
             },
             complete: () => {}
-          })
+          });
         }
       } else {
-        const rq = require('../../lib/request.js')
+        let self = this;
+        const rq = require('../../lib/request.js');
         var obj = {
           url: '/user/info',
           data: {
@@ -193,34 +201,42 @@ export default class Info extends wepy.page {
             nickName: this.temp.nickName
           },
           method: 'PUT'
-        }
-        console.log(obj)
+        };
+        console.log(obj);
         rq.request(obj).then(res => {
-          console.log(res)
-          this.userInfo.nickName = res.data.nickName
-          this.temp.nickName = ''
-        })
+          console.log(res);
+          if (res.errMsg == 'request:ok') {
+            self.userInfo.nickName = res.data.nickName;
+            self.temp.nickName = '';
+          }
+          self.$apply();
+        }).catch(err => {
+          if (err.data.message == 'login') {
+            self.$parent.reLogin();
+            self.$apply();
+          }
+        });
       }
-      this.modify = 0
+      this.modify = 0;
     }
   }
   events = {
     'index-emit': (...args) => {
-      let $event = args[args.length - 1]
-      console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
+      let $event = args[args.length - 1];
+      console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`);
     }
   }
   onLoad() {
-    let self = this
+    let self = this;
     if (this.$parent.globalData.user.userInfo) {
-      this.userInfo = this.$parent.globalData.user.userInfo
+      this.userInfo = this.$parent.globalData.user.userInfo;
     } else {
       this.$parent.login(function (user) {
         if (user) {
-          self.userInfo = user.userInfo
-          self.$apply()
+          self.userInfo = user.userInfo;
+          self.$apply();
         }
-      })
+      });
     }
   }
 }

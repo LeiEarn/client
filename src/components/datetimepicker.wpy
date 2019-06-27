@@ -168,44 +168,44 @@
 </template>
 
 <script>
-import wepy from 'wepy'
-import moment from 'moment'
+import wepy from 'wepy';
+import moment from 'moment';
 
 function computeYears() {
-  const now = new Date()
-  const years = []
+  const now = new Date();
+  const years = [];
   for (let i = 1990; i <= now.getFullYear() + 100; i++) {
-    years.push(i)
+    years.push(i);
   }
-  return years
+  return years;
 }
 
 function computeMonths() {
-  return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 }
 
 function computeHours() {
-  const hours = []
+  const hours = [];
   for (let i = 0; i <= 23; i++) {
-    hours.push(i)
+    hours.push(i);
   }
-  return hours
+  return hours;
 }
 
 function computeMinutes(step) {
-  const minutes = []
+  const minutes = [];
   for (let i = 0; i <= 59; i += step) {
-    minutes.push(i)
+    minutes.push(i);
   }
-  return minutes
+  return minutes;
 }
 
 function computeSeconds() {
-  const seconds = []
+  const seconds = [];
   for (let i = 0; i <= 59; i++) {
-    seconds.push(i)
+    seconds.push(i);
   }
-  return seconds
+  return seconds;
 }
 
 export default class Datetimepicker extends wepy.component {
@@ -263,93 +263,93 @@ export default class Datetimepicker extends wepy.component {
   };
 
   onLoad() {
-    this.init()
+    this.init();
   }
 
   methods = {
     openPicker: () => {
-      this.init()
-      this.open = true
+      this.init();
+      this.open = true;
     },
     changeType: function (type) {
-      this.showTab = type
+      this.showTab = type;
     },
     onDateChange: (e) => {
-      let selectedValues = e.detail.value
-      let index = 0
+      let selectedValues = e.detail.value;
+      let index = 0;
       this.selectDate.forEach(it => {
         if (it.show) {
-          it.value = selectedValues[index]
-          index++
+          it.value = selectedValues[index];
+          index++;
         }
-      })
-      this.render()
+      });
+      this.render();
     },
     onTimeChange: (e) => {
-      let selectedValues = e.detail.value
-      let index = 0
+      let selectedValues = e.detail.value;
+      let index = 0;
       this.selectTime.forEach(it => {
         if (it.show) {
-          it.value = selectedValues[index]
-          index++
+          it.value = selectedValues[index];
+          index++;
         }
-      })
-      this.render()
+      });
+      this.render();
     },
     onCancel() {
-      this.open = false
-      this.notifyEvent('cancel')
+      this.open = false;
+      this.notifyEvent('TimeCancel');
     },
     onConfirm() {
-      this.notifyEvent('confirm')
-      this.open = false
+      this.notifyEvent('TimeChange');
+      this.open = false;
     },
     stopEvent() {
 
     },
     input(data = {}) {
-      this.init()
-      this.open = true
+      this.init();
+      this.open = true;
     }
   };
 
   init() {
-    const minuteStep = parseInt(this.minuteStep || 1)
-    let inputValue = moment()
+    const minuteStep = parseInt(this.minuteStep || 1);
+    let inputValue = moment();
     if (this.value) {
-      inputValue = moment(this.value, this.dateFormat + ' ' + this.timeFormat)
+      inputValue = moment(this.value, this.dateFormat + ' ' + this.timeFormat);
     }
 
     // 计算显示的列
     if (!this.dateFormat) {
-      this.showTab = 'time'
+      this.showTab = 'time';
     } else {
-      this.showTab = 'date'
+      this.showTab = 'date';
     }
-    this.showYear = this.dateFormat && this.dateFormat.indexOf('YYYY') >= 0
-    this.showMonth = this.dateFormat && this.dateFormat.indexOf('MM') >= 0
-    this.showDay = this.dateFormat && this.dateFormat.indexOf('DD') >= 0
-    this.showHour = this.timeFormat && this.timeFormat.indexOf('HH') >= 0
-    this.showMinute = this.timeFormat && this.timeFormat.indexOf('mm') >= 0
-    this.showSecond = this.timeFormat && this.timeFormat.indexOf('ss') >= 0
+    this.showYear = this.dateFormat && this.dateFormat.indexOf('YYYY') >= 0;
+    this.showMonth = this.dateFormat && this.dateFormat.indexOf('MM') >= 0;
+    this.showDay = this.dateFormat && this.dateFormat.indexOf('DD') >= 0;
+    this.showHour = this.timeFormat && this.timeFormat.indexOf('HH') >= 0;
+    this.showMinute = this.timeFormat && this.timeFormat.indexOf('mm') >= 0;
+    this.showSecond = this.timeFormat && this.timeFormat.indexOf('ss') >= 0;
 
     if (this.showYear) {
-      this.years = computeYears()
+      this.years = computeYears();
     }
     if (this.showMonth) {
-      this.months = computeMonths()
+      this.months = computeMonths();
     }
     if (this.showDay) {
-      this.days = moment([inputValue.year(), inputValue.month()]).daysInMonth()
+      this.days = moment([inputValue.year(), inputValue.month()]).daysInMonth();
     }
     if (this.showHour) {
-      this.hours = computeHours()
+      this.hours = computeHours();
     }
     if (this.showMinute) {
-      this.minutes = computeMinutes(minuteStep)
+      this.minutes = computeMinutes(minuteStep);
     }
     if (this.showSecond) {
-      this.seconds = computeSeconds()
+      this.seconds = computeSeconds();
     }
 
     this.selectDate = [
@@ -365,7 +365,7 @@ export default class Datetimepicker extends wepy.component {
         show: this.showDay,
         value: inputValue.date() - 1
       }
-    ]
+    ];
     this.selectTime = [
       {
         show: this.showHour,
@@ -379,32 +379,32 @@ export default class Datetimepicker extends wepy.component {
         show: this.showSecond,
         value: inputValue.second()
       }
-    ]
+    ];
     // 计算默认值
-    this.defaultDate = this.selectDate.filter(it => it.show).map(it => it.value)
-    this.defaultTime = this.selectTime.filter(it => it.show).map(it => it.value)
+    this.defaultDate = this.selectDate.filter(it => it.show).map(it => it.value);
+    this.defaultTime = this.selectTime.filter(it => it.show).map(it => it.value);
 
-    this.render(true)
+    this.render(true);
   }
 
   render(first) {
-    let datetime = this.computeSelectDate()
+    let datetime = this.computeSelectDate();
     if (this.dateFormat) {
-      this.dateDesc = datetime.format(this.dateFormat)
+      this.dateDesc = datetime.format(this.dateFormat);
     }
     if (this.timeFormat) {
-      this.timeDesc = datetime.format(this.timeFormat)
+      this.timeDesc = datetime.format(this.timeFormat);
     }
     this.days = moment([
       this.selectDate[0].value + 1990,
       this.selectDate[1].value
-    ]).daysInMonth()
+    ]).daysInMonth();
 
-    const format = (this.dateFormat + ' ' + this.timeFormat).trim()
-    this.value = datetime.format(format)
+    const format = (this.dateFormat + ' ' + this.timeFormat).trim();
+    this.value = datetime.format(format);
 
     if (!first) {
-      this.notifyEvent('timechange')
+      this.notifyEvent('TimeChange');
     }
   }
 
@@ -416,12 +416,12 @@ export default class Datetimepicker extends wepy.component {
       this.selectTime[0].value,
       this.minutes[this.selectTime[1].value] || 0,
       this.selectTime[2].value
-    ])
+    ]);
   }
 
   notifyEvent(event) {
-    this.$emit(event, { value: this.value, params: this.params })
-    this.$apply()
+    this.$emit(event, { value: this.value, params: this.params });
+    this.$apply();
   }
 }
 </script>

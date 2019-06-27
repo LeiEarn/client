@@ -15,13 +15,13 @@
       </view>
     </view>
     <view class="button-sp-area weui-flex">
-      <view class="weui-flex__item"><button class="weui-btn placeholder" type="warn" bindtap="reject">拒绝</button></view>
-      <view class="weui-flex__item"><button class="weui-btn placeholder" type="primary" bindtap="confirm">确认</button></view>
+      <view class="weui-flex__item"><button class="weui-btn placeholder" type="warn" bindtap="opinion" data-state="reject">拒绝</button></view>
+      <view class="weui-flex__item"><button class="weui-btn placeholder" type="primary" bindtap="opinion" data-state="agree">确认</button></view>
     </view>
   </view>
 </template>
 <script>
-  import wepy from 'wepy'
+  import wepy from 'wepy';
   export default class JobDetail extends wepy.page {
     config = {
       navigationBarTitleText: '工作详情',
@@ -37,47 +37,58 @@
         'http://iph.href.lu/750x390',
         'http://iph.href.lu/750x390',
         'http://iph.href.lu/750x390'
-      ]
+      ],
+      userId: null
     }
     events = {}
     methods = {
-      confirm() {
-        const rq = require('../../lib/request.js')
+      opinion(e) {
+        console.log(e.currentTarget);
+        var state = e.currentTarget.dataset.state;
+        let self = this;
+        const rq = require('../../lib/request.js');
         var obj = {
-          url: '/task/' + this.taskId + '/job?userId=' + this.userId + '&state=agree',
+          url: '/task/' + this.taskId + '/job?userId=' + this.userId + '&state=' + state,
           data: {},
           method: 'PUT'
-        }
+        };
+        console.log(obj);
         rq.request(obj).then(res => {
-          console.log(res)
+          console.log(res);
+          if (res.data == 'success') {
+            self.$apply();
+            wepy.showToast({
+              title: '成功', // 提示的内容,
+              icon: 'success', // 图标,
+              duration: 2000, // 延迟时间,
+              mask: true, // 显示透明蒙层，防止触摸穿透,
+              success: res => {}
+            });
+            wepy.navigateBack({
+              delta: 1 // 返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+            });
+          }
         }).catch(err => {
-          console.log(err)
-        })
-      },
-      reject() {
-        const rq = require('../../lib/request.js')
-        var obj = {
-          url: '/task/' + this.taskId + '/job?userId=' + this.userId + '&state=reject',
-          data: {},
-          method: 'PUT'
-        }
-        rq.request(obj).then(res => {
-          console.log(res)
-        }).catch(err => {
-          console.log(err)
-        })
+          console.log(err);
+          if (err.data.message == 'login') {
+            self.$parent.reLogin();
+            self.$apply();
+          }
+        });
       }
     }
     onLoad(res) {
-      res = JSON.parse(res.json)
-      this.remarks = res.remarks
-      this.cert = res.files
+      var job = JSON.parse(res.job);
+      this.remarks = job.remarks;
+      this.cert = job.files;
+      this.userId = job.userId;
+      this.taskId = res.taskId;
     }
     onPullDownRefresh() {
-      console.log('下拉刷新列表')
+      console.log('下拉刷新列表');
       setTimeout(function() {
-        wepy.stopPullDownRefresh()
-      }, 5000)
+        wepy.stopPullDownRefresh();
+      }, 5000);
     }
   }
 </script>

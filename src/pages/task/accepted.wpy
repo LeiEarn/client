@@ -17,8 +17,8 @@
   </view>
 </template>
 <script>
-  import wepy from 'wepy'
-  import TaskList from '../../components/tasklist'
+  import wepy from 'wepy';
+  import TaskList from '../../components/tasklist';
   export default class AcceptedTask extends wepy.page {
     config = {
       navigationBarTitleText: '已接受任务',
@@ -72,52 +72,52 @@
     }
     events = {
       TapTask(e) {
-        wepy.navigateTo({ url: './detail?json=' + JSON.stringify(e.task) })
+        wepy.navigateTo({ url: './detail?json=' + JSON.stringify(e.task) });
       }
     }
     methods = {
       tap() {
         // this.num = this.num + 1
-        console.log('65465448')
+        console.log('65465448');
       },
       add() {
-        let len = this.list.length
+        let len = this.list.length;
         this.list.push({
           id: len + 1,
           title: 'title_' + len
-        })
+        });
       }
     }
     onLoad() {
       if (this.$parent.globalData.userId) {
-        this.userId = this.$parent.globalData.userId
-        this.getReceivedTask()
+        this.userId = this.$parent.globalData.userId;
+        this.getReceivedTask();
       }
     }
     onPullDownRefresh() {
-      console.log('下拉刷新列表')
+      console.log('下拉刷新列表');
       setTimeout(function() {
-        this.getReceivedTask()
-        wepy.stopPullDownRefresh()
-      }, 5000)
+        this.getReceivedTask();
+        wepy.stopPullDownRefresh();
+      }, 5000);
     }
     getReceivedTask() {
-      const rq = require('../../lib/request.js')
-      let self = this
+      const rq = require('../../lib/request.js');
+      let self = this;
       var object = {
         url: '/task/' + this.$parent.globalData.userId + '?type=acceptment',
         data: {
         },
         method: 'GET'
-      }
+      };
       rq.request(object).then(res => {
-        self.ongoing = res.data.ongoing
-        self.complete = res.data.complete
-        self.$apply()
+        self.ongoing = res.data.ongoing;
+        self.complete = res.data.complete;
+        self.$apply();
       }).catch(err => {
-        console.log(err)
-        this.$parent.reLogin()
-      })
+        console.log(err);
+        this.$parent.reLogin();
+      });
     }
   }
 </script>

@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import wepy from 'wepy'
+import wepy from 'wepy';
 export default class Cancel extends wepy.page {
   config = {
     navigationBarTitleText: '关于平台',
@@ -53,13 +53,13 @@ export default class Cancel extends wepy.page {
   };
   methods = {
     privacy() {
-      wepy.navigateTo({ url: './about/privacyItem' })
+      wepy.navigateTo({ url: './about/privacyItem' });
     },
     behavior() {
-      wepy.navigateTo({ url: './about/behaviorItem' })
+      wepy.navigateTo({ url: './about/behaviorItem' });
     },
     publish() {
-      wepy.navigateTo({ url: './about/publishItem' })
+      wepy.navigateTo({ url: './about/publishItem' });
     }
   }
 }

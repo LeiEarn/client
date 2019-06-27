@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import wepy from 'wepy'
+import wepy from 'wepy';
 export default class Setting extends wepy.page {
   config = {
     navigationBarTitleText: '账号设置',
@@ -59,13 +59,13 @@ export default class Setting extends wepy.page {
               title: '已退出',
               icon: 'success',
               duration: 3000
-            })
-            wepy.navigateTo({ url: '../index' })
+            });
+            wepy.navigateTo({ url: '../index' });
           } else if (res.cancel) {
 
           }
         }
-      })
+      });
     },
     cancel() {
       wepy.showModal({
@@ -73,25 +73,25 @@ export default class Setting extends wepy.page {
         confirmColor: '#b4282d',
         content: '注销账号将删除您在此小程序中的所有数据',
         success(res) {
-          const rq = require('../../lib/request.js')
+          const rq = require('../../lib/request.js');
           var object = {
             url: '/cancel',
             method: 'POST'
-          }
+          };
           rq.request(object).then(res => {
-            console.log(res.data)
-          })
+            console.log(res.data);
+          });
           if (res.confirm) {
             wx.showToast({
               title: '已注销',
               icon: 'success',
               duration: 3000
-            })
+            });
           } else if (res.cancel) {
 
           }
         }
-      })
+      });
     }
   }
 }

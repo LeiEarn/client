@@ -17,8 +17,8 @@
   </view>
 </template>
 <script>
-  import wepy from 'wepy'
-  import UserList from '../../components/userlist'
+  import wepy from 'wepy';
+  import UserList from '../../components/userlist';
   export default class Accepter extends wepy.page {
     config = {
       navigationBarTitleText: '任务接受者',
@@ -71,42 +71,46 @@
     }
     events = {
       TapUser(e) {
-        console.log(e.index)
+        console.log(e.index);
       }
     }
     methods = {
     }
     onLoad(res) {
-      this.taskId = res.taskId
-      if (this.$parent.globalData.userId) {
-        this.getAccepter(res.taskId, this.$parent.globalData.userId)
+      this.taskId = res.taskId;
+      if (this.$parent.globalData.user.userId) {
+        this.getAccepter(res.taskId, this.$parent.globalData.user.userId);
       }
     }
     onPullDownRefresh() {
-      console.log('下拉刷新列表')
+      console.log('下拉刷新列表');
       setTimeout(function() {
-        this.getAccepter()
-        wepy.stopPullDownRefresh()
-      }, 5000)
+        this.getAccepter();
+        wepy.stopPullDownRefresh();
+      }, 5000);
     }
     getAccepter(taskId, userId) {
-      const rq = require('../../lib/request.js')
-      let self = this
-      this.userId = this.$parent.globalData.userId
+      const rq = require('../../lib/request.js');
+      let self = this;
+      this.userId = userId;
       var object = {
-        url: '/task' + taskId + '/accepter?userId=' + userId,
+        url: '/task/' + taskId + '/accepter?userId=' + userId,
         data: {
         },
         method: 'GET'
-      }
+      };
+      console.log(object);
       rq.request(object).then(res => {
-        self.accepted = res.data.accepted
-        self.completed = res.data.completed
-        self.$apply()
+        console.log(res);
+        self.accepted = res.data.accepted;
+        self.completed = res.data.completed;
+        self.$apply();
       }).catch(err => {
-        console.log(err)
-        this.$parent.reLogin()
-      })
+        console.log(err);
+        if (err.data.message == 'login') {
+          this.$parent.reLogin();
+        }
+      });
     }
   }
 </script>

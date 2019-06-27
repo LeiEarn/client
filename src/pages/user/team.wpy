@@ -74,8 +74,8 @@
 </template>
 
 <script >
-import wepy from 'wepy'
-import TeamList from '../../components/teamlist'
+import wepy from 'wepy';
+import TeamList from '../../components/teamlist';
 export default class Team extends wepy.page {
   config = {
     navigationBarTitleText: '我的组织',
@@ -122,89 +122,89 @@ export default class Team extends wepy.page {
 
   events = {
     delete(e) {
-      console.log(e.index)
-      const rq = require('../../lib/request.js')
+      console.log(e.index);
+      const rq = require('../../lib/request.js');
       var object = {
         url: '/group/' + this.userId + '?groupName=' + this.joined[e.index].groupName,
         data: {
         },
         method: 'DELETE'
-      }
+      };
       rq.request(object).then(res => {
-        console.log(res.data)
+        console.log(res.data);
       }).catch(err => {
-        console.log(err.data)
-      })
+        console.log(err.data);
+      });
     }
   }
 
   methods = {
     createGroup() {
-      const rq = require('../../lib/request.js')
+      const rq = require('../../lib/request.js');
       var object = {
         url: '/group/' + this.userId + '?groupName=' + this.groupName,
         data: {
         },
         method: 'POST'
-      }
+      };
       rq.request(object).then(res => {
-        console.log(res.data)
+        console.log(res.data);
       }).catch(err => {
-        console.log(err.data)
-      })
+        console.log(err.data);
+      });
     },
     joinGroup() {
-      const rq = require('../../lib/request.js')
+      const rq = require('../../lib/request.js');
       var object = {
         url: '/group/' + this.userId + '?groupName=' + this.groupName,
         data: {
         },
         method: 'PUT'
-      }
+      };
       rq.request(object).then(res => {
-        console.log(res.data)
+        console.log(res.data);
       }).catch(err => {
-        console.log(err.data)
-      })
+        console.log(err.data);
+      });
     }
   }
 
   async onLoad() {
-    this.userId = this.$parent.userId
-    var sliderWidth = 114
-    let self = this
+    this.userId = this.$parent.userId;
+    var sliderWidth = 114;
+    let self = this;
     wepy.getSystemInfo({
       success: function (res) {
-        self.sliderLeft = (res.windowWidth / self.tabs.length - sliderWidth) / 2
-        self.sliderOffset = res.windowWidth / self.tabs.length * self.activeIndex
-        self.$apply()
+        self.sliderLeft = (res.windowWidth / self.tabs.length - sliderWidth) / 2;
+        self.sliderOffset = res.windowWidth / self.tabs.length * self.activeIndex;
+        self.$apply();
       }
-    })
-    await this.getGroup()
+    });
+    await this.getGroup();
   }
   async tabClick(e) {
     if (e.currentTarget.id === '0') {
-      await this.getGroup()
+      await this.getGroup();
     }
-    this.sliderOffset = e.currentTarget.offsetLeft
-    this.activeIndex = e.currentTarget.id
+    this.sliderOffset = e.currentTarget.offsetLeft;
+    this.activeIndex = e.currentTarget.id;
   }
   getGroup() {
-    const rq = require('../../lib/request.js')
+    const rq = require('../../lib/request.js');
     var object = {
       url: '/group/' + this.userId,
       data: {
       },
       method: 'GET'
-    }
+    };
     rq.request(object).then(res => {
-      console.log(res)
-      self.created = res.data.created
-      self.joined = res.data.joined
-      self.$apply()
+      console.log(res);
+      self.created = res.data.created;
+      self.joined = res.data.joined;
+      self.$apply();
     }).catch(err => {
-      console.log(err)
-    })
+      console.log(err);
+    });
   }
 }
 

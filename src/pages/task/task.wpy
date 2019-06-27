@@ -1,17 +1,25 @@
 <style lang="less">
+.type {
+  background-color: white;
+}
 </style>
 <template>
-  <view class="task">
+  <view class="page">
+    <view class="page__bd">
+      <picker bindchange="bindTypeChange" value="{{typeindex}}" range="{{typelist}}">
+          <button class="type">{{ typelist[typeindex] }}</button>
+      </picker>
+    </view>
     <list :list.sync="list"/>
   </view>
 </template>
 <script>
-  import wepy from 'wepy'
-  import TaskList from '../../components/tasklist'
+  import wepy from 'wepy';
+  import TaskList from '../../components/tasklist';
 
   export default class Task extends wepy.page {
     config = {
-      navigationBarTitleText: 'Task',
+      navigationBarTitleText: '任务大厅',
       navigationBarTextStyle: 'black',
       navigationBarBackgroundColor: '#E7E8E3',
       enablePullDownRefresh: true,
@@ -25,125 +33,70 @@
     data = {
       pageId: 0,
       list: [
-        {
-          id: '',
-          icon: '../../assets/background.jpg',
-          title: '标题一',
-          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
-          money: 0.5,
-          left: 33
-        },
-        {
-          icon: '../../assets/background.jpg',
-          title: '标题二',
-          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
-          money: 0.5,
-          left: 20
-        },
-        {
-          icon: '../../assets/background.jpg',
-          title: '标题一',
-          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
-          money: 0.5,
-          left: 33
-        },
-        {
-          icon: '../../assets/background.jpg',
-          title: '标题二',
-          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
-          money: 0.5,
-          left: 20
-        },
-        {
-          icon: '../../assets/background.jpg',
-          title: '标题一',
-          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
-          money: 0.5,
-          left: 33
-        },
-        {
-          icon: '../../assets/background.jpg',
-          title: '标题二',
-          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
-          money: 0.5,
-          left: 20
-        },
-        {
-          icon: '../../assets/background.jpg',
-          title: '标题一',
-          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
-          money: 0.5,
-          left: 33
-        },
-        {
-          icon: '../../assets/background.jpg',
-          title: '标题二',
-          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
-          money: 0.5,
-          left: 20
-        },
-        {
-          icon: '../../assets/background.jpg',
-          title: '标题一',
-          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
-          money: 0.5,
-          left: 33
-        },
-        {
-          icon: '../../assets/background.jpg',
-          title: '标题二',
-          desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
-          money: 0.5,
-          left: 20
-        }
-      ]
+      ],
+      type: 'default',
+      typeindex: 0,
+      typelist: ['默认', '简单任务', '调查问卷'],
+      up_typelist: ['default', 'simple', 'askForm']
     }
 
     events = {
       TapTask(e) {
-        wepy.navigateTo({ url: './detail?json=' + JSON.stringify(e.task) })
+        console.log(e);
+        wepy.navigateTo({ url: './detail?json=' + JSON.stringify(this.list[e.index]) });
       }
     }
 
     methods = {
+      bindTypeChange(e) {
+        this.typeindex = e.detail.value;
+        this.getTask();
+      }
     }
 
-    async onLoad () {
-      await this.getTask()
+    onLoad () {
+      this.typeindex = this.$parent.globalData.taskTypeIndex;
+    }
+
+    onShow() {
+      this.getTask();
     }
 
     load(list) {
-      this.list = list
-      this.$apply()
+      this.list = list;
+      this.$apply();
     }
 
     onPullDownRefresh() {
-      console.log('下拉刷新列表')
-      this.pageId = this.pageId + 1
-      this.list = this.list.concat(this.list)
-      this.$apply()
+      console.log('下拉刷新列表');
+      let self = this;
       setTimeout(function () {
-        this.getTask()
-        wepy.stopPullDownRefresh()
-      }, 5000)
+        self.getTask();
+        wepy.stopPullDownRefresh();
+      }, 2000);
     }
   
     getTask() {
-      const rq = require('../../lib/request.js')
-      let self = this
+      const rq = require('../../lib/request.js');
+      let self = this;
       var object = {
-        url: '/tasks?pageId=' + this.pageId,
+        url: '/tasks?pageId=' + this.pageId + '&type=' + this.up_typelist[this.typeindex],
         data: {
         },
         method: 'GET'
-      }
+      };
       rq.request(object).then(res => {
-        console.log(res)
-        self.list = res.data.concat(self.list)
-        self.$apply()
+        if (res.errMsg == 'request:ok') {
+          self.list = res.data;
+          self.$apply();
+        }
       }).catch(err => {
-        console.log(err)
-      })
+        console.log(err);
+        if (err.data.message == 'login') {
+          console.log('relogin');
+          self.$parent.reLogin();
+        }
+      });
     }
   }
 </script>

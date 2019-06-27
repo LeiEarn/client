@@ -44,7 +44,7 @@ page {
 </template>
 
 <script>
-import wepy from 'wepy'
+import wepy from 'wepy';
 
 export default class Authorize extends wepy.page {
   config = {
@@ -61,14 +61,14 @@ export default class Authorize extends wepy.page {
 
   methods = {
     bindGetUserInfo(e) {
-      wepy.reLaunch({ url: './user/mine' })
+      wepy.reLaunch({ url: './user/mine' });
     }
   }
 
   events = {
     'index-emit': (...args) => {
-      let $event = args[args.length - 1]
-      console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
+      let $event = args[args.length - 1];
+      console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`);
     }
   }
 

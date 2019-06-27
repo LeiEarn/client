@@ -38,14 +38,14 @@
         </view>
         <view class="weui-media-box__ft">
           <view class="money">赏{{item.money}}元</view>
-          <view class="left">剩{{item.left}}名额</view>
+          <view class="left">剩{{item.maxNum - item.partNum}}名额</view>
         </view>
       </view>
     </block>
   </view>
 </template>
 <script>
-import wepy from 'wepy'
+import wepy from 'wepy';
 
 export default class TaskList extends wepy.component {
   props = {
@@ -57,18 +57,18 @@ export default class TaskList extends wepy.component {
 
   events = {
     'index-broadcast': (...args) => {
-      let $event = args[args.length - 1]
-      console.log(`${this.$name} receive ${$event.name} from ${$event.source.name}`)
+      let $event = args[args.length - 1];
+      console.log(`${this.$name} receive ${$event.name} from ${$event.source.name}`);
     }
   }
 
   methods = {
     tap(e) {
-      this.$emit('TapTask', {task: this.list[e.currentTarget.dataset.index]})
+      this.$emit('TapTask', {index: e.currentTarget.dataset.index});
     },
     add() {
-      let len = this.list.length
-      this.list.push({ id: len + 1, title: 'title_' + len })
+      let len = this.list.length;
+      this.list.push({ id: len + 1, title: 'title_' + len });
     }
   }
 

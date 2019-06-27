@@ -13,8 +13,8 @@
 	</view>
 </template>
 <script>
-import wepy from 'wepy'
-import TaskList from '../../components/tasklist'
+import wepy from 'wepy';
+import TaskList from '../../components/tasklist';
 
 export default class PublishedTask extends wepy.page {
   config = {
@@ -65,7 +65,7 @@ export default class PublishedTask extends wepy.page {
 
   events = {
     TapTask(e) {
-      wepy.navigateTo({ url: './detail?json=' + JSON.stringify(e.task) })
+      wepy.navigateTo({ url: './detail?json=' + JSON.stringify(e.task) });
     }
   }
 
@@ -74,40 +74,40 @@ export default class PublishedTask extends wepy.page {
 
   onLoad() {
     if (this.$parent.globalData.userId) {
-      this.userId = this.$parent.globalData.userId
-      this.getIssuedTask()
+      this.userId = this.$parent.globalData.userId;
+      this.getIssuedTask();
     }
   }
 
   load(list) {
-    this.list = list
-    this.$apply()
+    this.list = list;
+    this.$apply();
   }
 
   onPullDownRefresh() {
-    console.log('下拉刷新列表')
+    console.log('下拉刷新列表');
     setTimeout(function () {
-      this.getIssuedTask()
-      wepy.stopPullDownRefresh()
-    }, 5000)
+      this.getIssuedTask();
+      wepy.stopPullDownRefresh();
+    }, 5000);
   }
 
   getIssuedTask() {
-    const rq = require('../../lib/request.js')
-    let self = this
+    const rq = require('../../lib/request.js');
+    let self = this;
     var object = {
       url: '/task/' + this.$parent.globalData.userId + '?type=publishment',
       data: {
       },
       method: 'GET'
-    }
+    };
     rq.request(object).then(res => {
-      self.issued = res.data
-      self.$apply()
+      self.issued = res.data;
+      self.$apply();
     }).catch(err => {
-      console.log(err)
-      this.$parent.reLogin()
-    })
+      console.log(err);
+      this.$parent.reLogin();
+    });
   }
 }
 </script>

@@ -47,7 +47,7 @@
   </view>
 </template>
 <script>
-import wepy from 'wepy'
+import wepy from 'wepy';
 
 export default class UserList extends wepy.component {
   props = {
@@ -60,16 +60,16 @@ export default class UserList extends wepy.component {
 
   events = {
     'index-broadcast': (...args) => {
-      let $event = args[args.length - 1]
-      console.log(`${this.$name} receive ${$event.name} from ${$event.source.name}`)
+      let $event = args[args.length - 1];
+      console.log(`${this.$name} receive ${$event.name} from ${$event.source.name}`);
     }
   }
 
   methods = {
     tap(e) {
-      console.log(this.list)
-      var index = e.currentTarget.dataset.index
-      this.$emit('TapUser', {index: index})
+      console.log(this.list);
+      var index = e.currentTarget.dataset.index;
+      this.$emit('TapUser', {index: index});
     }
   }
 

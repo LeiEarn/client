@@ -35,8 +35,8 @@ page {
 </template>
 
 <script>
-  import wepy from 'wepy'
-import UserList from '../../components/userlist'
+  import wepy from 'wepy';
+import UserList from '../../components/userlist';
 
   export default class TeamDetail extends wepy.page {
     config = {
@@ -73,7 +73,7 @@ import UserList from '../../components/userlist'
     };
 
     onLoad(res) {
-      this.group = JSON.parse(res.json)
-    }
+      this.group = JSON.parse(res.json);
+    };
   }
 </script>

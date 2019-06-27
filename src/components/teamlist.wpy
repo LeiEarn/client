@@ -67,7 +67,7 @@
   </view>
 </template>
 <script>
-import wepy from 'wepy'
+import wepy from 'wepy';
 
 export default class UserList extends wepy.component {
   props = {
@@ -83,66 +83,66 @@ export default class UserList extends wepy.component {
 
   events = {
     'index-broadcast': (...args) => {
-      let $event = args[args.length - 1]
-      console.log(`${this.$name} receive ${$event.name} from ${$event.source.name}`)
+      let $event = args[args.length - 1];
+      console.log(`${this.$name} receive ${$event.name} from ${$event.source.name}`);
     }
   }
 
   methods = {
     tap(e) {
-      this.$parent.$navigate({ url: './teamdetail?json=' + JSON.stringify(this.list[e.currentTarget.dataset.index]) })
+      this.$parent.$navigate({ url: './teamdetail?json=' + JSON.stringify(this.list[e.currentTarget.dataset.index]) });
     },
     quitGroup(e) {
-      this.delIndex = e.currentTarget.dataset.index
-      this.notifyEvent('delete')
+      this.delIndex = e.currentTarget.dataset.index;
+      this.notifyEvent('delete');
     },
     touchS(e) {
-      var touch = e.touches[0]
+      var touch = e.touches[0];
 
       for (var index in this.list) {
-        this.list[index].right = 0
+        this.list[index].right = 0;
       }
 
-      this.startX = touch.clientX
+      this.startX = touch.clientX;
     },
     touchM(e) {
-      var touch = e.touches[0]
-      var item = this.list[e.currentTarget.dataset.index]
-      var disX = this.startX - touch.clientX
+      var touch = e.touches[0];
+      var item = this.list[e.currentTarget.dataset.index];
+      var disX = this.startX - touch.clientX;
       if (disX >= 20) {
         if (disX > this.delBtnWidth) {
-          disX = this.delBtnWidth
+          disX = this.delBtnWidth;
         }
-        item.right = disX
-        this.isScroll = false
+        item.right = disX;
+        this.isScroll = false;
       } else {
-        item.right = 0
-        this.isScroll = true
+        item.right = 0;
+        this.isScroll = true;
       }
     },
     touchE(e) {
-      var item = this.list[e.currentTarget.dataset.index]
+      var item = this.list[e.currentTarget.dataset.index];
       if (item.right >= this.delBtnWidth / 2) {
-        item.right = this.data.delBtnWidth
-        this.isScroll = true
+        item.right = this.data.delBtnWidth;
+        this.isScroll = true;
       } else {
-        item.right = 0
-        this.isScroll = true
+        item.right = 0;
+        this.isScroll = true;
       }
     }
   }
 
   onLoad() {
-    let self = this
+    let self = this;
     wepy.getSystemInfo({ success: res => {
-      self.windowHeight = res.windowHeight
-      self.$apply()
-    } })
+      self.windowHeight = res.windowHeight;
+      self.$apply();
+    } });
   }
 
   notifyEvent(event) {
-    this.$emit(event, { index: this.delIndex })
-    this.$apply()
+    this.$emit(event, { index: this.delIndex });
+    this.$apply();
   }
 }
 </script>
