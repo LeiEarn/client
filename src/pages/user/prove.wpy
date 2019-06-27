@@ -102,8 +102,8 @@
       id_name: '学号',
       user: {
         name: '何枷瑜',
-        sex: 'M',
-        idenType: 'S',
+        sex: '男',
+        idenType: '学生',
         tel: '13169766417',
         department: '中山大学',
         cert: '',
@@ -232,12 +232,20 @@
               self.user = res.data.idenInfo;
               self.user.cert = res.data.idenInfo.cert;
               if (self.user.idenType == 'S') {
+                self.idens_index = 0;
                 self.user.department = self.user.school;
                 delete self.user.school;
               } else {
+                self.idens_index = 1;
                 self.user.department = self.user.company;
                 delete self.user.company;
               }
+              if (self.user.sex == 'M') {
+                self.sexs_index = 0;
+              } else {
+                self.sexs_index = 1;
+              }
+              self.$apply();
             } else if (res.data.message == 'login') {
               self.$parent.reLogin();
             }

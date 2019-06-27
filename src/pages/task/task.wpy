@@ -1,6 +1,7 @@
 <style lang="less">
 .type {
   background-color: white;
+  font-size: 11pt;
 }
 </style>
 <template>

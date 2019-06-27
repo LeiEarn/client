@@ -146,7 +146,7 @@
       },
       received() {
         if (this.checkProveState()) {
-          wepy.navigateTo({ url: '../task/received' });
+          wepy.navigateTo({ url: '../task/accepted' });
         }
       },
       issued() {
@@ -165,7 +165,6 @@
     }
   
     onLoad() {
-      this.getUser();
     }
 
     onShow() {
@@ -174,6 +173,7 @@
           wepy.navigateTo({ url: '../authorize' });
         }
       } });
+      this.getUser();
     }
 
     getUser() {
