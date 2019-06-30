@@ -13,7 +13,7 @@
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell">
           <view class="weui-cell__bd">账户余额</view>
-          <view class="weui-cell__ft">0</view>
+          <view class="weui-cell__ft">{{ balance }}</view>
         </view>
       </view>
 
@@ -23,6 +23,22 @@
       type="primary"
       bindtap="recharge"
     >充值</button>
+    <modal
+      class="dialog"
+      hidden="{{hidden}}"
+      title="充值"
+      confirm-text="确认"
+      cancel-text="取消"
+      bindconfirm="confirm"
+      bindcancel="cancel"
+    >
+      <input
+        class="weui-cell"
+        placeholder="请输入充值金额"
+        autofocus
+        bindinput="bindMoneyInput"
+      />
+    </modal>
   </view>
 </template>
 
@@ -36,31 +52,67 @@ export default class Balance extends wepy.page {
   components = {};
   data = {
     userId: null,
-    balance: 0
+    balance: 0,
+    hidden: true
   };
   methods = {
     recharge() {
+      this.hidden = false;
+    },
+    confirm() {
       let self = this;
       const rq = require('../../lib/request.js');
       var object = {
-        url: '/recharge',
+        url: '/user/' + this.userId + '/balance?money=' + this.money,
         data: {
-          userId: this.userId
         },
-        method: 'POST'
+        method: 'PUT'
       };
       rq.request(object).then(res => {
-        self.balance = res.data.balance;
+        console.log(res);
+        if (res.errMsg == 'request:ok') {
+          self.balance = res.data.balance;
+        } else if (res.data.message == 'login') {
+          self.$parent.reLogin();
+        }
         self.$apply();
       }).catch(err => {
         console.log(err);
-        this.$parent.reLogin();
       });
+      this.hidden = true;
+    },
+    cancel() {
+      this.hidden = true;
+    },
+    bindMoneyInput(e) {
+      this.money = e.detail.value;
     }
-  }
-  onload() {
+  };
 
-  }
+  onLoad() {
+    if (this.$parent.globalData.user.userId) {
+      this.userId = this.$parent.globalData.user.userId;
+    }
+    this.getBalance();
+  };
+
+  getBalance() {
+    let self = this;
+    const rq = require('../../lib/request.js');
+    var object = {
+      url: '/user/' + this.userId + '/balance',
+      data: {
+      },
+      method: 'GET'
+    };
+    console.log(object);
+    rq.request(object).then(res => {
+      console.log(res);
+      self.balance = res.data.balance;
+      self.$apply();
+    }).catch(err => {
+      console.log(err);
+    });
+  };
 }
-
 </script>

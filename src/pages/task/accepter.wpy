@@ -35,38 +35,8 @@ export default class Accepter extends wepy.page {
   data = {
     taskId: null,
     accepted: [
-      {
-        userId: '',
-        avatarUrl: '../../assets/background.jpg',
-        nickName: '大脸猫(蒋侑伸)',
-        tel: '电话号码：13169766417'
-      },
-      {
-        userId: '',
-        avatarUrl: '../../assets/background.jpg',
-        nickName: '大脸猫(蒋侑伸)',
-        tel: '电话号码：13169766417'
-      },
-      {
-        userId: '',
-        avatarUrl: '../../assets/background.jpg',
-        nickName: '大脸猫(蒋侑伸)',
-        tel: '电话号码：13169766417'
-      },
-      {
-        userId: '',
-        avatarUrl: '../../assets/background.jpg',
-        nickName: '大脸猫(蒋侑伸)',
-        tel: '电话号码：13169766417'
-      }
     ],
     completed: [
-      {
-        userId: '',
-        avatarUrl: '../../assets/background.jpg',
-        nickName: '大脸猫(蒋侑伸)',
-        tel: '电话号码：13169766417'
-      }
     ]
   }
   events = {

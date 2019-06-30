@@ -1,4 +1,9 @@
 <style lang = "less">
+.title {
+  text-align: center;
+  margin-top: 20rpx;
+  border-bottom: 1rpx solid #999;
+}
 </style>
 
 
@@ -30,10 +35,10 @@
             hidden="{{activeIndex != 0}}"
           >
             <view class="smallpage">
-              <view class="team">
-                <created :list.sync="created" />
-                <joined :list.sync="joined" />
-              </view>
+              <view class="title">我创建的组织</view>
+              <created :list.sync="created" />
+              <view class="title">我加入的组织</view>
+              <joined :list.sync="joined" />
             </view>
           </view>
           <view
@@ -104,27 +109,8 @@ export default class Team extends wepy.page {
 
   data = {
     tabs: ['我加入的组织', '加入组织', '创建组织'],
-    joined: [
-      {
-        groupId: '0',
-        icon: '../../assets/background.jpg',
-        name: '这是组织名称',
-        desc: '这里是组织介绍'
-      },
-      {
-        groupId: '0',
-        icon: '../../assets/background.jpg',
-        name: '这是组织名称1',
-        desc: '这里是组织介绍1'
-      },
-      {
-        groupId: '0',
-        icon: '../../assets/background.jpg',
-        name: '这是组织名称2',
-        desc: '这里是组织介绍2'
-      }
-    ],
     created: [],
+    joined: [],
     activeIndex: 0,
     sliderOffset: 0,
     sliderLeft: 0,
@@ -138,14 +124,29 @@ export default class Team extends wepy.page {
     delete(e) {
       console.log(e.index);
       const rq = require('../../lib/request.js');
+      let self = this;
       var object = {
         url: '/group/' + this.userId + '?groupName=' + this.joined[e.index].groupName,
         data: {
         },
         method: 'DELETE'
       };
+      console.log(object);
       rq.request(object).then(res => {
         console.log(res.data);
+        if (res.data == 'success') {
+          wepy.showToast({
+            title: '成功', // 提示的内容,
+            icon: 'success', // 图标,
+            duration: 2000, // 延迟时间,
+            mask: true, // 显示透明蒙层，防止触摸穿透,
+            success: res => {}
+          });
+        }
+        if (res.data.message == 'login') {
+          self.$parent.reLogin();
+          self.$apply();
+        }
       }).catch(err => {
         console.log(err.data);
       });
@@ -163,6 +164,19 @@ export default class Team extends wepy.page {
       };
       rq.request(object).then(res => {
         console.log(res.data);
+        if (res.data == 'success') {
+          wepy.showToast({
+            title: '成功', // 提示的内容,
+            icon: 'success', // 图标,
+            duration: 2000, // 延迟时间,
+            mask: true, // 显示透明蒙层，防止触摸穿透,
+            success: res => {}
+          });
+        }
+        if (res.data.message == 'login') {
+          self.$parent.reLogin();
+          self.$apply();
+        }
       }).catch(err => {
         console.log(err.data);
       });
@@ -177,6 +191,19 @@ export default class Team extends wepy.page {
       };
       rq.request(object).then(res => {
         console.log(res.data);
+        if (res.data == 'success') {
+          wepy.showToast({
+            title: '成功', // 提示的内容,
+            icon: 'success', // 图标,
+            duration: 2000, // 延迟时间,
+            mask: true, // 显示透明蒙层，防止触摸穿透,
+            success: res => {}
+          });
+        }
+        if (res.data.message == 'login') {
+          self.$parent.reLogin();
+          self.$apply();
+        }
       }).catch(err => {
         console.log(err.data);
       });
@@ -184,7 +211,9 @@ export default class Team extends wepy.page {
   }
 
   async onLoad() {
-    this.userId = this.$parent.userId;
+    if (this.$parent.globalData.user.userId) {
+      this.userId = this.$parent.globalData.user.userId;
+    }
     var sliderWidth = 114;
     let self = this;
     wepy.getSystemInfo({
@@ -205,6 +234,7 @@ export default class Team extends wepy.page {
   }
   getGroup() {
     const rq = require('../../lib/request.js');
+    let self = this;
     var object = {
       url: '/group/' + this.userId,
       data: {

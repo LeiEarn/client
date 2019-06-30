@@ -98,7 +98,7 @@ export default class extends wepy.app {
       proveState: ''
     },
 
-    taskType: 0
+    taskTypeIndex: 0
   }
   constructor() {
     super();
@@ -128,6 +128,7 @@ export default class extends wepy.app {
                 },
                 method: 'POST'
               };
+              console.log(object);
               rq.request(object).then(res => {
                 console.log(res);
                 self.globalData.user.userId = res.data.userId;

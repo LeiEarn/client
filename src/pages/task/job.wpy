@@ -30,13 +30,6 @@ export default class Job extends wepy.page {
   data = {
     taskId: null,
     user: [
-      {
-        userId: '1',
-        avatarUrl: '../../assets/background.jpg',
-        nickName: '用户1',
-        cert: [],
-        desc: '这是个备注'
-      }
     ]
   }
   events = {

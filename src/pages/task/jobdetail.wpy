@@ -52,12 +52,8 @@ export default class JobDetail extends wepy.page {
   components = {
   }
   data = {
-    remarks: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+    remarks: 'Nothing',
     cert: [
-      'http://iph.href.lu/750x390',
-      'http://iph.href.lu/750x390',
-      'http://iph.href.lu/750x390',
-      'http://iph.href.lu/750x390'
     ],
     userId: null
   }

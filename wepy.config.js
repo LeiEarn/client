@@ -1,5 +1,5 @@
-const path = require('path')
-var prod = process.env.NODE_ENV === 'production'
+const path = require('path');
+var prod = process.env.NODE_ENV === 'production';
 
 module.exports = {
   wpyExt: '.wpy',
@@ -44,9 +44,9 @@ module.exports = {
   },
   appConfig: {
     noPromiseAPI: ['createSelectorQuery'],
-    baseUrl: 'http://172.26.47.246:8080'
+    baseUrl: 'http://www.zhengxianqian.club:8000'
   }
-}
+};
 
 if (prod) {
   // 压缩sass
@@ -70,5 +70,5 @@ if (prod) {
         }
       }
     }
-  }
+  };
 }

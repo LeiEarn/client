@@ -1,6 +1,6 @@
-import wepy from 'wepy'
-import cookieJar from './cookieJar'
-import {resolve as urlResolve} from 'url'
+import wepy from 'wepy';
+import cookieJar from './cookieJar';
+import {resolve as urlResolve} from 'url';
 
 const request = (object) => {
   let promise = new Promise((resolve, reject) => {
@@ -13,22 +13,22 @@ const request = (object) => {
       },
       success: res => {
         if (res.statusCode === 200) {
-          resolve(res)
-          const cookieStr = res.header['Set-Cookie']
-          if (cookieStr) cookieJar.put(cookieStr)
+          resolve(res);
+          const cookieStr = res.header['Set-Cookie'];
+          if (cookieStr) cookieJar.put(cookieStr);
         } else {
-          reject(res)
+          reject(res);
         }
       },
       fail: res => {
-        reject(res)
+        reject(res);
       }
-    })
-  })
+    });
+  });
 
-  return promise
-}
+  return promise;
+};
 
 module.exports = {
   request: request
-}
+};

@@ -348,21 +348,16 @@ export default class TaskDetail extends wepy.page {
       tel: '获取失败'
     },
     content: {
-      type: '问卷星',
-      id: '39541637',
-      title: 'loading',
+      type: 'W',
+      id: '',
+      title: '',
       num: 0,
       left: 5,
       money: 1.7,
       condition: [
-        '软工8班班员',
-        '男生',
-        '80'
       ],
-      desc: '按照要求完成问卷即可完成任务。',
+      desc: '',
       steps: [
-        '打开问卷，如实填写问卷',
-        '添加填写完成证明'
       ]
     },
     hasReceived: 1,
@@ -370,9 +365,9 @@ export default class TaskDetail extends wepy.page {
 
     jobs: [
       {
-        userId: '123',
-        files: ['', '123'],
-        remarks: 'asdf1231654'
+        userId: null,
+        files: [],
+        remarks: ''
       }
     ],
 
@@ -519,7 +514,7 @@ export default class TaskDetail extends wepy.page {
       });
     },
     async submit() {
-      await this.uploadImgs(this.cert.files);
+      this.uploadImgs(this.cert.files);
       let self = this;
       var object = {
         url: '/task/' + this.taskId + '/job',
@@ -530,6 +525,7 @@ export default class TaskDetail extends wepy.page {
         },
         method: 'POST'
       };
+      console.log(object);
       rq.request(object).then(res => {
         console.log(res.data);
         if (res.data == 'success') {
@@ -654,23 +650,26 @@ export default class TaskDetail extends wepy.page {
     });
   }
 
-  uploadImgs(data) {
+  async uploadImgs(data) {
     let self = this;
     for (var i = 0; i < data.length; i++) {
-      wepy.uploadFile({
-        url: wepy.$appConfig.baseUrl + '/images', // 开发者服务器 url
-        filePath: data[i], // 要上传文件资源的路径
-        name: 'photo', // 文件对应的 key , 开发者在服务器端通过这个 key 可以获取到文件二进制内容
-        success: res => {
-          console.log(res.data);
-          res.data = JSON.parse(res.data);
-          self.cert.files[i] = res.data.img;
-        },
-        fail: () => {
-        },
-        complete: () => { }
-      });
-      self.$apply();
+      (function(i) {
+        wepy.uploadFile({
+          url: wepy.$appConfig.baseUrl + '/images', // 开发者服务器 url
+          filePath: data[i], // 要上传文件资源的路径
+          name: 'photo', // 文件对应的 key , 开发者在服务器端通过这个 key 可以获取到文件二进制内容
+          success: res => {
+            console.log(res.data);
+            console.log(i);
+            res.data = JSON.parse(res.data);
+            self.cert.files[i] = res.data.msg;
+            self.$apply();
+          },
+          fail: () => {
+          },
+          complete: () => { }
+        });
+      })(i);
     }
   }
 

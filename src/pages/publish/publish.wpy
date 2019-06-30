@@ -39,13 +39,6 @@ export default class Publish extends wepy.page {
   components = {
   }
   data = {
-    list: [{
-      type: '单选题',
-      title: '的说法伽大师傅士大',
-      contents: ['cell standard1', 'cell standard2'],
-      tips: 'sdaf'
-    }],
-    question: ['单选题', '多选题', '简答题'],
     type: ['使用问卷星', '使用自制模板']
   }
   events = {}

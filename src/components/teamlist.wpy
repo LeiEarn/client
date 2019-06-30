@@ -8,9 +8,6 @@
   border-radius: 50%;
 }
 
-.group {
-}
-
 .remove {
   width: 160rpx;
   height: 100%;
@@ -28,7 +25,6 @@
   <view class="list">
     <scroll-view
       scroll-y="{{isScroll}}"
-      style='height:{{windowHeight}}px'
     >
       <block
         class="weui-panel__bd"
@@ -49,12 +45,12 @@
           <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
             <image
               class="weui-media-box__thumb"
-              src="{{item.icon}}"
+              src="{{item.groupIcon}}"
             />
           </view>
           <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-            <view class="weui-media-box__title">{{item.title}}</view>
-            <view class="weui-media-box__desc">{{item.desc}}</view>
+            <view class="weui-media-box__title">{{item.groupName}}</view>
+            <view class="weui-media-box__desc">{{item.groupDesc}}</view>
           </view>
           <view
             class="remove"
@@ -90,7 +86,7 @@ export default class UserList extends wepy.component {
 
   methods = {
     tap(e) {
-      this.$parent.$navigate({ url: './teamdetail?json=' + JSON.stringify(this.list[e.currentTarget.dataset.index]) });
+      // this.$parent.$navigate({ url: './teamdetail?json=' + JSON.stringify(this.list[e.currentTarget.dataset.index]) });
     },
     quitGroup(e) {
       this.delIndex = e.currentTarget.dataset.index;

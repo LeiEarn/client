@@ -105,7 +105,7 @@ page {
           </view>
           <view class="weui-cell__bd" style="font-size: 11pt; padding-top: 10rpx">
             <span>组织：</span>
-            <groupspicker class="target" :groups="groups"></groupspicker>
+            <groupspicker class="target" :groups.sync="groups"></groupspicker>
             <span>性别：</span><view
               class="target"
               bindtap="bindSexChange"
@@ -158,13 +158,6 @@ export default class NormalTask extends wepy.page {
   }
   data = {
     groups: [
-      { name: '中山大学', value: '0' },
-      { name: '校学生会', value: '1' },
-      { name: '明德园2号', value: '2' },
-      { name: '软工3班', value: '3' },
-      { name: '校学生会', value: '4' },
-      { name: '校学生会', value: '5' },
-      { name: '校学生会', value: '6' }
     ],
     sexs: ['全部', '男', '女'],
     steps: [],
@@ -291,6 +284,25 @@ export default class NormalTask extends wepy.page {
       console.log(this.$parent.globalData.user.userId);
       this.userId = this.$parent.globalData.user.userId;
     }
+    this.getGroups();
+  }
+
+  getGroups() {
+    const rq = require('../../lib/request.js');
+    let self = this;
+    var obj = {
+      url: '/groups',
+      method: 'GET'
+    };
+    rq.request(obj).then(res => {
+      console.log(res);
+      self.groups = res.data;
+      for (var i = 0; i < self.groups.length; i++) {
+        self.groups[i].value = i.toString();
+        self.groups[i].checked = false;
+      }
+      self.$apply();
+    });
   }
 }
 </script>

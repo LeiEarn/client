@@ -151,13 +151,13 @@ export default class Prove extends wepy.page {
     idens_index: 0,
     id_name: '学号',
     user: {
-      name: '何枷瑜',
+      name: '',
       sex: '男',
       idenType: '学生',
-      tel: '13169766417',
-      department: '中山大学',
+      tel: '',
+      department: '',
       cert: '',
-      id: '16341007'
+      id: ''
     },
     userId: '',
     proveState: 'N'
@@ -246,6 +246,7 @@ export default class Prove extends wepy.page {
             rq.request(obj).then(res => {
               console.log(res);
               if (res.errMsg == 'request:ok') {
+                self.$parent.globalData.user.proveState = 'W';
                 wepy.reLaunch({ url: './mine' });
               } else if (res.data.data.message == 'login') {
                 self.$parent.reLogin();

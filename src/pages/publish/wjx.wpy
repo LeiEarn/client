@@ -70,6 +70,12 @@
             class="target"
             bindtap="bindSexChange"
           >{{wjx.condition.sex}}</view>
+          <span>最低信誉积分：</span>
+          <input
+            class="weui-input"
+            placeholder="请输入最低信誉积分"
+            bindinput="bindCreditScoreInput"
+          />
         </view>
       </view>
       <view class="weui-cell weui-cell_input">
@@ -134,13 +140,6 @@ export default class Wjx extends wepy.page {
   }
   data = {
     groups: [
-      { name: '中山大学', value: '0' },
-      { name: '校学生会', value: '1' },
-      { name: '明德园2号', value: '2' },
-      { name: '软工3班', value: '3' },
-      { name: '校学生会', value: '4' },
-      { name: '校学生会', value: '5' },
-      { name: '校学生会', value: '6' }
     ],
     sexs: ['全部', '男', '女'],
 
@@ -202,6 +201,9 @@ export default class Wjx extends wepy.page {
           }
         }
       });
+    },
+    bindCreditScoreInput: function (e) {
+      this.task.condition.creditScore = e.detail.value;
     },
     publish() {
       let self = this;
